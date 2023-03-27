@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>618140231524-ubak70fqdnj3lg1k4v6r0ks728t6q4a6.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.618140231524-ubak70fqdnj3lg1k4v6r0ks728t6q4a6</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBAKtVlSgaevD0HOgNSsMhlcR89CskVzrg</string>
+	<key>GCM_SENDER_ID</key>
+	<string>618140231524</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ambee.today</string>
+	<key>PROJECT_ID</key>
+	<string>today2023</string>
+	<key>STORAGE_BUCKET</key>
+	<string>today2023.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:618140231524:ios:9b41b888e5a58eddcd7c71</string>
+</dict>
+</plist>

@@ -1,14 +1,20 @@
 name: today
 description: A new Flutter project.
-publish_to: 'none'
-version: 0.1.0
+publish_to: none
+version: 1.0.0+1
 
 environment:
   sdk: '>=2.19.4 <3.0.0'
 
 dependencies:
+  firebase_core: ^2.8.0
   flutter:
     sdk: flutter
+  google_sign_in: ^6.0.2
+  googleapis: ^10.1.0
+  googleapis_auth: ^1.4.0
+  syncfusion_flutter_calendar: ^21.1.35
+  url_launcher: ^6.1.10
 
 dev_dependencies:
   flutter_test:

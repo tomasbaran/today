@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "618140231524",
+    "project_id": "today2023",
+    "storage_bucket": "today2023.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:618140231524:android:3a2ab1f62855fa50cd7c71",
+        "android_client_info": {
+          "package_name": "com.example.today"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "618140231524-0orhhrmk8n91679uvfe71dianu27afmk.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa0p22YD8UnUZZBp_-iy-0TTCoRnVrYxI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "618140231524-0orhhrmk8n91679uvfe71dianu27afmk.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "618140231524-ubak70fqdnj3lg1k4v6r0ks728t6q4a6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.ambee.today"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
