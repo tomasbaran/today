@@ -4,7 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'homepage.dart';
-import 'services/auth.dart';
+import '../services/auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 
@@ -35,13 +35,13 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(
-                "Todoes & Calendar & Reminders",
+                "TODAY:\nTodoes + Calendar",
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               SignInButton(
                 Buttons.GoogleDark,
-                onPressed: () => Auth().signup(context),
+                onPressed: () => Auth().signInWithGoogle(context),
               ),
             ],
           ),
