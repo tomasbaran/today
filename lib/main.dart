@@ -1,8 +1,10 @@
 // main.dart file
+import 'dart:developer';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'sign_in_screen.dart';
+import 'login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -10,37 +12,29 @@ void main() async {
 // initializing the firebase app
   await Firebase.initializeApp();
 
-  if (await FirebaseAuth.instance.currentUser != null) {
-    // signed in
-    print('signed in');
+  // DEV-MODE:
+  if (FirebaseAuth.instance.currentUser != null) {
+    // check whether the user is signed in
+    log(
+      time: DateTime.now(),
+      'signed in',
+    );
   } else {
-    print('NOT signed in');
+    log(time: DateTime.now(), '${DateTime.now().minute}:${DateTime.now().second} NOT signed in');
   }
 
 // calling of runApp
-  runApp(GoogleSignIn());
+  runApp(TodayApp());
 }
 
-class GoogleSignIn extends StatefulWidget {
-  @override
-  _GoogleSignInState createState() => _GoogleSignInState();
-}
+class TodayApp extends StatelessWidget {
+  const TodayApp({super.key});
 
-class _GoogleSignInState extends State<GoogleSignIn> {
   @override
   Widget build(BuildContext context) {
-    // we return the MaterialApp here ,
-    // MaterialApp contain some basic ui for android ,
     return MaterialApp(
-      //materialApp title
-      title: 'GEEKS FOR GEEKS',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-      ),
-
-      // home property contain SignInScreen widget
-      home: SignInScreen(),
+      title: 'Today',
+      home: LoginScreen(),
     );
   }
 }
