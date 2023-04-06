@@ -3,14 +3,13 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:today/screens/homepage.dart';
+import 'package:today/screens/home_screen.dart';
 
 class Auth {
-  // function to implement the google signin
-
   // creating firebase instance
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  // function to implement the google signin
   Future<UserCredential> signInWithGoogle(BuildContext context) async {
     GoogleSignIn googleSignIn = GoogleSignIn(
       scopes: [
@@ -35,7 +34,7 @@ class Auth {
     User? user = result.user;
     print(user);
 
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomePage()));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }
