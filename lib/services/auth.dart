@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis/tasks/v1.dart';
-import 'package:today/screens/home_screen.dart';
+import 'package:today/screens/today_screen/today_screen.dart';
 
 class Auth {
   // creating firebase instance

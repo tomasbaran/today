@@ -4,11 +4,14 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:today/screens/home_screen.dart';
+import 'package:today/screens/today_screen/today_screen.dart';
+import 'package:today/services/service_locator.dart';
 import 'screens/login_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  setupGetIt();
 
 // initializing the firebase app
   await Firebase.initializeApp();
@@ -35,7 +38,7 @@ class TodayApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Today',
-      home: FirebaseAuth.instance.currentUser == null ? LoginScreen() : HomeScreen(),
+      home: FirebaseAuth.instance.currentUser == null ? LoginScreen() : TodayScreen(),
     );
   }
 }

@@ -3,7 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'home_screen.dart';
+import 'today_screen/today_screen.dart';
 import '../services/auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -42,7 +42,7 @@ class _LoginScreenState extends State<LoginScreen> {
               SignInButton(Buttons.GoogleDark, onPressed: () async {
                 await Auth().signInWithGoogle(context);
                 if (FirebaseAuth.instance.currentUser != null) {
-                  if (context.mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                  if (context.mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => TodayScreen()));
                 }
               }),
             ],

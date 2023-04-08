@@ -13,7 +13,7 @@ class TaskCard extends StatelessWidget {
       child: Padding(
         padding: const EdgeInsets.all(8.0),
         child: SizedBox(
-          width: 350,
+          // width: 350,
           height: 40,
           child: Stack(children: [
             Align(
