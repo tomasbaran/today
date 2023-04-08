@@ -3,21 +3,20 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:googleapis/calendar/v3.dart';
+import 'package:googleapis/tasks/v1.dart';
 import 'package:today/screens/home_screen.dart';
 
 class Auth {
   // creating firebase instance
   final FirebaseAuth auth = FirebaseAuth.instance;
 
+  GoogleSignIn googleSignIn = GoogleSignIn(
+    scopes: <String>[CalendarApi.calendarScope, TasksApi.tasksScope],
+  );
+
   // function to implement the google signin
   Future<UserCredential> signInWithGoogle(BuildContext context) async {
-    GoogleSignIn googleSignIn = GoogleSignIn(
-      scopes: [
-        'email',
-        'https://www.googleapis.com/auth/contacts.readonly',
-      ],
-    );
-
     GoogleSignInAccount? googleUser = await googleSignIn.signIn();
 
     // Obtain the auth details from the request
@@ -30,11 +29,9 @@ class Auth {
     );
 
     //OPTIONAL: Getting users credential
-    UserCredential result = await auth.signInWithCredential(credential);
-    User? user = result.user;
-    print(user);
-
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => HomeScreen()));
+    // UserCredential result = await auth.signInWithCredential(credential);
+    // User? user = result.user;
+    // print(user);
 
     return await FirebaseAuth.instance.signInWithCredential(credential);
   }

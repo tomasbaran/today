@@ -39,10 +39,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
-              SignInButton(
-                Buttons.GoogleDark,
-                onPressed: () => Auth().signInWithGoogle(context),
-              ),
+              SignInButton(Buttons.GoogleDark, onPressed: () async {
+                await Auth().signInWithGoogle(context);
+                if (FirebaseAuth.instance.currentUser != null) {
+                  if (context.mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => HomeScreen()));
+                }
+              }),
             ],
           ),
         ),

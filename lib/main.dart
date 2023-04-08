@@ -23,8 +23,8 @@ void main() async {
   } else {
     log(time: DateTime.now(), '${DateTime.now().minute}:${DateTime.now().second} NOT signed in');
   }
+  // FirebaseAuth.instance.signOut();
 
-// calling of runApp
   runApp(const TodayApp());
 }
 
