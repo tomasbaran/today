@@ -2,52 +2,70 @@ import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sig
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/calendar/v3.dart';
 import 'package:googleapis/tasks/v1.dart';
+import 'package:today/models/my_task.dart';
+import 'package:today/models/my_list.dart';
 
 class CalendarService {
   GoogleSignIn googleSignIn = GoogleSignIn(
     scopes: <String>[CalendarApi.calendarScope, TasksApi.tasksScope],
   );
 
-  showTasksOnADate(DateTime date) async {
-    print('date: $date');
-
+  Future<TasksApi> getTaskApi() async {
+    await googleSignIn.signInSilently();
     var httpClient = (await googleSignIn.authenticatedClient())!;
-    var calendarApi = CalendarApi(httpClient);
-    Event event = Event();
+    return TasksApi(httpClient);
+  }
 
-    var _calendar = await calendarApi.calendarList.get('primary');
-    print(_calendar.summary);
+  Future<List<TaskList>> getLists() async {
+    TasksApi taskApi = await getTaskApi();
+    var lists = await taskApi.tasklists.list();
+    // print('lists.length: ${lists.items?.length}');
+    return lists.items ?? [];
+  }
 
-    var algo2 = await calendarApi.events.list('tomas@ambee.app');
+  Future<MyList> getTasks() async {
+    MyList myTasks = MyList();
+    MyTask myTask = MyTask(id: 'id0', title: 'Title', dateIndex: 0);
+    myTasks.items.add(myTask);
 
-    if (algo2 != null) {
-      print('length: ${algo2.summary}: ${algo2.items?.length}');
-      for (event in algo2.items!) {
-        // print('${event.start?.dateTime}: ${event.summary}');
-        if ((event.start?.dateTime?.day == DateTime.now().day) &&
-            (event.start?.dateTime?.month == DateTime.now().month) &&
-            (event.start?.dateTime?.year == DateTime.now().year)) {
-          print('TODAY:[${event.start?.dateTime?.toLocal().hour}:${event.start?.dateTime?.toLocal().minute}]${event.summary}');
-        }
-      }
-    }
-    var taskApi = TasksApi(httpClient);
-    // var taskLists = await taskApi.tasks.list(tasklist);
-    // print(taskLists);
-    // print('taskList: ${taskLists.items?.first.title}');
-    var tasks = await taskApi.tasks.list('MDgwNTI1MzE5Njg0OTU4NzczMzc6MDow', showHidden: true);
-    print('tasks: ${tasks.items?.length}');
+    myTask = MyTask(id: 'id1', title: 'Title 2', dateIndex: 1);
+    myTasks.items.add(myTask);
 
-    if (tasks != null) {
-      for (var task in tasks.items!) {
-        print('${task.kind}: ${task.due}: ${task.completed} ${task.title}');
-        // if ((task.due. .start?.dateTime?.day == DateTime.now().day) &&
-        //     (event.start?.dateTime?.month == DateTime.now().month) &&
-        //     (event.start?.dateTime?.year == DateTime.now().year)) {
-        //   print('TODAY:[${event.start?.dateTime?.toLocal().hour}:${event.start?.dateTime?.toLocal().minute}]${event.summary}');
-        // }
-      }
-    }
+    myTask = MyTask(id: 'id2', title: 'Title 3', dateIndex: 2);
+    myTasks.items.add(myTask);
+
+    print('added my task: ${myTasks.items.length}');
+
+    return myTasks;
+
+    // if (tasks != null) {
+    //   for (var task in tasks.items!) {
+    //     print('${task.kind}: ${task.due}: ${task.completed} ${task.title}');
+    //     // if ((task.due. .start?.dateTime?.day == DateTime.now().day) &&
+    //     //     (event.start?.dateTime?.month == DateTime.now().month) &&
+    //     //     (event.start?.dateTime?.year == DateTime.now().year)) {
+    //     //   print('TODAY:[${event.start?.dateTime?.toLocal().hour}:${event.start?.dateTime?.toLocal().minute}]${event.summary}');
+    //     // }
+    //   }
+    // }
+
+    // var calendarApi = CalendarApi(httpClient);
+    // var _calendar = await calendarApi.calendarList.get('primary');
+    // print(_calendar.summary);
+
+    // var algo2 = await calendarApi.events.list('tomas@ambee.app');
+
+    // if (algo2 != null) {
+    //   print('length: ${algo2.summary}: ${algo2.items?.length}');
+    //   for (event in algo2.items!) {
+    //     // print('${event.start?.dateTime}: ${event.summary}');
+    //     if ((event.start?.dateTime?.day == DateTime.now().day) &&
+    //         (event.start?.dateTime?.month == DateTime.now().month) &&
+    //         (event.start?.dateTime?.year == DateTime.now().year)) {
+    //       print('TODAY:[${event.start?.dateTime?.toLocal().hour}:${event.start?.dateTime?.toLocal().minute}]${event.summary}');
+    //     }
+    //   }
+    // }
   }
 
   addEvent() async {
