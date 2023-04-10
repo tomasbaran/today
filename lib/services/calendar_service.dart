@@ -24,19 +24,21 @@ class CalendarService {
   }
 
   Future<MyList> getTasks() async {
-    MyList myTasks = MyList();
+    MyList myList = MyList(
+      title: 'Todayyy',
+    );
     MyTask myTask = MyTask(id: 'id0', title: 'Title', dateIndex: 0);
-    myTasks.items.add(myTask);
+    myList.items.add(myTask);
 
     myTask = MyTask(id: 'id1', title: 'Title 2', dateIndex: 1);
-    myTasks.items.add(myTask);
+    myList.items.add(myTask);
 
     myTask = MyTask(id: 'id2', title: 'Title 3', dateIndex: 2);
-    myTasks.items.add(myTask);
+    myList.items.add(myTask);
 
-    print('added my task: ${myTasks.items.length}');
+    print('added my task: ${myList.items.length}');
 
-    return myTasks;
+    return myList;
 
     // if (tasks != null) {
     //   for (var task in tasks.items!) {
