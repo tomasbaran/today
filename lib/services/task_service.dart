@@ -14,17 +14,21 @@ class TaskService {
   final db = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? getTasks({
-    required String listId,
-    bool isDateList = false,
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? getList({
+    DateTime? date,
+    String? listId,
   }) {
     if (auth.currentUser != null) {
       String uid = auth.currentUser!.uid;
-      if (isDateList) {
-        listId = listId + '_' + uid;
-      }
 
-      final listDocRef = db.collection("users").doc(uid).collection('date_lists').doc(listId);
+      final listDocRef;
+      if (date != null) {
+        String listDateId = '${date.year}-${date.month}-${date.day}_$uid';
+        // print(listDateId);
+        listDocRef = db.collection("users").doc(uid).collection('date_lists').doc(listDateId);
+      } else {
+        listDocRef = db.collection("users").doc(uid).collection('lists').doc(listId);
+      }
 
       return listDocRef.snapshots().listen(
         (event) {

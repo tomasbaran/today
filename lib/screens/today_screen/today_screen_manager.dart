@@ -13,15 +13,27 @@ import 'package:today/services/task_service.dart';
 class TodayScreenManager {
   final listNotifier = ValueNotifier<MyList>(MyList());
 
-  getTasks() {
-    TaskService().getTasks(listId: '2023-04-13', isDateList: true)?.onData((data) {
+  getList() {
+    DateTime now = DateTime.now();
+    DateTime today = DateTime(now.year, now.month, now.day);
+
+    TaskService().getList(date: today)?.onData((data) {
       final listData = data.data();
       int i = 0;
       MyList myList = MyList();
 
-      for (var task in listData?['tasks']) {
-        print("id: ${task['id']}, title: ${task['title']}");
-        myList.items.add(MyTask(id: task['id'], title: task['title'], dateIndex: i++));
+      if (listData != null) {
+        for (var task in listData['tasks']) {
+          print("id: ${task['id']}, title: ${task['title']}");
+          myList.items.add(MyTask(
+            id: task['id'],
+            title: task['title'],
+            dateIndex: i++,
+          ));
+        }
+      } else {
+        // else there are no tasks for that day assigned (yet)
+        print('no tasks for that day');
       }
 
       listNotifier.value = myList;

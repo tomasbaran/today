@@ -28,7 +28,7 @@ class _TodayScreenState extends State<TodayScreen> {
   @override
   void initState() {
     super.initState();
-    screenManager.getTasks();
+    screenManager.getList();
     // screenManager.loadLists();
   }
 
