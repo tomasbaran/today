@@ -14,11 +14,10 @@ class TaskService {
   final db = FirebaseFirestore.instance;
   final FirebaseAuth auth = FirebaseAuth.instance;
 
-  StreamSubscription<DocumentSnapshot>? getTasks({
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? getTasks({
     required String listId,
     bool isDateList = false,
   }) {
-    log('--------0');
     if (auth.currentUser != null) {
       String uid = auth.currentUser!.uid;
       if (isDateList) {
@@ -27,24 +26,9 @@ class TaskService {
 
       final listDocRef = db.collection("users").doc(uid).collection('date_lists').doc(listId);
 
-      MyList myList = MyList();
-      myList.items.add(MyTask(id: 'id', title: 'title'));
       return listDocRef.snapshots().listen(
         (event) {
-          print('event: $event');
-
-          myList = MyList();
-          final listData = event.data();
-          int i = 0;
-          for (var task in listData?['tasks']) {
-            print("id: ${task['id']}, title: ${task['title']})");
-            myList.items.add(MyTask(id: task['id'], title: task['title'], dateIndex: i++));
-            print('myList: ${myList.items.first.id}');
-            print('myList-start: ${myList.items.length}');
-          }
-          print("date: ${listData}");
-          print('myList-end: ${myList.items.length}');
-          // yield MyList();
+          print('event: $event;${event.data()}');
         },
         onError: (error) => print("Listen failed: $error"),
       );

@@ -61,7 +61,7 @@ class _TodayScreenState extends State<TodayScreen> {
               itemBuilder: ((context, index) {
                 log('index: $index');
                 return TaskCard(
-                  //key: Key(myTasks.items[index].dateIndex.toString()),
+                  key: Key(myTasks.items[index].dateIndex.toString()),
                   title: myTasks.items[index].title,
                   completed: myTasks.items[index].completed ?? false,
                   listTitle: myTasks.items[index].listId ?? 'null listId',
