@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:extension_google_sign_in_as_googleapis_auth/extension_google_sign_in_as_googleapis_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:googleapis/calendar/v3.dart';
@@ -10,20 +11,14 @@ class CalendarService {
     scopes: <String>[CalendarApi.calendarScope, TasksApi.tasksScope],
   );
 
-  Future<TasksApi> getTaskApi() async {
-    await googleSignIn.signInSilently();
-    var httpClient = (await googleSignIn.authenticatedClient())!;
-    return TasksApi(httpClient);
-  }
+  // Future<List<TaskList>> getLists() async {
+  //   TasksApi taskApi = await getTaskApi();
+  //   var lists = await taskApi.tasklists.list();
+  //   // print('lists.length: ${lists.items?.length}');
+  //   return lists.items ?? [];
+  // }
 
-  Future<List<TaskList>> getLists() async {
-    TasksApi taskApi = await getTaskApi();
-    var lists = await taskApi.tasklists.list();
-    // print('lists.length: ${lists.items?.length}');
-    return lists.items ?? [];
-  }
-
-  Future<MyList> getTasks() async {
+  Future<MyList> getEvents() async {
     MyList myList = MyList(
       title: 'Todayyy',
     );
@@ -35,8 +30,6 @@ class CalendarService {
 
     myTask = MyTask(id: 'id2', title: 'Title 3', dateIndex: 2);
     myList.items.add(myTask);
-
-    print('added my task: ${myList.items.length}');
 
     return myList;
 

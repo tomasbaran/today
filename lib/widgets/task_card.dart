@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class TaskCard extends StatelessWidget {
   final String title;
-  final String position;
+  // final String position;
   final bool completed;
   final String listTitle;
   const TaskCard({
@@ -12,13 +12,12 @@ class TaskCard extends StatelessWidget {
     required this.title,
     required this.completed,
     required this.listTitle,
-    required this.position,
+    // required this.position,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
-      key: Key(position),
       child: Container(
         color: completed ? Colors.black12 : null,
         height: 68,

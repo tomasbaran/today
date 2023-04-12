@@ -12,6 +12,7 @@ import 'package:today/models/my_list.dart';
 import 'package:today/screens/today_screen/today_screen_manager.dart';
 import 'package:today/services/calendar_service.dart';
 import 'package:today/services/service_locator.dart';
+import 'package:today/services/task_service.dart';
 import 'package:today/widgets/task_card.dart';
 
 class TodayScreen extends StatefulWidget {
@@ -27,8 +28,8 @@ class _TodayScreenState extends State<TodayScreen> {
   @override
   void initState() {
     super.initState();
-    screenManager.loadTasks();
-    screenManager.loadLists();
+    screenManager.getTasks();
+    // screenManager.loadLists();
   }
 
   @override
@@ -40,7 +41,7 @@ class _TodayScreenState extends State<TodayScreen> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => CalendarService().addEvent(),
+        onPressed: () => TaskService().addTask(),
         label: Text('+ Add task'),
       ),
       appBar: AppBar(
@@ -53,31 +54,44 @@ class _TodayScreenState extends State<TodayScreen> {
 
       // In body text containing 'Home page ' in center
       body: ValueListenableBuilder<MyList>(
-          valueListenable: screenManager.tasksNotifier,
+          valueListenable: screenManager.listNotifier,
           builder: (context, myTasks, child) {
+            return ListView.builder(
+              itemCount: myTasks.items.length,
+              itemBuilder: ((context, index) {
+                log('index: $index');
+                return TaskCard(
+                  //key: Key(myTasks.items[index].dateIndex.toString()),
+                  title: myTasks.items[index].title,
+                  completed: myTasks.items[index].completed ?? false,
+                  listTitle: myTasks.items[index].listId ?? 'null listId',
+                );
+              }),
+            );
+
             return ReorderableListView.builder(
               itemCount: myTasks.items.length,
               onReorder: (oldIndex, newIndex) {
-                print('oldIndex: $oldIndex');
-                print('newIndex: $newIndex');
-                int changePosition = newIndex - oldIndex;
+                // print('oldIndex: $oldIndex');
+                // print('newIndex: $newIndex');
+                // int changePosition = newIndex - oldIndex;
 
-                for (MyTask task in myTasks.items) {
-                  print('task[${task.id}]: ${task.dateIndex}');
-                }
+                // for (MyTask task in myTasks.items) {
+                //   print('task[${task.id}]: ${task.dateIndex}');
+                // }
 
-                setState(() {
-                  if (oldIndex < newIndex) {
-                    newIndex -= 1;
-                  }
-                  final MyTask item = myTasks.items.removeAt(oldIndex);
-                  myTasks.items.insert(newIndex, item);
-                });
-                int tmpIndex = 0;
-                for (MyTask task in myTasks.items) {
-                  task.dateIndex = tmpIndex++;
-                  log('task[${task.id}]: ${task.dateIndex}');
-                }
+                // setState(() {
+                //   if (oldIndex < newIndex) {
+                //     newIndex -= 1;
+                //   }
+                //   final MyTask item = myTasks.items.removeAt(oldIndex);
+                //   myTasks.items.insert(newIndex, item);
+                // });
+                // int tmpIndex = 0;
+                // for (MyTask task in myTasks.items) {
+                //   task.dateIndex = tmpIndex++;
+                //   log('task[${task.id}]: ${task.dateIndex}');
+                // }
               },
               itemBuilder: ((context, index) {
                 return TaskCard(
@@ -85,7 +99,6 @@ class _TodayScreenState extends State<TodayScreen> {
                   title: myTasks.items[index].title,
                   completed: myTasks.items[index].completed ?? false,
                   listTitle: myTasks.items[index].listId ?? 'null listId',
-                  position: myTasks.items[index].dateIndex.toString(),
                 );
               }),
             );
