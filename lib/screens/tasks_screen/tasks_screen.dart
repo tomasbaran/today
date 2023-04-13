@@ -9,27 +9,38 @@ import 'package:googleapis/tasks/v1.dart';
 import 'package:today/models/my_list.dart';
 import 'package:today/models/my_task.dart';
 import 'package:today/models/my_list.dart';
-import 'package:today/screens/today_screen/today_screen_manager.dart';
+import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/calendar_service.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/services/task_service.dart';
 import 'package:today/widgets/task_card.dart';
 
-class TodayScreen extends StatefulWidget {
-  TodayScreen({Key? key}) : super(key: key);
+class TasksScreen extends StatefulWidget {
+  DateTime? date;
+  String? listId;
+  TasksScreen({
+    Key? key,
+    this.date,
+    this.listId,
+  }) : super(key: key);
 
   @override
-  _TodayScreenState createState() => _TodayScreenState();
+  _TasksScreenState createState() => _TasksScreenState();
 }
 
-class _TodayScreenState extends State<TodayScreen> {
+class _TasksScreenState extends State<TasksScreen> {
   final screenManager = getIt<TodayScreenManager>();
 
   @override
   void initState() {
     super.initState();
-    screenManager.getList();
-    // screenManager.loadLists();
+
+    if (widget.date != null) {
+      screenManager.getList(date: widget.date);
+    }
+    if (widget.listId != null) {
+      screenManager.getList(listId: widget.listId);
+    }
   }
 
   @override
@@ -41,7 +52,7 @@ class _TodayScreenState extends State<TodayScreen> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => TaskService().addTask(date: DateTime.now()),
+        onPressed: () => TaskService().addTask(date: widget.date),
         label: Text('+ Add task'),
       ),
       appBar: AppBar(
@@ -49,28 +60,48 @@ class _TodayScreenState extends State<TodayScreen> {
         centerTitle: true,
 
         // on appbar text containing 'GEEKS FOR GEEKS'
-        title: Text("Today for $username"),
+        title: Column(
+          children: [
+            ValueListenableBuilder(
+                valueListenable: screenManager.listNotifier, builder: ((context, selectedList, child) => Text(selectedList.title ?? '...'))),
+          ],
+        ),
+        actions: <Widget>[
+          IconButton(
+            icon: const Icon(Icons.question_mark),
+            onPressed: () {
+              // handle the press
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.arrow_right),
+            onPressed: () {
+              final now = DateTime.now();
+              screenManager.getList(date: now.add(Duration(days: 1)));
+            },
+          ),
+        ],
       ),
 
       // In body text containing 'Home page ' in center
       body: ValueListenableBuilder<MyList>(
           valueListenable: screenManager.listNotifier,
-          builder: (context, myTasks, child) {
+          builder: (context, selectedList, child) {
             return ListView.builder(
-              itemCount: myTasks.items.length,
+              itemCount: selectedList.items.length,
               itemBuilder: ((context, index) {
                 log('index: $index');
                 return TaskCard(
-                  key: Key(myTasks.items[index].dateIndex.toString()),
-                  title: myTasks.items[index].title,
-                  completed: myTasks.items[index].completed ?? false,
-                  listTitle: myTasks.items[index].listId ?? 'null listId',
+                  key: Key(selectedList.items[index].dateIndex.toString()),
+                  title: selectedList.items[index].title,
+                  completed: selectedList.items[index].completed ?? false,
+                  listTitle: selectedList.items[index].listId ?? 'null listId',
                 );
               }),
             );
 
             return ReorderableListView.builder(
-              itemCount: myTasks.items.length,
+              itemCount: selectedList.items.length,
               onReorder: (oldIndex, newIndex) {
                 // print('oldIndex: $oldIndex');
                 // print('newIndex: $newIndex');
@@ -95,10 +126,10 @@ class _TodayScreenState extends State<TodayScreen> {
               },
               itemBuilder: ((context, index) {
                 return TaskCard(
-                  key: Key(myTasks.items[index].dateIndex.toString()),
-                  title: myTasks.items[index].title,
-                  completed: myTasks.items[index].completed ?? false,
-                  listTitle: myTasks.items[index].listId ?? 'null listId',
+                  key: Key(selectedList.items[index].dateIndex.toString()),
+                  title: selectedList.items[index].title,
+                  completed: selectedList.items[index].completed ?? false,
+                  listTitle: selectedList.items[index].listId ?? 'null listId',
                 );
               }),
             );

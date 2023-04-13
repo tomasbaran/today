@@ -13,16 +13,16 @@ import 'package:today/services/task_service.dart';
 class TodayScreenManager {
   final listNotifier = ValueNotifier<MyList>(MyList());
 
-  getList() {
-    DateTime now = DateTime.now();
-    DateTime today = DateTime(now.year, now.month, now.day);
+  getList({DateTime? date, String? listId}) {
+    log('getList for: $date');
 
-    TaskService().getList(date: today)?.onData((data) {
+    TaskService().getList(date: date)?.onData((data) {
       final listData = data.data();
       int i = 0;
       MyList myList = MyList();
 
       if (listData != null && listData.isNotEmpty) {
+        myList.title = listData['title'];
         print('listData: $listData');
         for (var task in listData['tasks']) {
           print('task: $task');
