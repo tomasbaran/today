@@ -1,5 +1,7 @@
 # Firebase
-lib/firebase_options.dart 
+/lib/firebase_options.dart 
+*GoogleService-Info.plist
+*google-services.json
 
 # Miscellaneous
 *.class
