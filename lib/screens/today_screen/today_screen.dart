@@ -41,7 +41,7 @@ class _TodayScreenState extends State<TodayScreen> {
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => TaskService().addTask(),
+        onPressed: () => TaskService().addTask(date: DateTime.now()),
         label: Text('+ Add task'),
       ),
       appBar: AppBar(

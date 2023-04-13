@@ -22,8 +22,10 @@ class TodayScreenManager {
       int i = 0;
       MyList myList = MyList();
 
-      if (listData != null) {
+      if (listData != null && listData.isNotEmpty) {
+        print('listData: $listData');
         for (var task in listData['tasks']) {
+          print('task: $task');
           print("id: ${task['id']}, title: ${task['title']}");
           myList.items.add(MyTask(
             id: task['id'],

@@ -36,26 +36,32 @@ class TaskService {
         },
         onError: (error) => print("Listen failed: $error"),
       );
+    } else {
+      throw ('Error #2: User not signed in.');
     }
   }
 
-  addTask() async {
-    print('-----');
+  addTask({DateTime? date, String? listId}) async {
     if (auth.currentUser != null) {
-      print(auth.currentUser!.uid);
-      // Create a new user with a first and last name
-      final user = <String, dynamic>{
-        "first": "Ada",
-        "last": "Lovelace",
-        "born": 1815,
+      String uid = auth.currentUser!.uid;
+      final DocumentReference<Map<String, dynamic>> listDocRef;
+      if (date != null) {
+        String listDateId = '${date.year}-${date.month}-${date.day}_$uid';
+        // print(listDateId);
+        listDocRef = db.collection("users").doc(uid).collection('date_lists').doc(listDateId);
+      } else {
+        listDocRef = db.collection("users").doc(uid).collection('lists').doc(listId);
+      }
+
+      final newTask = <String, dynamic>{
+        'id': 'id3',
+        'title': 'My Title 3',
+        'completed': false,
       };
 
-      String uid = auth.currentUser!.uid;
-
-      db.collection('users').doc(uid).set(user).then((value) => print('added'));
-
-// Add a new document with a generated ID
-      // await db.collection("users").add(user).then((DocumentReference doc) => print('DocumentSnapshot added with ID: ${doc.id}'));
+      listDocRef.update({
+        'tasks': FieldValue.arrayUnion([newTask])
+      }).then((value) => print('added a new task:'));
     } else {
       throw ('Error #1: User not signed in.');
     }
