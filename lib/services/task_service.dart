@@ -48,6 +48,7 @@ class TaskService {
       final String listTitle;
       if (date != null) {
         // listTitle = '${date.year}-${date.month}-${date.day}';
+
         String listDateId = '${date.year}-${date.month}-${date.day}_$uid';
         // print(listDateId);
         listDocRef = db.collection("users").doc(uid).collection('date_lists').doc(listDateId);
