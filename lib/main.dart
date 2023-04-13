@@ -4,7 +4,7 @@ import 'dart:developer';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:today/screens/today_screen/today_screen.dart';
+import 'package:today/screens/tasks_screen/tasks_screen.dart';
 import 'package:today/services/service_locator.dart';
 import 'screens/login_screen.dart';
 
@@ -38,7 +38,7 @@ class TodayApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Today',
-      home: FirebaseAuth.instance.currentUser == null ? LoginScreen() : TodayScreen(),
+      home: FirebaseAuth.instance.currentUser == null ? LoginScreen() : TasksScreen(date: DateTime.now()),
     );
   }
 }
