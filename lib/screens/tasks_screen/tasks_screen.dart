@@ -31,34 +31,18 @@ class TasksScreen extends StatefulWidget {
 class _TasksScreenState extends State<TasksScreen> {
   final widgetManager = getIt<TodayScreenManager>();
 
-  DateTime? selectedDay;
-
   @override
   void initState() {
     super.initState();
-
-    if (widget.date != null) {
-      selectedDay = widget.date;
-      widgetManager.getList(date: selectedDay);
-    }
-    if (widget.listId != null) {
-      widgetManager.getList(listId: widget.listId);
-    }
+    widgetManager.getList(date: widgetManager.selectedDate.value);
   }
 
   @override
   Widget build(BuildContext context) {
-    User? currentUser = FirebaseAuth.instance.currentUser;
-    String username = currentUser?.displayName ?? 'unknown';
-
-    // CalendarService().showTasksOnADate(DateTime.now());
-
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          if (selectedDay != null) {
-            TaskService().addTask(date: selectedDay);
-          }
+          TaskService().addTask(date: widgetManager.selectedDate.value);
         },
         label: Text('+ Add task'),
       ),
@@ -70,31 +54,32 @@ class _TasksScreenState extends State<TasksScreen> {
         title: Column(
           children: [
             ValueListenableBuilder(
-                valueListenable: widgetManager.listNotifier, builder: ((context, selectedList, child) => Text(selectedList.title ?? '...'))),
+              valueListenable: widgetManager.selectedList,
+              builder: ((_, selectedList, __) => Text(selectedList.title ?? '...')),
+            ),
           ],
         ),
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.question_mark),
             onPressed: () {
-              selectedDay = DateTime(2023, 1, 1);
-              widgetManager.getList(date: selectedDay);
+              widgetManager.changeSelecteDay(DateTime(2023, 1, 1));
+              widgetManager.getList(date: widgetManager.selectedDate.value);
             },
           ),
-          if (selectedDay != null)
-            IconButton(
-              icon: const Icon(Icons.arrow_right),
-              onPressed: () {
-                selectedDay = selectedDay!.add(Duration(days: 1));
-                widgetManager.getList(date: selectedDay);
-              },
-            ),
+          IconButton(
+            icon: const Icon(Icons.arrow_right),
+            onPressed: () {
+              widgetManager.nextDay();
+              widgetManager.getList(date: widgetManager.selectedDate.value);
+            },
+          ),
         ],
       ),
 
       // In body text containing 'Home page ' in center
       body: ValueListenableBuilder<MyList>(
-          valueListenable: widgetManager.listNotifier,
+          valueListenable: widgetManager.selectedList,
           builder: (context, selectedList, child) {
             return ListView.builder(
               itemCount: selectedList.items.length,

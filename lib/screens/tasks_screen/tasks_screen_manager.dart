@@ -11,7 +11,21 @@ import 'package:today/services/calendar_service.dart';
 import 'package:today/services/task_service.dart';
 
 class TodayScreenManager {
-  final listNotifier = ValueNotifier<MyList>(MyList());
+  final selectedList = ValueNotifier<MyList>(MyList());
+  final selectedDate = ValueNotifier<DateTime>(DateTime.now());
+
+  changeSelecteDay(DateTime newDate) {
+    selectedDate.value = newDate;
+  }
+
+  nextDay() {
+    selectedDate.value = selectedDate.value.add(Duration(days: 1));
+    selectedDate.notifyListeners();
+  }
+
+  previousDay() {
+    selectedDate.value = selectedDate.value.subtract(Duration(days: 1));
+  }
 
   addTask({DateTime? date, String? listId}) {}
 
@@ -41,7 +55,7 @@ class TodayScreenManager {
         // else there are no tasks for that day assigned (yet)
         print('no tasks for that day');
       }
-      listNotifier.value = myList;
+      selectedList.value = myList;
     });
   }
 }
