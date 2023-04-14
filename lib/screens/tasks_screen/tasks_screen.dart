@@ -56,10 +56,8 @@ class _TasksScreenState extends State<TasksScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          // TODO: Refactor
           if (selectedDay != null) {
             TaskService().addTask(date: selectedDay);
-            widgetManager.getList(date: selectedDay);
           }
         },
         label: Text('+ Add task'),

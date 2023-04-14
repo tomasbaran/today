@@ -16,37 +16,31 @@ class TodayScreenManager {
   addTask({DateTime? date, String? listId}) {}
 
   getList({DateTime? date, String? listId}) {
-    MyList myList = MyList();
-
-    if (date != null) {
-      log('getList for: $date');
-      myList.title = date.toString();
-    }
-
-    if (listId != null) {
-      myList.title = listId;
-    }
-
     TaskService().getList(date: date)?.onData((data) {
+      MyList myList = MyList();
+      if (date != null) {
+        log('getList for: $date');
+        myList.title = date.toString();
+      }
+
+      if (listId != null) {
+        myList.title = listId;
+      }
       final dbList = data.data();
-      int i = 0;
 
       if (dbList != null && dbList.isNotEmpty) {
         print('listData: $dbList');
-        for (var task in dbList['tasks']) {
-          print('task: $task');
-          print("id: ${task['id']}, title: ${task['title']}");
+        for (var dbTask in dbList['tasks']) {
+          print('dbTask: $dbTask');
           myList.items.add(MyTask(
-            id: task['id'],
-            title: task['title'],
-            dateIndex: i++,
+            id: dbTask['id'],
+            title: dbTask['title'],
           ));
         }
       } else {
         // else there are no tasks for that day assigned (yet)
         print('no tasks for that day');
       }
-
       listNotifier.value = myList;
     });
   }
