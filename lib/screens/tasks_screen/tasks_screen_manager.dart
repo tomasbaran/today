@@ -14,17 +14,19 @@ class TodayScreenManager {
   final selectedList = ValueNotifier<MyList>(MyList());
   final selectedDate = ValueNotifier<DateTime>(DateTime.now());
 
-  changeSelecteDay(DateTime newDate) {
+  showAnotherDay(DateTime newDate) {
     selectedDate.value = newDate;
+    getList(date: selectedDate.value);
   }
 
-  nextDay() {
+  showNextDay() {
     selectedDate.value = selectedDate.value.add(Duration(days: 1));
-    selectedDate.notifyListeners();
+    getList(date: selectedDate.value);
   }
 
-  previousDay() {
+  showPreviousDay() {
     selectedDate.value = selectedDate.value.subtract(Duration(days: 1));
+    getList(date: selectedDate.value);
   }
 
   addTask({DateTime? date, String? listId}) {}

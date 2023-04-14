@@ -1,0 +1,1 @@
+const todayIndex = 100;
