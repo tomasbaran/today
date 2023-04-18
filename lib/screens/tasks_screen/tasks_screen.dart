@@ -1,20 +1,15 @@
 // Home page screen
 
-import 'dart:developer';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:googleapis/calendar/v3.dart';
-import 'package:googleapis/tasks/v1.dart';
-import 'package:today/models/my_list.dart';
-import 'package:today/models/my_task.dart';
 import 'package:today/models/my_list.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
-import 'package:today/services/calendar_service.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/services/task_service.dart';
-import 'package:today/widgets/task_card.dart';
 import 'package:today/constants.dart';
+import 'package:today/style/style_constants.dart';
+import 'package:today/widgets/sliver_app_bar_widget.dart';
+
+import 'package:today/widgets/task_card.dart';
 
 class TasksScreen extends StatefulWidget {
   DateTime? date;
@@ -45,72 +40,53 @@ class _TasksScreenState extends State<TasksScreen> {
       viewportFraction: 0.95,
     );
     return Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
-            TaskService().addTask(date: widgetManager.selectedDate.value);
-          },
-          label: Text('+ Add task'),
-        ),
-        appBar: AppBar(
-          // backgroundColor: Colors.green,
-          centerTitle: true,
-
-          // on appbar text containing 'GEEKS FOR GEEKS'
-          title: Column(
-            children: [
-              ValueListenableBuilder(
-                valueListenable: widgetManager.selectedList,
-                builder: ((_, selectedList, __) => Text(selectedList.title ?? '...')),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () {
+          TaskService().addTask(date: widgetManager.selectedDate.value);
+        },
+        label: Text('+ Add task'),
+      ),
+      body: NestedScrollView(
+        controller: ScrollController(initialScrollOffset: expandedAppBar - 56),
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: const SliverAppBar(
+                backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                pinned: true,
+                snap: false,
+                floating: false,
+                expandedHeight: expandedAppBar,
+                flexibleSpace: SliverAppBarWidget(),
               ),
-            ],
-          ),
-          actions: <Widget>[
-            IconButton(
-              icon: const Icon(Icons.question_mark),
-              onPressed: () {
-                widgetManager.showAnotherDay(DateTime(2023, 1, 1));
-              },
             ),
-            IconButton(
-              icon: const Icon(Icons.arrow_right),
-              onPressed: () {
-                widgetManager.showNextDay();
-              },
-            ),
-          ],
-        ),
+          ];
+        },
         body: PageView.builder(
-            onPageChanged: (newPage) {
-              print('${pageController.page} -> $newPage; ');
-              if (pageController.page != null) {
-                if (newPage.toDouble() > pageController.page!) {
-                  widgetManager.showNextDay();
-                } else {
-                  widgetManager.showPreviousDay();
-                }
-              }
-            },
-            controller: pageController,
-            itemBuilder: (context, index) {
-              return ValueListenableBuilder<MyList>(
-                  valueListenable: widgetManager.selectedList,
-                  builder: (context, selectedList, child) {
-                    return ListView.builder(
-                      itemCount: selectedList.items.length,
-                      itemBuilder: ((context, index) {
-                        return TaskCard(
-                          key: Key(selectedList.items[index].dateIndex.toString()),
-                          title: selectedList.items[index].title,
-                          completed: selectedList.items[index].completed ?? false,
-                          listTitle: selectedList.items[index].listId ?? 'null listId',
-                        );
-                      }),
-                    );
-
-                    // const Placeholder(color:Color.fromARGB(0, 255, 0, 0)),
-                    // const Placeholder(color:Color.fromARGB(0, 0, 255, 0)),
-                  });
-            }));
+          onPageChanged: (newPage) => widgetManager.changePage(pageController.page, newPage),
+          controller: pageController,
+          itemBuilder: (context, index) {
+            return ValueListenableBuilder<MyList>(
+                valueListenable: widgetManager.selectedList,
+                builder: (context, selectedList, child) {
+                  return ListView.builder(
+                    padding: EdgeInsets.fromLTRB(0, 120, 0, 40),
+                    itemCount: selectedList.items.length,
+                    itemBuilder: ((context, index) {
+                      return TaskCard(
+                        key: Key(selectedList.items[index].dateIndex.toString()),
+                        title: selectedList.items[index].title,
+                        completed: selectedList.items[index].completed ?? false,
+                        listTitle: selectedList.items[index].listId ?? 'null listId',
+                      );
+                    }),
+                  );
+                });
+          },
+        ),
+      ),
+    );
 
 //             return ReorderableListView.builder(
 //               itemCount: selectedList.items.length,

@@ -14,7 +14,19 @@ class TodayScreenManager {
   final selectedList = ValueNotifier<MyList>(MyList());
   final selectedDate = ValueNotifier<DateTime>(DateTime.now());
 
-  showAnotherDay(DateTime newDate) {
+  changePage(double? oldPageIndex, int newPageIndex) {
+    print('$oldPageIndex -> $newPageIndex');
+
+    if (oldPageIndex != null) {
+      if (newPageIndex.toDouble() > oldPageIndex) {
+        showNextDay();
+      } else {
+        showPreviousDay();
+      }
+    }
+  }
+
+  showAnyDay(DateTime newDate) {
     selectedDate.value = newDate;
     getList(date: selectedDate.value);
   }
