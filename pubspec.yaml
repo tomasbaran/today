@@ -19,6 +19,7 @@ dependencies:
   googleapis: ^10.1.0
   googleapis_auth: ^1.4.0
   syncfusion_flutter_calendar: ^21.1.35
+  table_calendar: ^3.0.8
   url_launcher: ^6.1.10
 
 dev_dependencies:

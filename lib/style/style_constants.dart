@@ -1,1 +1,5 @@
-const double expandedAppBar = 260;
+import 'package:flutter/material.dart';
+
+const double expandedAppBar = 380;
+
+const kBackgroundColor = Color(0xFFFAFAFA);

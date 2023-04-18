@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:today/widgets/collapsed_app_bar.dart';
-
+import 'package:today/widgets/expanded_app_bar.dart';
 import 'dart:math' as math;
 
 class SliverAppBarWidget extends StatelessWidget {
@@ -21,22 +21,13 @@ class SliverAppBarWidget extends StatelessWidget {
 
         return Stack(
           children: [
-            Center(
-              child: Opacity(
-                opacity: 1 - opacity,
-                child: CollapsedAppBar(),
-              ),
+            Opacity(
+              opacity: (1 - opacity * 5) <= 0 ? 0 : (1 - opacity * 5),
+              child: CollapsedAppBar(),
             ),
             Opacity(
               opacity: opacity,
-              child: Stack(
-                alignment: Alignment.bottomCenter,
-                children: [
-                  Placeholder(
-                    color: Colors.orange,
-                  ),
-                ],
-              ),
+              child: ExpandedAppBar(),
             ),
           ],
         );

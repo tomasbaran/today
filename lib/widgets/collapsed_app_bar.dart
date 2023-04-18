@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
+import 'package:today/style/style_constants.dart';
 
 class CollapsedAppBar extends StatelessWidget {
   const CollapsedAppBar({super.key});
@@ -9,7 +10,7 @@ class CollapsedAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final tasksScreenManager = getIt<TodayScreenManager>();
     return AppBar(
-      backgroundColor: Color(0xFFFAFAFA),
+      backgroundColor: kBackgroundColor,
       shadowColor: Colors.transparent,
       centerTitle: true,
       title: Column(

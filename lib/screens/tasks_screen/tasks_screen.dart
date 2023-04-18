@@ -53,7 +53,7 @@ class _TasksScreenState extends State<TasksScreen> {
             SliverOverlapAbsorber(
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               sliver: const SliverAppBar(
-                backgroundColor: Color.fromARGB(255, 255, 255, 255),
+                backgroundColor: kBackgroundColor,
                 pinned: true,
                 snap: false,
                 floating: false,
