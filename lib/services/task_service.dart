@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
-
+import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
@@ -60,7 +60,7 @@ class TaskService {
 
       final newTask = <String, dynamic>{
         'id': 'id3',
-        'title': 'My Title 4',
+        'title': 'My Title ' + math.Random().nextInt(20).toString(),
         'completed': false,
       };
 
