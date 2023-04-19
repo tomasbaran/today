@@ -47,7 +47,7 @@ class _TasksScreenState extends State<TasksScreen> {
         label: Text('+ Add task'),
       ),
       body: NestedScrollView(
-        controller: ScrollController(initialScrollOffset: expandedAppBar - 56),
+        controller: ScrollController(initialScrollOffset: expandedAppBarHeight - collapsedAppBarHeight),
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverOverlapAbsorber(
@@ -57,7 +57,7 @@ class _TasksScreenState extends State<TasksScreen> {
                 pinned: true,
                 snap: false,
                 floating: false,
-                expandedHeight: expandedAppBar,
+                expandedHeight: expandedAppBarHeight,
                 flexibleSpace: SliverAppBarWidget(),
               ),
             ),

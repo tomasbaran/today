@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
-const double expandedAppBar = 380;
+const double expandedAppBarHeight = 380;
+const double collapsedAppBarHeight = 56;
 
 const kBackgroundColor = Color(0xFFFAFAFA);
