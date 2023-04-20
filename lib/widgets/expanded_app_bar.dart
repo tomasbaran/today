@@ -11,11 +11,15 @@ class ExpandedAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRect(
       child: Padding(
-        padding: EdgeInsets.only(top: 36),
-        child: TableCalendar(
-          firstDay: DateTime.utc(2010, 10, 16),
-          lastDay: DateTime.utc(2030, 3, 14),
-          focusedDay: DateTime.now(),
+        padding: EdgeInsets.only(left: 28, right: 28, top: 40, bottom: 28),
+        child: Wrap(
+          children: [
+            TableCalendar(
+              firstDay: DateTime.utc(2010, 10, 16),
+              lastDay: DateTime.utc(2030, 3, 14),
+              focusedDay: DateTime.now(),
+            ),
+          ],
         ),
       ),
     );
