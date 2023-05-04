@@ -51,7 +51,7 @@ class _TasksScreenState extends State<TasksScreen> {
       ),
       body: NestedScrollView(
         controller: scrollController,
-        // controller: ScrollController(initialScrollOffset: expandedAppBarHeight - collapsedAppBarHeight),
+        // controller: ScrollController(initialScrollOffset: expandedAppBarHeight - kToolbarHeight),
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverList(
