@@ -8,7 +8,7 @@ class SliverAppBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-      builder: (context, c) {
+      builder: (context, boxConstraints) {
         double opacity = 0;
         final settings = context.dependOnInheritedWidgetOfExactType<FlexibleSpaceBarSettings>();
         if (settings != null) {
@@ -18,6 +18,7 @@ class SliverAppBarWidget extends StatelessWidget {
           const fadeEnd = 1.0;
           opacity = 1.0 - Interval(fadeStart, fadeEnd).transform(t);
         }
+        // print('settings.currentExtent: ${settings!.currentExtent}');
 
         return Stack(
           children: [

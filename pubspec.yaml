@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   cloud_firestore: ^4.5.0
+  extended_nested_scroll_view: ^6.0.0
   extension_google_sign_in_as_googleapis_auth: ^2.0.9
   firebase_auth: ^4.4.0
   firebase_core: ^2.9.0
@@ -18,6 +19,7 @@ dependencies:
   google_sign_in: ^6.0.2
   googleapis: ^10.1.0
   googleapis_auth: ^1.4.0
+  loading_more_list: ^5.0.3
   syncfusion_flutter_calendar: ^21.1.35
   table_calendar: ^3.0.8
   url_launcher: ^6.1.10

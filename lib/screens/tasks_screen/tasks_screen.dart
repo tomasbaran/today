@@ -8,6 +8,7 @@ import 'package:today/services/task_service.dart';
 import 'package:today/constants.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/sliver_app_bar_widget.dart';
+import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 
 import 'package:today/widgets/task_card.dart';
 
@@ -35,6 +36,8 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var scrollController = ScrollController();
+
     final pageController = PageController(
       initialPage: todayIndex,
       viewportFraction: 0.95,
@@ -47,44 +50,49 @@ class _TasksScreenState extends State<TasksScreen> {
         label: Text('+ Add task'),
       ),
       body: NestedScrollView(
-        controller: ScrollController(initialScrollOffset: expandedAppBarHeight - collapsedAppBarHeight),
+        controller: scrollController,
+        // controller: ScrollController(initialScrollOffset: expandedAppBarHeight - collapsedAppBarHeight),
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
-            SliverOverlapAbsorber(
-              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-              sliver: const SliverAppBar(
-                backgroundColor: kBackgroundColor,
-                pinned: true,
-                snap: false,
-                floating: false,
-                expandedHeight: expandedAppBarHeight,
-                flexibleSpace: SliverAppBarWidget(),
-              ),
+            SliverList(
+              delegate: SliverChildListDelegate([Container(height: 300, color: Colors.blue)]),
             ),
+            // SliverOverlapAbsorber(
+            //   handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            //   sliver: const SliverAppBar(
+            //     backgroundColor: kBackgroundColor,
+            //     pinned: true,
+            //     snap: false,
+            //     floating: false,
+            //     expandedHeight: expandedAppBarHeight,
+            //     flexibleSpace: SliverAppBarWidget(),
+            //   ),
+            // ),
           ];
         },
-        body: PageView.builder(
-          onPageChanged: (newPage) => widgetManager.changePage(pageController.page, newPage),
-          controller: pageController,
-          itemBuilder: (context, index) {
-            return ValueListenableBuilder<MyList>(
-                valueListenable: widgetManager.selectedList,
-                builder: (context, selectedList, child) {
-                  return ListView.builder(
-                    padding: EdgeInsets.fromLTRB(0, 120, 0, 40),
-                    itemCount: selectedList.items.length,
-                    itemBuilder: ((context, index) {
-                      return TaskCard(
-                        key: Key(selectedList.items[index].dateIndex.toString()),
-                        title: selectedList.items[index].title,
-                        completed: selectedList.items[index].completed ?? false,
-                        listTitle: selectedList.items[index].listId ?? 'null listId',
-                      );
-                    }),
-                  );
-                });
-          },
-        ),
+        body: DemoTab(parentController: scrollController),
+        // body: PageView.builder(
+        //   onPageChanged: (newPage) => widgetManager.changePage(pageController.page, newPage),
+        //   controller: pageController,
+        //   itemBuilder: (context, index) {
+        //     return ValueListenableBuilder<MyList>(
+        //         valueListenable: widgetManager.selectedList,
+        //         builder: (context, selectedList, child) {
+        //           return ListView.builder(
+        //             padding: EdgeInsets.fromLTRB(0, 120, 0, 40),
+        //             itemCount: selectedList.items.length,
+        //             itemBuilder: ((context, index) {
+        //               return TaskCard(
+        //                 key: Key(selectedList.items[index].dateIndex.toString()),
+        //                 title: selectedList.items[index].title,
+        //                 completed: selectedList.items[index].completed ?? false,
+        //                 listTitle: selectedList.items[index].listId ?? 'null listId',
+        //               );
+        //             }),
+        //           );
+        //         });
+        //   },
+        // ),
       ),
     );
 
@@ -139,5 +147,69 @@ class _TasksScreenState extends State<TasksScreen> {
 //           }),
 //     );
 //   }
+  }
+// }
+}
+
+class DemoTab extends StatefulWidget {
+  DemoTab({this.parentController});
+
+  final ScrollController? parentController;
+
+  DemoTabState createState() => DemoTabState();
+}
+
+class DemoTabState extends State<DemoTab> with AutomaticKeepAliveClientMixin<DemoTab> {
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+
+  ScrollController? _scrollController;
+
+  ScrollPhysics? ph;
+  @override
+  void initState() {
+    super.initState();
+    _scrollController = ScrollController();
+
+    _scrollController!.addListener(() {
+      var innerPos = _scrollController!.position.pixels;
+      var maxOuterPos = widget.parentController!.position.maxScrollExtent;
+      var currentOutPos = widget.parentController!.position.pixels;
+
+      if (innerPos >= 0 && currentOutPos < maxOuterPos) {
+        //print("parent pos " + currentOutPos.toString() + "max parent pos " + maxOuterPos.toString());
+        widget.parentController!.position.jumpTo(innerPos + currentOutPos);
+      } else {
+        var currenParentPos = innerPos + currentOutPos;
+        widget.parentController!.position.jumpTo(currenParentPos);
+      }
+    });
+
+    widget.parentController!.addListener(() {
+      var currentOutPos = widget.parentController!.position.pixels;
+      if (currentOutPos <= 0) {
+        _scrollController!.position.jumpTo(0);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      key: UniqueKey(),
+      controller: _scrollController,
+      itemBuilder: (b, i) {
+        return Container(
+          height: 50,
+          color: Colors.green,
+          margin: EdgeInsets.only(bottom: 3),
+          child: Text(
+            i.toString(),
+          ),
+        );
+      },
+      itemCount: 30,
+    );
   }
 }
