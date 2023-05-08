@@ -6,6 +6,7 @@ import 'package:today/widgets/sliver_app_bar_widget.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/sliver_app_bar_widget.dart';
+import 'my_globals.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,12 +25,15 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    PageStorageKey? pageKeyParent;
+    pageKeyParent = PageStorageKey('parent');
     return Scaffold(
       body: NestedScrollView(
         controller: parentScrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverOverlapAbsorber(
+              key: pageKeyParent,
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               sliver: SliverAppBar(
                 backgroundColor: kBackgroundColor,
@@ -59,58 +63,47 @@ class DemoTab extends StatefulWidget {
 
 class DemoTabState extends State<DemoTab> {
   ScrollController childController = ScrollController();
+  ScrollPhysics? _scrollPhysics;
 
-  ScrollPhysics? physics;
+  bool isScrollEnabled = true;
 
-  bool revealCalendar = false;
+  PageStorageKey? pageKeyChild;
 
   @override
   void initState() {
     super.initState();
 
+    pageKeyChild = PageStorageKey('child');
+    _scrollPhysics = AlwaysScrollableScrollPhysics();
+    log('scrollPhysics: ${_scrollPhysics!.allowImplicitScrolling}');
+
     widget.parentController.addListener(() {
       double parentPosition = widget.parentController.offset;
-      print('parentPosition: $parentPosition');
-      // if (isCalendarRevealed) {
-      //   setState(() {
-      //     log('setState: false;');
-      //     isCalendarRevealed = false;
-      //   });
-      // }
-
-      print('scrollDirection: ${widget.parentController.position.userScrollDirection}');
-
-      if (widget.parentController.position.userScrollDirection == ScrollDirection.reverse && parentPosition == 324) {
-        setState(() {
-          log('revealCalendar: false;');
-          revealCalendar = false;
-        });
-      }
+      double defaultHiddenParentPosition = widget.parentController.position.maxScrollExtent;
+      log('parentPosition: $parentPosition');
     });
 
-    childController.addListener(() {
-      // double maxParentScroll = widget.parentController.position.maxScrollExtent;
+    childController.addListener(() async {
+      log('pageStorageChildKey: ${pageKeyChild!.value}');
+      double defaultHiddenParentPosition = widget.parentController.position.maxScrollExtent;
       // double parentPosition = widget.parentController.offset;
+      // _scrollPhysics!.allowImplicitScrolling = false;
 
       double childPosition = childController.offset;
-      log('childPosition: $childPosition');
-      if (childPosition <= 0) {
-        if (!revealCalendar) {
-          setState(() {
-            log('revealCalendar: true;');
-            revealCalendar = true;
-          });
-        }
-      }
 
-      // if (childController.position. .userScrollDirection == ScrollDirection.reverse) {
-      //   log('forward');
-      //   if (revealingCalendar) {
-      //     setState(() {
-      //       revealingCalendar = false;
-      //     });
-      //   }
-      // }
+      if (childPosition < 0) {
+        setState(() {
+          print('-------------------------');
+          isScrollEnabled = false;
+          // _scrollPhysics = NeverScrollableScrollPhysics();
+        });
+
+        widget.parentController.jumpTo(defaultHiddenParentPosition + childPosition);
+        // childController.position.setPixels(0);
+        print('childPosition: $childPosition');
+
+        // childController.position.setPixels(childPosition);
+      }
     });
   }
 
@@ -118,22 +111,82 @@ class DemoTabState extends State<DemoTab> {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(top: kToolbarHeight + 3),
-      child: ListView.builder(
-        physics: revealCalendar ? NeverScrollableScrollPhysics() : BouncingScrollPhysics(),
-        key: UniqueKey(),
-        controller: childController,
-        itemBuilder: (b, i) {
-          return Container(
-            height: 50,
-            color: Colors.green,
-            margin: EdgeInsets.only(bottom: 3),
-            child: Text(
-              i.toString(),
+      child: Stack(
+        children: [
+          ListView.builder(
+            shrinkWrap: true,
+            itemBuilder: (_, index) => ListTile(
+              title: Text("index: $index"),
             ),
-          );
-        },
-        itemCount: 30,
+          ),
+          if (!isScrollEnabled)
+            Container(
+              color: Colors.black,
+            ),
+        ],
       ),
+      // child: ListView.builder(
+      //   physics: _scrollPhysics,
+      //   // key: myGlobals.scaffoldKey,
+      //   key: pageKeyChild,
+      //   controller: childController,
+      //   itemBuilder: (b, i) {
+      //     return Container(
+      //       height: 50,
+      //       color: Colors.green,
+      //       margin: EdgeInsets.only(bottom: 3),
+      //       child: Text(
+      //         i.toString(),
+      //       ),
+      //     );
+      //   },
+      //   itemCount: 30,
+      // ),
+    );
+  }
+}
+
+class MySampleWidget extends StatefulWidget {
+  @override
+  State<MySampleWidget> createState() => _MySampleWidgetState();
+}
+
+class _MySampleWidgetState extends State<MySampleWidget> {
+  bool scrollEnabled = true;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Expanded(
+          child: Center(
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  scrollEnabled = !scrollEnabled;
+                });
+              },
+              child: Text("Update"),
+            ),
+          ),
+        ),
+        Expanded(
+          child: Stack(
+            children: [
+              ListView.builder(
+                shrinkWrap: true,
+                itemBuilder: (_, index) => ListTile(
+                  title: Text("index: $index"),
+                ),
+              ),
+              if (!scrollEnabled)
+                Container(
+                  color: Colors.transparent,
+                ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
