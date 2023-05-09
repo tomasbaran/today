@@ -1,12 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:today/widgets/sliver_app_bar_widget.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
-import 'package:today/widgets/sliver_app_bar_widget.dart';
-import 'my_globals.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,15 +22,12 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    PageStorageKey? pageKeyParent;
-    pageKeyParent = PageStorageKey('parent');
     return Scaffold(
       body: NestedScrollView(
         controller: parentScrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverOverlapAbsorber(
-              key: pageKeyParent,
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               sliver: SliverAppBar(
                 backgroundColor: kBackgroundColor,
@@ -41,7 +35,8 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
                 snap: false,
                 floating: false,
                 expandedHeight: expandedAppBarHeight,
-                // flexibleSpace: Container(height: 300, color: Colors.pink),
+                // DEV-MODE:
+                // flexibleSpace: Container(height: expandedAppBarHeight + kToolbarHeight, color: Colors.pink),
                 flexibleSpace: SliverAppBarWidget(),
               ),
             ),
@@ -54,139 +49,81 @@ class MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
 }
 
 class DemoTab extends StatefulWidget {
+  ScrollController parentController;
   DemoTab({required this.parentController});
 
-  final ScrollController parentController;
-
-  DemoTabState createState() => DemoTabState();
+  @override
+  State<DemoTab> createState() => _DemoTabState();
 }
 
-class DemoTabState extends State<DemoTab> {
-  ScrollController childController = ScrollController();
-  ScrollPhysics? _scrollPhysics;
+class _DemoTabState extends State<DemoTab> {
+  lockParentController() {
+    double defaultParentHiddenPosition = widget.parentController.position.maxScrollExtent;
 
-  bool isScrollEnabled = true;
-
-  PageStorageKey? pageKeyChild;
+    // -BUG: https://github.com/flutter/flutter/issues/126336
+    // widget.parentController.jumpTo(defaultParentHiddenPosition);
+    // -WORKAROUND: below
+    widget.parentController.animateTo(
+      defaultParentHiddenPosition,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeIn,
+    );
+  }
 
   @override
   void initState() {
-    super.initState();
-
-    pageKeyChild = PageStorageKey('child');
-    _scrollPhysics = AlwaysScrollableScrollPhysics();
-    log('scrollPhysics: ${_scrollPhysics!.allowImplicitScrolling}');
-
-    widget.parentController.addListener(() {
+    widget.parentController.addListener(() async {
       double parentPosition = widget.parentController.offset;
-      double defaultHiddenParentPosition = widget.parentController.position.maxScrollExtent;
-      log('parentPosition: $parentPosition');
-    });
-
-    childController.addListener(() async {
-      log('pageStorageChildKey: ${pageKeyChild!.value}');
-      double defaultHiddenParentPosition = widget.parentController.position.maxScrollExtent;
-      // double parentPosition = widget.parentController.offset;
-      // _scrollPhysics!.allowImplicitScrolling = false;
-
-      double childPosition = childController.offset;
-
-      if (childPosition < 0) {
-        setState(() {
-          print('-------------------------');
-          isScrollEnabled = false;
-          // _scrollPhysics = NeverScrollableScrollPhysics();
-        });
-
-        widget.parentController.jumpTo(defaultHiddenParentPosition + childPosition);
-        // childController.position.setPixels(0);
-        print('childPosition: $childPosition');
-
-        // childController.position.setPixels(childPosition);
+      print('parentPosition: $parentPosition');
+      if (lockHeader) {
+        lockParentController();
+        lockHeader = false;
       }
     });
+
+    super.initState();
   }
+
+  bool lockHeader = false;
+  bool? isScrollingUp;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: kToolbarHeight + 3),
-      child: Stack(
-        children: [
-          ListView.builder(
-            shrinkWrap: true,
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(top: kToolbarHeight + 3),
+        child: NotificationListener<ScrollUpdateNotification>(
+          onNotification: (notification) {
+            if (notification.dragDetails != null) {
+              if (notification.dragDetails!.primaryDelta != null) {
+                if (notification.dragDetails!.primaryDelta! > 0) {
+                  print('direction: up');
+                  isScrollingUp = true;
+                } else {
+                  print('direction: down');
+                  isScrollingUp = false;
+                }
+              }
+            }
+
+            if (isScrollingUp != null) {
+              if (isScrollingUp! && notification.metrics.atEdge) {
+                lockHeader = true;
+                lockParentController();
+              }
+            }
+
+            return false;
+          },
+          child: ListView.builder(
+            // shrinkWrap: true,
+            // controller: ScrollController(),
             itemBuilder: (_, index) => ListTile(
-              title: Text("index: $index"),
+              title: Text("index: ${index}"),
             ),
           ),
-          if (!isScrollEnabled)
-            Container(
-              color: Colors.black,
-            ),
-        ],
+        ),
       ),
-      // child: ListView.builder(
-      //   physics: _scrollPhysics,
-      //   // key: myGlobals.scaffoldKey,
-      //   key: pageKeyChild,
-      //   controller: childController,
-      //   itemBuilder: (b, i) {
-      //     return Container(
-      //       height: 50,
-      //       color: Colors.green,
-      //       margin: EdgeInsets.only(bottom: 3),
-      //       child: Text(
-      //         i.toString(),
-      //       ),
-      //     );
-      //   },
-      //   itemCount: 30,
-      // ),
-    );
-  }
-}
-
-class MySampleWidget extends StatefulWidget {
-  @override
-  State<MySampleWidget> createState() => _MySampleWidgetState();
-}
-
-class _MySampleWidgetState extends State<MySampleWidget> {
-  bool scrollEnabled = true;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Center(
-            child: ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  scrollEnabled = !scrollEnabled;
-                });
-              },
-              child: Text("Update"),
-            ),
-          ),
-        ),
-        Expanded(
-          child: Stack(
-            children: [
-              ListView.builder(
-                shrinkWrap: true,
-                itemBuilder: (_, index) => ListTile(
-                  title: Text("index: $index"),
-                ),
-              ),
-              if (!scrollEnabled)
-                Container(
-                  color: Colors.transparent,
-                ),
-            ],
-          ),
-        ),
-      ],
     );
   }
 }
