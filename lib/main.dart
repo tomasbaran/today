@@ -60,6 +60,7 @@ class _DemoTabState extends State<DemoTab> {
   lockParentController() {
     double defaultParentHiddenPosition = widget.parentController.position.maxScrollExtent;
 
+    // print('activity: ${widget.parentController.position.activity!.isScrolling}');
     // -BUG: https://github.com/flutter/flutter/issues/126336
     // widget.parentController.jumpTo(defaultParentHiddenPosition);
     // -WORKAROUND: below
@@ -74,7 +75,11 @@ class _DemoTabState extends State<DemoTab> {
   void initState() {
     widget.parentController.addListener(() async {
       double parentPosition = widget.parentController.offset;
-      print('parentPosition: $parentPosition');
+
+      if (parentPosition == 0) {
+        lockHeader = false;
+      }
+
       if (lockHeader) {
         lockParentController();
         lockHeader = false;
@@ -94,6 +99,10 @@ class _DemoTabState extends State<DemoTab> {
         padding: const EdgeInsets.only(top: kToolbarHeight + 3),
         child: NotificationListener<ScrollUpdateNotification>(
           onNotification: (notification) {
+            // print('activity: ${notification.dragDetails.}');
+            if (notification is ScrollEndNotification) {
+              print('end');
+            }
             if (notification.dragDetails != null) {
               if (notification.dragDetails!.primaryDelta != null) {
                 if (notification.dragDetails!.primaryDelta! > 0) {
@@ -108,8 +117,10 @@ class _DemoTabState extends State<DemoTab> {
 
             if (isScrollingUp != null) {
               if (isScrollingUp! && notification.metrics.atEdge) {
+                if (lockHeader) {
+                  lockParentController();
+                }
                 lockHeader = true;
-                lockParentController();
               }
             }
 
