@@ -1,6 +1,9 @@
 // Home page screen
 
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:today/models/my_list.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
@@ -78,29 +81,25 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
-  bool headerRevealed = false;
-  lockParentController() {
-    if (widget.parentController.position.pixels == 0) {
-      headerRevealed = true;
-    } else {
-      headerRevealed = false;
-    }
-
+  Future lockParentController() async {
     double defaultParentHiddenPosition = widget.parentController.position.maxScrollExtent;
+
+    print('parentController: ${widget.parentController.position.pixels}');
 
     // Hide the calendar only when scrolling down && the calendar is hidden. In other words, don't hide the calendar when the calendar is revealed
     // This bug happened when: 1. reveal the calendar 2. scroll down 3. scroll down again 4. it hid the calendar automatically which is unwanted
-    if (!headerRevealed) {
-      // print('activity: ${widget.parentController.position.activity!.isScrolling}');
-      // -BUG: https://github.com/flutter/flutter/issues/126336
-      // widget.parentController.jumpTo(defaultParentHiddenPosition);
-      // -WORKAROUND: below
-      widget.parentController.animateTo(
-        defaultParentHiddenPosition,
-        duration: Duration(milliseconds: 500),
-        curve: Curves.easeIn,
-      );
-    }
+    // if (!headerRevealed) {
+    // print('activity: ${widget.parentController.position.activity!.isScrolling}');
+    // -BUG: https://github.com/flutter/flutter/issues/126336
+    // widget.parentController.jumpTo(defaultParentHiddenPosition);
+    // -WORKAROUND: below
+    await widget.parentController.animateTo(
+      defaultParentHiddenPosition,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeIn,
+    );
+    print('animated to: $defaultParentHiddenPosition; ');
+    // }
   }
 
   @override
@@ -122,7 +121,6 @@ class _TaskListState extends State<TaskList> {
   }
 
   bool lockHeader = false;
-  bool? isScrollingUp;
 
   final pageController = PageController(
     initialPage: todayIndex,
@@ -130,76 +128,59 @@ class _TaskListState extends State<TaskList> {
   );
 
   final widgetManager = getIt<TodayScreenManager>();
-
+  ScrollDirection? _scrollDirection;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.only(top: kToolbarHeight + 3),
-        child: NotificationListener<ScrollUpdateNotification>(
+        child: NotificationListener<UserScrollNotification>(
           onNotification: (notification) {
-            // print('activity: ${notification.dragDetails.}');
-            if (notification is ScrollEndNotification) {
-              print('end');
-            }
-            if (notification.dragDetails != null) {
-              if (notification.dragDetails!.primaryDelta != null) {
-                if (notification.dragDetails!.primaryDelta! > 0) {
-                  print('direction: up');
-                  print('direction delta: ${notification.dragDetails!.delta}');
-                  print('direction globalPosition: ${notification.dragDetails!.globalPosition}');
-                  print('direction sourceTimeStamp: ${notification.dragDetails!.sourceTimeStamp}');
-                  print('direction2 pixels: ${notification.metrics.pixels}');
-                  isScrollingUp = true;
-                } else {
-                  print('direction: down');
-                  isScrollingUp = false;
-                }
-              }
-            }
-
-            // This locks/hides the header when it passes through a threshold atEdge
-            if (isScrollingUp != null) {
-              if (isScrollingUp! && notification.metrics.atEdge) {
-                if (lockHeader) {
-                  lockParentController();
-                }
-                lockHeader = true;
-              }
-            }
-
+            _scrollDirection = notification.direction;
             return false;
           },
+          child: NotificationListener<ScrollUpdateNotification>(
+            onNotification: (notification2) {
+              print('child.position: ${notification2.metrics.pixels}; $_scrollDirection');
 
-          // DEV-MODE: alt1
-          // child: ListView.builder(
-          //   // shrinkWrap: true,
-          //   // controller: ScrollController(),
-          //   itemBuilder: (_, index) => ListTile(
-          //     title: Text("index: ${index}"),
-          //   ),
-          // ),
-          // DEV-MODE: alt2
-          child: ValueListenableBuilder<MyList>(
-              valueListenable: widgetManager.selectedList,
-              builder: (context, selectedList, child) {
-                return ListView.builder(
-                  padding: EdgeInsets.fromLTRB(0, 52, 0, 40),
-                  itemCount: selectedList.items.length,
-                  itemBuilder: ((context, index) {
-                    // return ListTile(
-                    //   title: Text("index: ${index}"),
-                    // );
+              if (_scrollDirection == ScrollDirection.forward && notification2.metrics.atEdge) {
+                log('---LOCK----');
+                lockHeader = true;
+                lockParentController();
+              }
 
-                    return TaskCard(
-                      key: Key(selectedList.items[index].dateIndex.toString()),
-                      title: selectedList.items[index].title,
-                      completed: selectedList.items[index].completed ?? false,
-                      listTitle: selectedList.items[index].listId ?? 'null listId',
-                    );
-                  }),
-                );
-              }),
+              return false;
+            },
+            child: ValueListenableBuilder<MyList>(
+                valueListenable: widgetManager.selectedList,
+                builder: (context, selectedList, child) {
+                  // DEV-MODE: alt1
+                  // child: ListView.builder(
+                  //   // shrinkWrap: true,
+                  //   // controller: ScrollController(),
+                  //   itemBuilder: (_, index) => ListTile(
+                  //     title: Text("index: ${index}"),
+                  //   ),
+                  // ),
+                  // DEV-MODE: alt2
+                  return ListView.builder(
+                    padding: EdgeInsets.fromLTRB(0, 52, 0, 40),
+                    itemCount: selectedList.items.length,
+                    itemBuilder: ((context, index) {
+                      // return ListTile(
+                      //   title: Text("index: ${index}"),
+                      // );
+
+                      return TaskCard(
+                        key: Key(selectedList.items[index].dateIndex.toString()),
+                        title: selectedList.items[index].title,
+                        completed: selectedList.items[index].completed ?? false,
+                        listTitle: selectedList.items[index].listId ?? 'null listId',
+                      );
+                    }),
+                  );
+                }),
+          ),
           // RELEASE-MODE:
           // child: PageView.builder(
           //   onPageChanged: (newPage) => widgetManager.changePage(pageController.page, newPage),
