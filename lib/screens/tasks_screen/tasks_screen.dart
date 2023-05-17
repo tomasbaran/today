@@ -78,18 +78,29 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
+  bool headerRevealed = false;
   lockParentController() {
+    if (widget.parentController.position.pixels == 0) {
+      headerRevealed = true;
+    } else {
+      headerRevealed = false;
+    }
+
     double defaultParentHiddenPosition = widget.parentController.position.maxScrollExtent;
 
-    // print('activity: ${widget.parentController.position.activity!.isScrolling}');
-    // -BUG: https://github.com/flutter/flutter/issues/126336
-    // widget.parentController.jumpTo(defaultParentHiddenPosition);
-    // -WORKAROUND: below
-    widget.parentController.animateTo(
-      defaultParentHiddenPosition,
-      duration: Duration(milliseconds: 500),
-      curve: Curves.easeIn,
-    );
+    // Hide the calendar only when scrolling down && the calendar is hidden. In other words, don't hide the calendar when the calendar is revealed
+    // This bug happened when: 1. reveal the calendar 2. scroll down 3. scroll down again 4. it hid the calendar automatically which is unwanted
+    if (!headerRevealed) {
+      // print('activity: ${widget.parentController.position.activity!.isScrolling}');
+      // -BUG: https://github.com/flutter/flutter/issues/126336
+      // widget.parentController.jumpTo(defaultParentHiddenPosition);
+      // -WORKAROUND: below
+      widget.parentController.animateTo(
+        defaultParentHiddenPosition,
+        duration: Duration(milliseconds: 500),
+        curve: Curves.easeIn,
+      );
+    }
   }
 
   @override
@@ -102,7 +113,7 @@ class _TaskListState extends State<TaskList> {
       }
 
       if (lockHeader) {
-        lockParentController();
+        await lockParentController();
         lockHeader = false;
       }
     });
@@ -176,9 +187,9 @@ class _TaskListState extends State<TaskList> {
                   padding: EdgeInsets.fromLTRB(0, 52, 0, 40),
                   itemCount: selectedList.items.length,
                   itemBuilder: ((context, index) {
-                    return ListTile(
-                      title: Text("index: ${index}"),
-                    );
+                    // return ListTile(
+                    //   title: Text("index: ${index}"),
+                    // );
 
                     return TaskCard(
                       key: Key(selectedList.items[index].dateIndex.toString()),
