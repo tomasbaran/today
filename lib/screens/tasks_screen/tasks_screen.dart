@@ -81,25 +81,26 @@ class TaskList extends StatefulWidget {
 }
 
 class _TaskListState extends State<TaskList> {
-  Future lockParentController() async {
+  lockParentController() {
     double defaultParentHiddenPosition = widget.parentController.position.maxScrollExtent;
 
     print('parentController: ${widget.parentController.position.pixels}');
 
-    // Hide the calendar only when scrolling down && the calendar is hidden. In other words, don't hide the calendar when the calendar is revealed
-    // This bug happened when: 1. reveal the calendar 2. scroll down 3. scroll down again 4. it hid the calendar automatically which is unwanted
-    // if (!headerRevealed) {
-    // print('activity: ${widget.parentController.position.activity!.isScrolling}');
-    // -BUG: https://github.com/flutter/flutter/issues/126336
-    // widget.parentController.jumpTo(defaultParentHiddenPosition);
-    // -WORKAROUND: below
-    await widget.parentController.animateTo(
-      defaultParentHiddenPosition,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.easeIn,
-    );
-    print('animated to: $defaultParentHiddenPosition; ');
-    // }
+    // addPostFrameCallback solves the bug that animateTo was ignored in the following case:
+    // 1. scroll up
+    // 2. scroll down to reveal the header/calendar while still holding the scrolling finger down on the screen
+    // 3. animateTo in this case would be ignored. addPostFrameCallback forces animateTo to work
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // BUG: https://github.com/flutter/flutter/issues/126336
+      // widget.parentController.jumpTo(defaultParentHiddenPosition);
+      // WORKAROUND: below
+      widget.parentController.animateTo(
+        defaultParentHiddenPosition,
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeIn,
+      );
+    });
   }
 
   @override
