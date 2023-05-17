@@ -36,12 +36,7 @@ class _TasksScreenState extends State<TasksScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var scrollController = ScrollController();
-
-    final pageController = PageController(
-      initialPage: todayIndex,
-      viewportFraction: 0.95,
-    );
+    var parentScrollController = ScrollController(initialScrollOffset: expandedAppBarHeight - kToolbarHeight);
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
@@ -50,166 +45,175 @@ class _TasksScreenState extends State<TasksScreen> {
         label: Text('+ Add task'),
       ),
       body: NestedScrollView(
-        controller: scrollController,
-        // controller: ScrollController(initialScrollOffset: expandedAppBarHeight - kToolbarHeight),
+        controller: parentScrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
-            SliverList(
-              delegate: SliverChildListDelegate([Container(height: 300, color: Colors.blue)]),
+            SliverOverlapAbsorber(
+              handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+              sliver: SliverAppBar(
+                backgroundColor: kBackgroundColor,
+                pinned: true,
+                snap: false,
+                floating: false,
+                expandedHeight: expandedAppBarHeight,
+                // DEV-MODE:
+                // flexibleSpace: Container(height: expandedAppBarHeight + kToolbarHeight, color: Colors.pink),
+                flexibleSpace: SliverAppBarWidget(),
+              ),
             ),
-            // SliverOverlapAbsorber(
-            //   handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-            //   sliver: const SliverAppBar(
-            //     backgroundColor: kBackgroundColor,
-            //     pinned: true,
-            //     snap: false,
-            //     floating: false,
-            //     expandedHeight: expandedAppBarHeight,
-            //     flexibleSpace: SliverAppBarWidget(),
-            //   ),
-            // ),
           ];
         },
-        body: DemoTab(parentController: scrollController),
-        // body: PageView.builder(
-        //   onPageChanged: (newPage) => widgetManager.changePage(pageController.page, newPage),
-        //   controller: pageController,
-        //   itemBuilder: (context, index) {
-        //     return ValueListenableBuilder<MyList>(
-        //         valueListenable: widgetManager.selectedList,
-        //         builder: (context, selectedList, child) {
-        //           return ListView.builder(
-        //             padding: EdgeInsets.fromLTRB(0, 120, 0, 40),
-        //             itemCount: selectedList.items.length,
-        //             itemBuilder: ((context, index) {
-        //               return TaskCard(
-        //                 key: Key(selectedList.items[index].dateIndex.toString()),
-        //                 title: selectedList.items[index].title,
-        //                 completed: selectedList.items[index].completed ?? false,
-        //                 listTitle: selectedList.items[index].listId ?? 'null listId',
-        //               );
-        //             }),
-        //           );
-        //         });
-        //   },
-        // ),
+        body: TaskList(parentController: parentScrollController),
       ),
     );
-
-//             return ReorderableListView.builder(
-//               itemCount: selectedList.items.length,
-//               onReorder: (oldIndex, newIndex) {
-//                 // print('oldIndex: $oldIndex');
-//                 // print('newIndex: $newIndex');
-//                 // int changePosition = newIndex - oldIndex;
-
-//                 // for (MyTask task in myTasks.items) {
-//                 //   print('task[${task.id}]: ${task.dateIndex}');
-//                 // }
-
-//                 // setState(() {
-//                 //   if (oldIndex < newIndex) {
-//                 //     newIndex -= 1;
-//                 //   }
-//                 //   final MyTask item = myTasks.items.removeAt(oldIndex);
-//                 //   myTasks.items.insert(newIndex, item);
-//                 // });
-//                 // int tmpIndex = 0;
-//                 // for (MyTask task in myTasks.items) {
-//                 //   task.dateIndex = tmpIndex++;
-//                 //   log('task[${task.id}]: ${task.dateIndex}');
-//                 // }
-//               },
-//               itemBuilder: ((context, index) {
-//                 return TaskCard(
-//                   key: Key(selectedList.items[index].dateIndex.toString()),
-//                   title: selectedList.items[index].title,
-//                   completed: selectedList.items[index].completed ?? false,
-//                   listTitle: selectedList.items[index].listId ?? 'null listId',
-//                 );
-//               }),
-//             );
-
-//             // return ListView.builder(
-//             //   itemCount: tasks.length,
-//             //   itemBuilder: ((context, index) {
-//             //     // DEV-MODE:
-//             //     // return Text('${lists[index].title}:${lists[index].id} ' ?? 'null list');
-//             //     // RELEASE-MODE:
-
-//             //     return TaskCard(
-//             //       title: tasks[index].title ?? 'null title',
-//             //       hidden: tasks[index].hidden ?? false,
-//             //       listTitle: tasks[index].position ?? 'null list',
-//             //     );
-//             //   }),
-//             // );
-//           }),
-//     );
-//   }
   }
-// }
 }
 
-class DemoTab extends StatefulWidget {
-  DemoTab({this.parentController});
+class TaskList extends StatefulWidget {
+  ScrollController parentController;
+  TaskList({required this.parentController});
 
-  final ScrollController? parentController;
-
-  DemoTabState createState() => DemoTabState();
-}
-
-class DemoTabState extends State<DemoTab> with AutomaticKeepAliveClientMixin<DemoTab> {
   @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
+  State<TaskList> createState() => _TaskListState();
+}
 
-  ScrollController? _scrollController;
+class _TaskListState extends State<TaskList> {
+  lockParentController() {
+    double defaultParentHiddenPosition = widget.parentController.position.maxScrollExtent;
 
-  ScrollPhysics? ph;
+    // print('activity: ${widget.parentController.position.activity!.isScrolling}');
+    // -BUG: https://github.com/flutter/flutter/issues/126336
+    // widget.parentController.jumpTo(defaultParentHiddenPosition);
+    // -WORKAROUND: below
+    widget.parentController.animateTo(
+      defaultParentHiddenPosition,
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeIn,
+    );
+  }
+
   @override
   void initState() {
+    widget.parentController.addListener(() async {
+      double parentPosition = widget.parentController.offset;
+
+      if (parentPosition == 0) {
+        lockHeader = false;
+      }
+
+      if (lockHeader) {
+        lockParentController();
+        lockHeader = false;
+      }
+    });
+
     super.initState();
-    _scrollController = ScrollController();
-
-    _scrollController!.addListener(() {
-      var innerPos = _scrollController!.position.pixels;
-      var maxOuterPos = widget.parentController!.position.maxScrollExtent;
-      var currentOutPos = widget.parentController!.position.pixels;
-
-      if (innerPos >= 0 && currentOutPos < maxOuterPos) {
-        //print("parent pos " + currentOutPos.toString() + "max parent pos " + maxOuterPos.toString());
-        widget.parentController!.position.jumpTo(innerPos + currentOutPos);
-      } else {
-        var currenParentPos = innerPos + currentOutPos;
-        widget.parentController!.position.jumpTo(currenParentPos);
-      }
-    });
-
-    widget.parentController!.addListener(() {
-      var currentOutPos = widget.parentController!.position.pixels;
-      if (currentOutPos <= 0) {
-        _scrollController!.position.jumpTo(0);
-      }
-    });
   }
+
+  bool lockHeader = false;
+  bool? isScrollingUp;
+
+  final pageController = PageController(
+    initialPage: todayIndex,
+    // viewportFraction: 0.95,
+  );
+
+  final widgetManager = getIt<TodayScreenManager>();
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      key: UniqueKey(),
-      controller: _scrollController,
-      itemBuilder: (b, i) {
-        return Container(
-          height: 50,
-          color: Colors.green,
-          margin: EdgeInsets.only(bottom: 3),
-          child: Text(
-            i.toString(),
-          ),
-        );
-      },
-      itemCount: 30,
+    return Scaffold(
+      body: Padding(
+        padding: const EdgeInsets.only(top: kToolbarHeight + 3),
+        child: NotificationListener<ScrollUpdateNotification>(
+          onNotification: (notification) {
+            // print('activity: ${notification.dragDetails.}');
+            if (notification is ScrollEndNotification) {
+              print('end');
+            }
+            if (notification.dragDetails != null) {
+              if (notification.dragDetails!.primaryDelta != null) {
+                if (notification.dragDetails!.primaryDelta! > 0) {
+                  print('direction: up');
+                  print('direction delta: ${notification.dragDetails!.delta}');
+                  print('direction globalPosition: ${notification.dragDetails!.globalPosition}');
+                  print('direction sourceTimeStamp: ${notification.dragDetails!.sourceTimeStamp}');
+                  print('direction2 pixels: ${notification.metrics.pixels}');
+                  isScrollingUp = true;
+                } else {
+                  print('direction: down');
+                  isScrollingUp = false;
+                }
+              }
+            }
+
+            // This locks/hides the header when it passes through a threshold atEdge
+            if (isScrollingUp != null) {
+              if (isScrollingUp! && notification.metrics.atEdge) {
+                if (lockHeader) {
+                  lockParentController();
+                }
+                lockHeader = true;
+              }
+            }
+
+            return false;
+          },
+
+          // DEV-MODE: alt1
+          // child: ListView.builder(
+          //   // shrinkWrap: true,
+          //   // controller: ScrollController(),
+          //   itemBuilder: (_, index) => ListTile(
+          //     title: Text("index: ${index}"),
+          //   ),
+          // ),
+          // DEV-MODE: alt2
+          child: ValueListenableBuilder<MyList>(
+              valueListenable: widgetManager.selectedList,
+              builder: (context, selectedList, child) {
+                return ListView.builder(
+                  padding: EdgeInsets.fromLTRB(0, 52, 0, 40),
+                  itemCount: selectedList.items.length,
+                  itemBuilder: ((context, index) {
+                    return ListTile(
+                      title: Text("index: ${index}"),
+                    );
+
+                    return TaskCard(
+                      key: Key(selectedList.items[index].dateIndex.toString()),
+                      title: selectedList.items[index].title,
+                      completed: selectedList.items[index].completed ?? false,
+                      listTitle: selectedList.items[index].listId ?? 'null listId',
+                    );
+                  }),
+                );
+              }),
+          // RELEASE-MODE:
+          // child: PageView.builder(
+          //   onPageChanged: (newPage) => widgetManager.changePage(pageController.page, newPage),
+          //   // controller: pageController,
+          //   itemBuilder: (context, index) {
+          //     return ValueListenableBuilder<MyList>(
+          //         valueListenable: widgetManager.selectedList,
+          //         builder: (context, selectedList, child) {
+          //           return ListView.builder(
+          //             padding: EdgeInsets.fromLTRB(0, 52, 0, 40),
+          //             itemCount: selectedList.items.length,
+          //             itemBuilder: ((context, index) {
+          //               return TaskCard(
+          //                 key: Key(selectedList.items[index].dateIndex.toString()),
+          //                 title: selectedList.items[index].title,
+          //                 completed: selectedList.items[index].completed ?? false,
+          //                 listTitle: selectedList.items[index].listId ?? 'null listId',
+          //               );
+          //             }),
+          //           );
+          //         });
+          //   },
+          // ),
+        ),
+      ),
     );
   }
 }
