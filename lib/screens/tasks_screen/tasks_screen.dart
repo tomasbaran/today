@@ -143,14 +143,18 @@ class _TaskListState extends State<TaskList> {
           },
           child: NotificationListener<ScrollUpdateNotification>(
             onNotification: (notification2) {
+              if (notification2.metrics.atEdge) {
+                log('NO: atEdge: ${widget.parentController.offset}');
+              }
               double defaultParentHiddenPosition = widget.parentController.position.maxScrollExtent;
               // additional condition `widget.parentController.offset == defaultParentHiddenPosition` fixes a bug:
               // when the calendar was open/unlocked/not hidden and sometimes when scrolling back up, the app would finish the scroll itself — it would force the animation to hide the calendar instead of the manual scroll.
               // It felt as if a user lost control over the app.
               // The additinoal condition `widget.parentController.offset == defaultParentHiddenPosition` makes sure it detects the movement only when the calendar/header is locked.
+              // optimizing defaultParentHiddenPosition / 2 since sometimes it wouldn't detect even when the calendar was locked and had widget.parentController.offset something below the thrashold of defaultParentHiddenPosition
               if (_scrollDirection == ScrollDirection.forward &&
                   notification2.metrics.atEdge &&
-                  widget.parentController.offset == defaultParentHiddenPosition) {
+                  widget.parentController.offset > defaultParentHiddenPosition / 2) {
                 log('---LOCK----: ${widget.parentController.offset}');
                 print('child.position: ${notification2.metrics.pixels}; $_scrollDirection');
                 print('parent.position: ${widget.parentController.offset}');
