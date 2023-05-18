@@ -112,7 +112,7 @@ class _TaskListState extends State<TaskList> {
 
       delta = parentPosition - _previousOffset;
 
-      // BUG: scrollbug#2: most probably Flutter's bug
+      // BUG: scrollbug#2: most probably Flutter's bug. Possibly related to: https://github.com/flutter/flutter/issues/125006 
       // 1. scroll down to reveal the calendar
       // 2. hold the finger down while performing step A. and step B.
       // 2A. scroll even more down
