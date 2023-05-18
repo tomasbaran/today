@@ -138,32 +138,43 @@ class _TaskListState extends State<TaskList> {
         child: NotificationListener<UserScrollNotification>(
           onNotification: (notification) {
             _scrollDirection = notification.direction;
+            print('_scrollDirection: $_scrollDirection');
             return false;
           },
           child: NotificationListener<ScrollUpdateNotification>(
             onNotification: (notification2) {
-              print('child.position: ${notification2.metrics.pixels}; $_scrollDirection');
-
-              if (_scrollDirection == ScrollDirection.forward && notification2.metrics.atEdge) {
-                log('---LOCK----');
+              double defaultParentHiddenPosition = widget.parentController.position.maxScrollExtent;
+              // additional condition `widget.parentController.offset == defaultParentHiddenPosition` fixes a bug:
+              // when the calendar was open/unlocked/not hidden and sometimes when scrolling back up, the app would finish the scroll itself — it would force the animation to hide the calendar instead of the manual scroll.
+              // It felt as if a user lost control over the app.
+              // The additinoal condition `widget.parentController.offset == defaultParentHiddenPosition` makes sure it detects the movement only when the calendar/header is locked.
+              if (_scrollDirection == ScrollDirection.forward &&
+                  notification2.metrics.atEdge &&
+                  widget.parentController.offset == defaultParentHiddenPosition) {
+                log('---LOCK----: ${widget.parentController.offset}');
+                print('child.position: ${notification2.metrics.pixels}; $_scrollDirection');
+                print('parent.position: ${widget.parentController.offset}');
                 lockHeader = true;
                 lockParentController();
               }
 
               return false;
             },
+            // DEV-MODE: alt1
+            // child: ListView.builder(
+            //   itemBuilder: (_, index) => ListTile(
+            //     title: Text("index: ${index}"),
+            //   ),
+            // ),
+            // DEV-MODE: alt2
             child: ValueListenableBuilder<MyList>(
                 valueListenable: widgetManager.selectedList,
                 builder: (context, selectedList, child) {
-                  // DEV-MODE: alt1
-                  // child: ListView.builder(
-                  //   // shrinkWrap: true,
-                  //   // controller: ScrollController(),
+                  // return ListView.builder(
                   //   itemBuilder: (_, index) => ListTile(
                   //     title: Text("index: ${index}"),
                   //   ),
-                  // ),
-                  // DEV-MODE: alt2
+                  // );
                   return ListView.builder(
                     padding: EdgeInsets.fromLTRB(0, 52, 0, 40),
                     itemCount: selectedList.items.length,
@@ -181,30 +192,29 @@ class _TaskListState extends State<TaskList> {
                     }),
                   );
                 }),
+            // RELEASE-MODE:
+            // child: PageView.builder(
+            //   onPageChanged: (newPage) => widgetManager.changePage(pageController.page, newPage),
+            //   // controller: pageController,
+            //   itemBuilder: (context, index) {
+            //     return ValueListenableBuilder<MyList>(
+            //         valueListenable: widgetManager.selectedList,
+            //         builder: (context, selectedList, child) {
+            //           return ListView.builder(
+            //             padding: EdgeInsets.fromLTRB(0, 52, 0, 40),
+            //             itemCount: selectedList.items.length,
+            //             itemBuilder: ((context, index) {
+            //               return TaskCard(
+            //                 key: Key(selectedList.items[index].dateIndex.toString()),
+            //                 title: selectedList.items[index].title,
+            //                 completed: selectedList.items[index].completed ?? false,
+            //                 listTitle: selectedList.items[index].listId ?? 'null listId',
+            //               );
+            //             }),
+            //           );
+            //         });
+            //   },
           ),
-          // RELEASE-MODE:
-          // child: PageView.builder(
-          //   onPageChanged: (newPage) => widgetManager.changePage(pageController.page, newPage),
-          //   // controller: pageController,
-          //   itemBuilder: (context, index) {
-          //     return ValueListenableBuilder<MyList>(
-          //         valueListenable: widgetManager.selectedList,
-          //         builder: (context, selectedList, child) {
-          //           return ListView.builder(
-          //             padding: EdgeInsets.fromLTRB(0, 52, 0, 40),
-          //             itemCount: selectedList.items.length,
-          //             itemBuilder: ((context, index) {
-          //               return TaskCard(
-          //                 key: Key(selectedList.items[index].dateIndex.toString()),
-          //                 title: selectedList.items[index].title,
-          //                 completed: selectedList.items[index].completed ?? false,
-          //                 listTitle: selectedList.items[index].listId ?? 'null listId',
-          //               );
-          //             }),
-          //           );
-          //         });
-          //   },
-          // ),
         ),
       ),
     );
