@@ -11,7 +11,6 @@ import 'package:today/services/task_service.dart';
 import 'package:today/constants.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/sliver_app_bar_widget.dart';
-import 'package:extended_nested_scroll_view/extended_nested_scroll_view.dart';
 
 import 'package:today/widgets/task_card.dart';
 
@@ -103,10 +102,29 @@ class _TaskListState extends State<TaskList> {
     });
   }
 
+  double _previousOffset = 324;
+  double delta = 0;
+
   @override
   void initState() {
     widget.parentController.addListener(() async {
       double parentPosition = widget.parentController.offset;
+
+      delta = parentPosition - _previousOffset;
+
+      // BUG: scrollbug#2: most probably Flutter's bug
+      // 1. scroll down to reveal the calendar
+      // 2. hold the finger down while performing step A. and step B.
+      // 2A. scroll even more down
+      // 2B. scroll fast up like 100-200px
+      // 3. This should throw the delta error
+      // 4. After which will return the Calendar/header back to reveal it which creates a flicker
+      if (delta < -100) {
+        log('delta: $delta');
+        throw 'delta>100';
+      }
+
+      _previousOffset = parentPosition;
 
       if (parentPosition == 0) {
         lockHeader = false;
@@ -143,9 +161,15 @@ class _TaskListState extends State<TaskList> {
           },
           child: NotificationListener<ScrollUpdateNotification>(
             onNotification: (notification2) {
-              if (notification2.metrics.atEdge) {
-                log('NO: atEdge: ${widget.parentController.offset}');
-              }
+              // DEV-MODE: to analyze scrollbug#2
+              // if (notification2.metrics.pixels > 0) {
+              //   log('child.pixels: ${notification2.metrics.pixels}');
+              // } else {
+              //   print('child.offset: ${notification2.metrics.pixels}');
+              // }
+              // if (notification2.metrics.atEdge) {
+              //   log('NO: atEdge; parent.offset: ${widget.parentController.offset}');
+              // }
               double defaultParentHiddenPosition = widget.parentController.position.maxScrollExtent;
               // additional condition `widget.parentController.offset == defaultParentHiddenPosition` fixes a bug:
               // when the calendar was open/unlocked/not hidden and sometimes when scrolling back up, the app would finish the scroll itself — it would force the animation to hide the calendar instead of the manual scroll.
