@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:today/constants.dart';
@@ -91,15 +93,35 @@ class TaskListContainer extends StatelessWidget {
                 return ValueListenableBuilder<MyList>(
                     valueListenable: widgetManager.selectedList,
                     builder: (context, selectedList, child) {
-                      return ListView.builder(
+                      return ReorderableListView.builder(
+                        proxyDecorator: (child, index, animation) {
+                          return AnimatedBuilder(
+                            animation: animation,
+                            builder: (BuildContext context, Widget? child) {
+                              final double animValue = Curves.easeOut.transform(animation.value);
+                              final double elevation = lerpDouble(1, 6, animValue)!;
+                              final scale = lerpDouble(1, 1.02, animValue)!;
+                              print('animValue: $animValue');
+                              return Transform.scale(
+                                scale: scale,
+                                child: TaskCard(
+                                  elevation: elevation,
+                                  task: selectedList.items[index],
+                                  listTitle: selectedList.items[index].listId,
+                                ),
+                              );
+                            },
+                            child: child,
+                          );
+                        },
+                        onReorder: (oldIndex, newIndex) => print('h'),
                         padding: const EdgeInsets.fromLTRB(0, 52, 0, 40),
                         itemCount: selectedList.items.length,
                         itemBuilder: ((context, index) {
                           return TaskCard(
-                            key: Key(selectedList.items[index].dateIndex.toString()),
-                            title: selectedList.items[index].title,
-                            completed: selectedList.items[index].completed ?? false,
-                            listTitle: selectedList.items[index].listId ?? 'null listId',
+                            key: Key(selectedList.items[index].title),
+                            task: selectedList.items[index],
+                            listTitle: selectedList.items[index].listId,
                           );
                         }),
                       );

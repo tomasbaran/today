@@ -1,27 +1,27 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:today/models/my_task.dart';
 
 class TaskCard extends StatelessWidget {
-  final String title;
-  // final String position;
-  final bool completed;
-  final String listTitle;
+  final String? listTitle;
+  final double elevation;
+  final MyTask task;
   const TaskCard({
+    required this.task,
     super.key,
-    required this.title,
-    required this.completed,
-    required this.listTitle,
+    this.listTitle,
+    this.elevation = 0,
     // required this.position,
   });
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      elevation: elevation,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      shadowColor: Colors.transparent,
       child: Container(
-        color: completed ? Colors.black12 : null,
+        color: task.completed ? Colors.black12 : null,
         height: 68,
         child: Stack(children: [
           Padding(
@@ -29,11 +29,11 @@ class TaskCard extends StatelessWidget {
             child: Align(
               alignment: Alignment.topLeft,
               child: Text(
-                title,
+                task.title,
                 style: TextStyle(
                   fontSize: 16,
-                  color: completed ? Colors.black54 : null,
-                  decoration: completed ? TextDecoration.lineThrough : null,
+                  color: task.completed ? Colors.black54 : null,
+                  decoration: task.completed ? TextDecoration.lineThrough : null,
                 ),
               ),
             ),
@@ -43,7 +43,7 @@ class TaskCard extends StatelessWidget {
             child: Container(
               // color: Colors.pink,
               child: Checkbox(
-                value: completed,
+                value: task.completed,
                 onChanged: null,
               ),
             ),
@@ -53,7 +53,7 @@ class TaskCard extends StatelessWidget {
             child: Align(
               alignment: Alignment.bottomRight,
               child: Text(
-                listTitle,
+                listTitle ?? '',
               ),
             ),
           ),

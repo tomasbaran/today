@@ -2,7 +2,7 @@ class MyTask {
   String id;
   String title;
   String? listId;
-  bool? completed;
+  bool completed;
   DateTime? createdOn;
   DateTime? scheduledFor;
   int? dateIndex;
@@ -11,7 +11,7 @@ class MyTask {
     required this.id,
     required this.title,
     this.dateIndex,
-    this.completed,
+    this.completed = false,
     this.createdOn,
     this.listId,
     this.listIndex,
