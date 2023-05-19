@@ -11,7 +11,7 @@ class ExpandedAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return ClipRect(
       child: Padding(
-        padding: EdgeInsets.only(left: 28, right: 28, top: 40, bottom: 28),
+        padding: EdgeInsets.only(left: 28, right: 28, top: 36, bottom: 28),
         child: Wrap(
           children: [
             TableCalendar(

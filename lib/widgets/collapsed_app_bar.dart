@@ -19,7 +19,7 @@ class CollapsedAppBar extends StatelessWidget {
             valueListenable: tasksScreenManager.selectedList,
             builder: ((_, selectedList, __) => Text(
                   selectedList.title ?? '...',
-                  style: TextStyle(color: Colors.blue),
+                  style: const TextStyle(color: Colors.black),
                 )),
           ),
         ],
