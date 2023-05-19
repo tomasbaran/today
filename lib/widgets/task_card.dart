@@ -18,6 +18,8 @@ class TaskCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      shadowColor: Colors.transparent,
       child: Container(
         color: completed ? Colors.black12 : null,
         height: 68,

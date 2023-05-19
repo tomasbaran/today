@@ -4,6 +4,7 @@ import 'package:today/constants.dart';
 import 'package:today/models/my_list.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
+import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/task_card.dart';
 
 class TaskListContainer extends StatelessWidget {
@@ -62,6 +63,7 @@ class TaskListContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     ScrollDirection? scrollDirection;
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.only(top: kToolbarHeight + 3),
         child: NotificationListener<UserScrollNotification>(
