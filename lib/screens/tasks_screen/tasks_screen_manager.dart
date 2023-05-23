@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/foundation.dart';
@@ -40,34 +39,19 @@ class TasksScreenManager {
     TaskService().addTask(date: date);
   }
 
-  bool reorderIsUpdating = false;
-  // REFACTOR#1: Is Future,async,await necessary?
-  // REFACTOR#1: Is reorderIsUpdating necessary?
-  Future reorderList(int oldIndex, int newIndex) async {
-    reorderIsUpdating = true;
-
+  reorderList(int oldIndex, int newIndex) {
     if (newIndex < oldIndex) {
       newIndex = newIndex + 1;
     }
     final element = selectedList.value.tasks.removeAt(oldIndex);
     selectedList.value.tasks.insert(newIndex, element);
-
     log('reordered List: ${selectedList.value}');
 
-    await TaskService().updateList(selectedList.value);
-
-    reorderIsUpdating = false;
+    TaskService().updateList(selectedList.value);
   }
 
   getList({DateTime? date, String? listId}) {
     TaskService().getList(date: date)?.onData((data) async {
-      // REFACTOR#1: Is reorderIsUpdating necessary?
-      // don't update the screen nor the list while the reordering is happening
-      while (reorderIsUpdating) {
-        await Future.delayed(const Duration(milliseconds: 100));
-        print('waiting');
-      }
-
       MyList myList = MyList();
       if (date != null) {
         myList.title = date.toString();

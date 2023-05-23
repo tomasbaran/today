@@ -36,16 +36,16 @@ class TaskService {
     }
   }
 
-  // REFACTOR#1: Is Future,async,await necessary?
-  Future updateList(MyList updatedList) async {
+  updateList(MyList updatedList) {
+    // REFACTOR#3 check if the user is signedIn in a separate function
     if (auth.currentUser != null) {
       String uid = auth.currentUser!.uid;
       final DocumentReference<Map<String, dynamic>> listDocRef;
       listDocRef = db.collection("users").doc(uid).collection('date_lists').doc(updatedList.id);
 
       log('updatedList.tasks: ${updatedList.tasks}');
-// REFACTOR#1: make separate functions for formatting from db->local and viceversa
-//REFACTOR#1 also implement for adding a new task
+// REFACTOR#2: make separate functions for formatting from db->local and viceversa
+//REFACTOR#2 also implement for adding a new task
 //   // TODO: whenever a task has a new field, it has to be added here, so it is reflected upon reordering
       List<Map> formattedTasks = [];
       Map formattedTask;
@@ -60,7 +60,7 @@ class TaskService {
 
       log('formattedTasks: $formattedTasks');
 
-      await listDocRef.update({'tasks': formattedTasks});
+      listDocRef.update({'tasks': formattedTasks});
     }
   }
 
