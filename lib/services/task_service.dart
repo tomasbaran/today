@@ -10,15 +10,13 @@ class TaskService {
   final db = FirebaseFirestore.instance;
   String? uid = Auth().uid;
 
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? getList({
-    DateTime? date,
-    String? listId,
-  }) {
-    if (uid != null) {
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? getList({DateTime? date, String? listId}) {
+    if (uid == null) {
+      throw ('Error #2[getting list]: User not signed in.');
+    } else {
       final listDocRef;
       if (date != null) {
         String listDateId = '${date.year}-${date.month}-${date.day}_$uid';
-        // print(listDateId);
         listDocRef = db.collection("users").doc(uid).collection('date_lists').doc(listDateId);
       } else {
         listDocRef = db.collection("users").doc(uid).collection('lists').doc(listId);
@@ -30,13 +28,13 @@ class TaskService {
         },
         onError: (error) => log("Error #4: Listen failed: $error"),
       );
-    } else {
-      throw ('Error #2: User not signed in.');
     }
   }
 
   updateList(MyList updatedList) {
-    if (uid != null) {
+    if (uid == null) {
+      throw ('Error #6[updating task]: User not signed in.');
+    } else {
       final DocumentReference<Map<String, dynamic>> listDocRef;
       listDocRef = db.collection("users").doc(uid).collection('date_lists').doc(updatedList.id);
 
@@ -62,7 +60,9 @@ class TaskService {
   }
 
   addTask({DateTime? date, String? listId}) {
-    if (uid != null) {
+    if (uid == null) {
+      throw ('Error #1[adding task]: User not signed in.');
+    } else {
       final DocumentReference<Map<String, dynamic>> listDocRef;
       final String listTitle;
       if (date != null) {
@@ -91,8 +91,6 @@ class TaskService {
         // TODO: Handle error with screen notification
         print('Error #3 adding a task:$e');
       });
-    } else {
-      throw ('Error #1: User not signed in.');
     }
   }
 }

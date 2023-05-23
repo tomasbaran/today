@@ -52,6 +52,7 @@ class TasksScreenManager {
 
   getList({DateTime? date, String? listId}) {
     TaskService().getList(date: date)?.onData((data) async {
+      // REFACTOR#5 separate function to get the title,id: either from dateList or list
       MyList myList = MyList();
       if (date != null) {
         myList.title = date.toString();
@@ -61,8 +62,12 @@ class TasksScreenManager {
       if (listId != null) {
         myList.title = listId;
       }
+
       final Map<String, dynamic>? dbList = data.data();
-      if (dbList != null) {
+      if (dbList == null) {
+        // there are no tasks for that day assigned (yet)
+        print('no tasks for that day');
+      } else {
         List dbTasks = dbList['tasks'];
         dbTasks.asMap().forEach((key, value) {
           MyTask task = MyTask(
@@ -73,9 +78,6 @@ class TasksScreenManager {
           myList.tasks.add(task);
           print('loadedTask as Map: ${task}');
         });
-      } else {
-        // else there are no tasks for that day assigned (yet)
-        print('no tasks for that day');
       }
       selectedList.value = myList;
     });

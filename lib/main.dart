@@ -17,7 +17,7 @@ void main() async {
   await Firebase.initializeApp();
 
   // DEV-MODE:
-  if (FirebaseAuth.instance.currentUser != null) {
+  if (Auth().uid != null) {
     // check whether the user is signed in
     log(
       time: DateTime.now(),
