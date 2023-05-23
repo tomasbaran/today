@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -89,41 +90,51 @@ class TaskListContainer extends StatelessWidget {
             child: PageView.builder(
               onPageChanged: (newPage) => widgetManager.changePage(pageController.page, newPage),
               controller: pageController,
-              itemBuilder: (context, index) {
+              itemBuilder: (____, pageIndex) {
                 return ValueListenableBuilder<MyList>(
                     valueListenable: widgetManager.selectedList,
-                    builder: (context, selectedList, child) {
+                    builder: (_, pageList, __) {
+                      log('selectedList: ${widgetManager.selectedList.value.id}');
                       return ReorderableListView.builder(
-                        proxyDecorator: (child, index, animation) {
+                        padding: const EdgeInsets.fromLTRB(0, 52, 0, 40),
+                        itemCount: pageList.tasks.length,
+                        itemBuilder: ((___, taskIndex) {
+                          // reversedIndex is to show the newest task on top of the list
+                          int reversedIndex = pageList.tasks.length - 1 - taskIndex;
+                          return TaskCard(
+                            key: Key(reversedIndex.toString()),
+                            task: pageList.tasks[reversedIndex],
+                            listTitle: pageList.tasks[reversedIndex].listId,
+                          );
+                        }),
+                        // possible bugfix of scrollbug#2 by utilizing the below scrollController instead of using PageView's NotificationListener
+                        // scrollController: ,
+                        proxyDecorator: (_, taskIndex, animation) {
+                          // reversedIndex is to show the newest task on top of the list
+                          int reversedIndex = pageList.tasks.length - 1 - taskIndex;
                           return AnimatedBuilder(
                             animation: animation,
-                            builder: (BuildContext context, Widget? child) {
+                            builder: (_, __) {
                               final double animValue = Curves.easeOut.transform(animation.value);
                               final double elevation = lerpDouble(1, 6, animValue)!;
                               final scale = lerpDouble(1, 1.02, animValue)!;
-                              print('animValue: $animValue');
                               return Transform.scale(
                                 scale: scale,
                                 child: TaskCard(
                                   elevation: elevation,
-                                  task: selectedList.items[index],
-                                  listTitle: selectedList.items[index].listId,
+                                  task: pageList.tasks[reversedIndex],
+                                  listTitle: pageList.tasks[reversedIndex].listId,
                                 ),
                               );
                             },
-                            child: child,
+                            // child: child,
                           );
                         },
-                        onReorder: (oldIndex, newIndex) => print('h'),
-                        padding: const EdgeInsets.fromLTRB(0, 52, 0, 40),
-                        itemCount: selectedList.items.length,
-                        itemBuilder: ((context, index) {
-                          return TaskCard(
-                            key: Key(selectedList.items[index].title),
-                            task: selectedList.items[index],
-                            listTitle: selectedList.items[index].listId,
-                          );
-                        }),
+                        onReorder: (oldIndex, newIndex) {
+                          int reversedOldIndex = pageList.tasks.length - 1 - oldIndex;
+                          int reversedNewIndex = pageList.tasks.length - 1 - newIndex;
+                          widgetManager.reorderList(reversedOldIndex, reversedNewIndex);
+                        },
                       );
                     });
               },

@@ -22,14 +22,14 @@ class CalendarService {
     MyList myList = MyList(
       title: 'Todayyy',
     );
-    MyTask myTask = MyTask(id: 'id0', title: 'Title', dateIndex: 0);
-    myList.items.add(myTask);
+    // MyTask myTask = MyTask(id: 'id0', title: 'Title', dateIndex: 0);
+    // myList.items.add(myTask);
 
-    myTask = MyTask(id: 'id1', title: 'Title 2', dateIndex: 1);
-    myList.items.add(myTask);
+    // myTask = MyTask(id: 'id1', title: 'Title 2', dateIndex: 1);
+    // myList.items.add(myTask);
 
-    myTask = MyTask(id: 'id2', title: 'Title 3', dateIndex: 2);
-    myList.items.add(myTask);
+    // myTask = MyTask(id: 'id2', title: 'Title 3', dateIndex: 2);
+    // myList.items.add(myTask);
 
     return myList;
 

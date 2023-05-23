@@ -33,9 +33,7 @@ class _TasksScreenState extends State<TasksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          TaskService().addTask(date: widgetManager.selectedDate.value);
-        },
+        onPressed: () => widgetManager.addTask(date: widgetManager.selectedDate.value),
         label: const Text('+ Add task'),
       ),
       body: NestedScrollView(

@@ -6,15 +6,24 @@ class MyTask {
   DateTime? createdOn;
   DateTime? scheduledFor;
   int? dateIndex;
-  int? listIndex;
+  int key;
+  // DEV-MODE: listIndex
+  // int listIndex;
   MyTask({
+    required this.key,
     required this.id,
     required this.title,
     this.dateIndex,
     this.completed = false,
     this.createdOn,
     this.listId,
-    this.listIndex,
+    // DEV-MODE: listIndex
+    // required this.listIndex,
     this.scheduledFor,
   });
+
+  @override
+  String toString() {
+    return '[$key] $title: $completed';
+  }
 }

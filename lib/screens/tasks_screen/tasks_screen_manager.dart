@@ -16,7 +16,6 @@ class TodayScreenManager {
 
   changePage(double? oldPageIndex, int newPageIndex) {
     print('$oldPageIndex -> $newPageIndex');
-
     if (oldPageIndex != null) {
       if (newPageIndex.toDouble() > oldPageIndex) {
         showNextDay();
@@ -41,34 +40,83 @@ class TodayScreenManager {
     getList(date: selectedDate.value);
   }
 
-  addTask({DateTime? date, String? listId}) {}
+  addTask({DateTime? date}) {
+    TaskService().addTask(date: date);
+  }
+
+  bool reorderIsUpdating = false;
+  // REFACTOR#1: Is Future,async,await necessary?
+  // REFACTOR#1: Is reorderIsUpdating necessary?
+  Future reorderList(int oldIndex, int newIndex) async {
+    reorderIsUpdating = true;
+
+    if (newIndex < oldIndex) {
+      newIndex = newIndex + 1;
+    }
+    final element = selectedList.value.tasks.removeAt(oldIndex);
+    selectedList.value.tasks.insert(newIndex, element);
+
+    log('reordered List: ${selectedList.value}');
+
+    await TaskService().updateList(selectedList.value);
+
+    reorderIsUpdating = false;
+  }
 
   getList({DateTime? date, String? listId}) {
-    TaskService().getList(date: date)?.onData((data) {
+    TaskService().getList(date: date)?.onData((data) async {
+      // REFACTOR#1: Is reorderIsUpdating necessary?
+      // don't update the screen nor the list while the reordering is happening
+      while (reorderIsUpdating) {
+        await Future.delayed(const Duration(milliseconds: 100));
+        print('waiting');
+      }
       MyList myList = MyList();
       if (date != null) {
-        log('getList for: $date');
         myList.title = date.toString();
+        myList.id = data.id;
       }
 
       if (listId != null) {
         myList.title = listId;
       }
-      final dbList = data.data();
+      final Map<String, dynamic>? dbList = data.data();
 
       if (dbList != null && dbList.isNotEmpty) {
-        print('listData: $dbList');
-        for (var dbTask in dbList['tasks']) {
-          print('dbTask: $dbTask');
-          myList.items.add(MyTask(
-            id: dbTask['id'],
-            title: dbTask['title'],
-          ));
-        }
+        // print('getList.onData: $dbList');
+        // for (final dbTask in dbList['tasks']) {
+        //   // print('readTask: $dbTask');
+        //   myList.items.add(MyTask(
+        //     // listId: ,
+        //     key: dbTask,
+        //     id: dbTask['id'],
+        //     title: dbTask['title'],
+        //     // DEV-MODE: listIndex
+        //     // listIndex: dbTask['list_index'],
+        //   ));
+        //   print('loadedTask: ${myList.items.last}');
+        // }
+
+        // ------------------START
+        List dbTasks = dbList['tasks'];
+
+        dbTasks.asMap().forEach((key, value) {
+          MyTask task = MyTask(
+            key: key,
+            id: value['id'],
+            title: value['title'],
+          );
+          myList.tasks.add(task);
+          print('loadedTask as Map: ${task}');
+        });
+        // -------------------END
       } else {
         // else there are no tasks for that day assigned (yet)
         print('no tasks for that day');
       }
+      // DEV-MODE: listIndex
+      // orderBy `listIndex`
+      // myList.items.sort((a, b) => b.listIndex.compareTo(a.listIndex));
       selectedList.value = myList;
     });
   }
