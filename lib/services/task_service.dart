@@ -4,18 +4,17 @@ import 'dart:math' as math;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:today/models/my_list.dart';
+import 'package:today/services/auth.dart';
 
 class TaskService {
   final db = FirebaseFirestore.instance;
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  String? uid = Auth().uid;
 
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? getList({
     DateTime? date,
     String? listId,
   }) {
-    if (auth.currentUser != null) {
-      String uid = auth.currentUser!.uid;
-
+    if (uid != null) {
       final listDocRef;
       if (date != null) {
         String listDateId = '${date.year}-${date.month}-${date.day}_$uid';
@@ -37,9 +36,7 @@ class TaskService {
   }
 
   updateList(MyList updatedList) {
-    // REFACTOR#3 check if the user is signedIn in a separate function
-    if (auth.currentUser != null) {
-      String uid = auth.currentUser!.uid;
+    if (uid != null) {
       final DocumentReference<Map<String, dynamic>> listDocRef;
       listDocRef = db.collection("users").doc(uid).collection('date_lists').doc(updatedList.id);
 
@@ -65,8 +62,7 @@ class TaskService {
   }
 
   addTask({DateTime? date, String? listId}) {
-    if (auth.currentUser != null) {
-      String uid = auth.currentUser!.uid;
+    if (uid != null) {
       final DocumentReference<Map<String, dynamic>> listDocRef;
       final String listTitle;
       if (date != null) {

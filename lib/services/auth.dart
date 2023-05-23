@@ -10,6 +10,7 @@ import 'package:today/screens/tasks_screen/tasks_screen.dart';
 class Auth {
   // creating firebase instance
   final FirebaseAuth auth = FirebaseAuth.instance;
+  String? get uid => auth.currentUser?.uid;
 
   GoogleSignIn googleSignIn = GoogleSignIn(
     scopes: <String>[CalendarApi.calendarScope, TasksApi.tasksScope],

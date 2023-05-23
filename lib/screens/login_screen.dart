@@ -41,8 +41,10 @@ class _LoginScreenState extends State<LoginScreen> {
               ),
               SignInButton(Buttons.GoogleDark, onPressed: () async {
                 await Auth().signInWithGoogle(context);
-                if (FirebaseAuth.instance.currentUser != null) {
+                if (Auth().uid != null) {
                   if (context.mounted) Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => TasksScreen()));
+                } else {
+                  throw 'Error #5: unable to signInWithGoogle';
                 }
               }),
             ],
