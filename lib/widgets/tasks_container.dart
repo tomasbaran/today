@@ -1,3 +1,4 @@
+
 import 'dart:developer';
 import 'dart:ui';
 
@@ -10,11 +11,14 @@ import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/task_card.dart';
 
-class TaskListContainer extends StatelessWidget {
+class TasksContainer extends StatelessWidget {
   final ScrollController parentController;
-  TaskListContainer({required this.parentController});
+  TasksContainer({
+    Key? key,
+    required this.parentController,
+  }) : super(key: key);
 
-  final widgetManager = getIt<TodayScreenManager>();
+  final widgetManager = getIt<TasksScreenManager>();
 
   final pageController = PageController(initialPage: todayIndex, viewportFraction: 0.95);
 
@@ -94,7 +98,7 @@ class TaskListContainer extends StatelessWidget {
                 return ValueListenableBuilder<MyList>(
                     valueListenable: widgetManager.selectedList,
                     builder: (_, pageList, __) {
-                      log('selectedList: ${widgetManager.selectedList.value.id}');
+                      log('selectedList: ${widgetManager.selectedList.value}');
                       return ReorderableListView.builder(
                         padding: const EdgeInsets.fromLTRB(0, 52, 0, 40),
                         itemCount: pageList.tasks.length,

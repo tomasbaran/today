@@ -29,7 +29,7 @@ class TaskService {
         (event) {
           log('event: $event;${event.data()}');
         },
-        onError: (error) => print("Listen failed: $error"),
+        onError: (error) => log("Error #4: Listen failed: $error"),
       );
     } else {
       throw ('Error #2: User not signed in.');
@@ -80,7 +80,7 @@ class TaskService {
         listTitle = 'listTitle';
         listDocRef = db.collection("users").doc(uid).collection('lists').doc(listId);
       }
-
+      // REFACTOR#2: add newTask via functions that convert local MyTask -> formatted dbMyTask
       final newTask = <String, dynamic>{
         'id': 'id3',
         'title': 'My Title ' + math.Random().nextInt(20).toString(),

@@ -4,5 +4,5 @@ import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 final getIt = GetIt.instance;
 
 void setupGetIt() {
-  getIt.registerLazySingleton<TodayScreenManager>(() => TodayScreenManager());
+  getIt.registerLazySingleton<TasksScreenManager>(() => TasksScreenManager());
 }

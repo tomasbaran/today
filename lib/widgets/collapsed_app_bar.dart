@@ -8,7 +8,7 @@ class CollapsedAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tasksScreenManager = getIt<TodayScreenManager>();
+    final tasksScreenManager = getIt<TasksScreenManager>();
     return AppBar(
       backgroundColor: kBackgroundColor,
       shadowColor: Colors.transparent,

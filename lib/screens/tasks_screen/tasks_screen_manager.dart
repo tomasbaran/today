@@ -6,7 +6,7 @@ import 'package:today/models/my_task.dart';
 import 'package:today/models/my_list.dart';
 import 'package:today/services/task_service.dart';
 
-class TodayScreenManager {
+class TasksScreenManager {
   final selectedList = ValueNotifier<MyList>(MyList());
   final selectedDate = ValueNotifier<DateTime>(DateTime.now());
 
@@ -67,6 +67,7 @@ class TodayScreenManager {
         await Future.delayed(const Duration(milliseconds: 100));
         print('waiting');
       }
+
       MyList myList = MyList();
       if (date != null) {
         myList.title = date.toString();
@@ -77,8 +78,7 @@ class TodayScreenManager {
         myList.title = listId;
       }
       final Map<String, dynamic>? dbList = data.data();
-
-      if (dbList != null && dbList.isNotEmpty) {
+      if (dbList != null) {
         List dbTasks = dbList['tasks'];
         dbTasks.asMap().forEach((key, value) {
           MyTask task = MyTask(

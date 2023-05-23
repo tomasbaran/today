@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
-import 'package:today/services/task_service.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/sliver_app_bar_widget.dart';
-import 'package:today/widgets/task_list_container.dart';
+import 'package:today/widgets/tasks_container.dart';
 
 class TasksScreen extends StatefulWidget {
   final DateTime? date;
@@ -20,8 +19,7 @@ class TasksScreen extends StatefulWidget {
 }
 
 class _TasksScreenState extends State<TasksScreen> {
-  final widgetManager = getIt<TodayScreenManager>();
-
+  final widgetManager = getIt<TasksScreenManager>();
   @override
   void initState() {
     super.initState();
@@ -51,7 +49,7 @@ class _TasksScreenState extends State<TasksScreen> {
             ),
           ];
         },
-        body: TaskListContainer(parentController: parentScrollController),
+        body: TasksContainer(parentController: parentScrollController),
       ),
     );
   }
