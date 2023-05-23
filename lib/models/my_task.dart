@@ -7,8 +7,6 @@ class MyTask {
   DateTime? scheduledFor;
   int? dateIndex;
   int key;
-  // DEV-MODE: listIndex
-  // int listIndex;
   MyTask({
     required this.key,
     required this.id,
@@ -17,8 +15,6 @@ class MyTask {
     this.completed = false,
     this.createdOn,
     this.listId,
-    // DEV-MODE: listIndex
-    // required this.listIndex,
     this.scheduledFor,
   });
 

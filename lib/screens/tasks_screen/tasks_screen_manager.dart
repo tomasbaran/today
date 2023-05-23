@@ -1,13 +1,9 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
-import 'package:googleapis/tasks/v1.dart';
 import 'package:today/models/my_task.dart';
 import 'package:today/models/my_list.dart';
-import 'package:today/services/calendar_service.dart';
 import 'package:today/services/task_service.dart';
 
 class TodayScreenManager {
@@ -83,23 +79,7 @@ class TodayScreenManager {
       final Map<String, dynamic>? dbList = data.data();
 
       if (dbList != null && dbList.isNotEmpty) {
-        // print('getList.onData: $dbList');
-        // for (final dbTask in dbList['tasks']) {
-        //   // print('readTask: $dbTask');
-        //   myList.items.add(MyTask(
-        //     // listId: ,
-        //     key: dbTask,
-        //     id: dbTask['id'],
-        //     title: dbTask['title'],
-        //     // DEV-MODE: listIndex
-        //     // listIndex: dbTask['list_index'],
-        //   ));
-        //   print('loadedTask: ${myList.items.last}');
-        // }
-
-        // ------------------START
         List dbTasks = dbList['tasks'];
-
         dbTasks.asMap().forEach((key, value) {
           MyTask task = MyTask(
             key: key,
@@ -109,14 +89,10 @@ class TodayScreenManager {
           myList.tasks.add(task);
           print('loadedTask as Map: ${task}');
         });
-        // -------------------END
       } else {
         // else there are no tasks for that day assigned (yet)
         print('no tasks for that day');
       }
-      // DEV-MODE: listIndex
-      // orderBy `listIndex`
-      // myList.items.sort((a, b) => b.listIndex.compareTo(a.listIndex));
       selectedList.value = myList;
     });
   }
