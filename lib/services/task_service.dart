@@ -7,20 +7,21 @@ import 'package:today/services/auth.dart';
 import 'package:logger/logger.dart';
 
 class TaskService {
-  final db = FirebaseFirestore.instance;
-  String? uid = Auth().uid;
+  final _db = FirebaseFirestore.instance;
+  final String? _uid = Auth().uid;
 
-  // REFACTOR: ? maybe better have two seperate functions: getListByDate, getListById
+  // REFACTOR #100: ? maybe better have two seperate functions: getListByDate, getListById
   StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? getListByDate({DateTime? date, String? listId}) {
-    if (uid == null) {
+    if (_uid == null) {
       throw ('Error #2[getting list]: User not signed in.');
     } else {
-      final listDocRef;
+      final DocumentReference<Map<String, dynamic>> listDocRef;
+      // REFACTOR #100: ? maybe better have two seperate functions: getListByDate, getListById
       if (date != null) {
-        String listDateId = '${date.year}-${date.month}-${date.day}_$uid';
-        listDocRef = db.collection("users").doc(uid).collection('date_lists').doc(listDateId);
+        String listDateId = '${date.year}-${date.month}-${date.day}_$_uid';
+        listDocRef = _db.collection("users").doc(_uid).collection('date_lists').doc(listDateId);
       } else {
-        listDocRef = db.collection("users").doc(uid).collection('lists').doc(listId);
+        listDocRef = _db.collection("users").doc(_uid).collection('id_lists').doc(listId);
       }
 
       return listDocRef.snapshots().listen(
@@ -36,11 +37,11 @@ class TaskService {
   }
 
   updateList(MyList updatedList) {
-    if (uid == null) {
+    if (_uid == null) {
       throw ('Error #6[updating task]: User not signed in.');
     } else {
       final DocumentReference<Map<String, dynamic>> listDocRef;
-      listDocRef = db.collection("users").doc(uid).collection('date_lists').doc(updatedList.id);
+      listDocRef = _db.collection("users").doc(_uid).collection('date_lists').doc(updatedList.id);
 
       log('updatedList.tasks: ${updatedList.tasks}');
 // REFACTOR#2: make separate functions for formatting from db->local and viceversa
@@ -65,15 +66,13 @@ class TaskService {
   }
 
   addTaskToDateList(DateTime date) {
-    if (uid == null) {
+    if (_uid == null) {
       throw ('Error #1[adding task]: User not signed in.');
     } else {
       final DocumentReference<Map<String, dynamic>> listDocRef;
-      final String listTitle;
 
-      listTitle = '${date.year}-${date.month}-${date.day}';
-      String listDateId = '${date.year}-${date.month}-${date.day}_$uid';
-      listDocRef = db.collection("users").doc(uid).collection('date_lists').doc(listDateId);
+      String listDateId = '${date.year}-${date.month}-${date.day}_$_uid';
+      listDocRef = _db.collection("users").doc(_uid).collection('date_lists').doc(listDateId);
       log('listDocRef: ${listDocRef.path}');
 
       // REFACTOR#2: add newTask via functions that convert local MyTask -> formatted dbMyTask

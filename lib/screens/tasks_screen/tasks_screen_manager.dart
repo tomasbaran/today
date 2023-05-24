@@ -24,12 +24,12 @@ class TasksScreenManager {
   }
 
   showNextDay() {
-    selectedDate.value = selectedDate.value.add(Duration(days: 1));
+    selectedDate.value = selectedDate.value.add(const Duration(days: 1));
     getListBySelectedDate();
   }
 
   showPreviousDay() {
-    selectedDate.value = selectedDate.value.subtract(Duration(days: 1));
+    selectedDate.value = selectedDate.value.subtract(const Duration(days: 1));
     getListBySelectedDate();
   }
 
@@ -49,17 +49,13 @@ class TasksScreenManager {
   }
 
   getListBySelectedDate() {
-    DateTime date = selectedDate.value;
-    TaskService().getListByDate(date: date)?.onData((data) {
+    TaskService().getListByDate(date: selectedDate.value)?.onData((data) {
       MyList myList = MyList();
-      myList.title = date.toString();
+      myList.title = selectedDate.value.toString();
       myList.id = data.id;
-
-      selectedList.value.title = date.toString();
 
       final Map<String, dynamic>? dbList = data.data();
       log('newData!');
-      // TODO: follow up
       if (dbList == null) {
         // there are no tasks for that day assigned (yet)
         print('no tasks for that day');
