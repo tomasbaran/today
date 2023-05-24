@@ -45,11 +45,11 @@ class TasksScreenManager {
     selectedList.value.tasks.insert(newIndex, element);
     log('reordered List: ${selectedList.value}');
 
-    TaskService().updateList(selectedList.value);
+    TaskService().updateDateList(selectedList.value);
   }
 
   getListBySelectedDate() {
-    TaskService().getListByDate(date: selectedDate.value)?.onData((data) {
+    TaskService().getDateList(date: selectedDate.value)?.onData((data) {
       MyList myList = MyList();
       myList.title = selectedDate.value.toString();
       myList.id = data.id;

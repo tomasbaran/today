@@ -11,7 +11,7 @@ class TaskService {
   final String? _uid = Auth().uid;
 
   // REFACTOR #100: ? maybe better have two seperate functions: getListByDate, getListById
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? getListByDate({DateTime? date, String? listId}) {
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? getDateList({DateTime? date, String? listId}) {
     if (_uid == null) {
       throw ('Error #2[getting list]: User not signed in.');
     } else {
@@ -36,7 +36,7 @@ class TaskService {
     }
   }
 
-  updateList(MyList updatedList) {
+  updateDateList(MyList updatedList) {
     if (_uid == null) {
       throw ('Error #6[updating task]: User not signed in.');
     } else {
