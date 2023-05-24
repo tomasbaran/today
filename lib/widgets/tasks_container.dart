@@ -91,13 +91,13 @@ class TasksContainer extends StatelessWidget {
               return false;
             },
             child: PageView.builder(
-              onPageChanged: (newPage) => widgetManager.changePage(pageController.page, newPage),
+              onPageChanged: (newPage) => widgetManager.changePage(pageController.page ?? todayIndex.toDouble(), newPage),
               controller: pageController,
               itemBuilder: (____, pageIndex) {
                 return ValueListenableBuilder<MyList>(
                     valueListenable: widgetManager.selectedList,
                     builder: (_, pageList, __) {
-                      log('selectedList: ${widgetManager.selectedList.value}');
+                      log('!!!!!!!!!!!!!!!selectedList: ${widgetManager.selectedList.value}');
                       return ReorderableListView.builder(
                         padding: const EdgeInsets.fromLTRB(0, 52, 0, 40),
                         itemCount: pageList.tasks.length,
@@ -107,7 +107,6 @@ class TasksContainer extends StatelessWidget {
                           return TaskCard(
                             key: Key(reversedIndex.toString()),
                             task: pageList.tasks[reversedIndex],
-                            listTitle: pageList.tasks[reversedIndex].listId,
                           );
                         }),
                         // possible bugfix of scrollbug#2 by utilizing the below scrollController instead of using PageView's NotificationListener
@@ -126,7 +125,6 @@ class TasksContainer extends StatelessWidget {
                                 child: TaskCard(
                                   elevation: elevation,
                                   task: pageList.tasks[reversedIndex],
-                                  listTitle: pageList.tasks[reversedIndex].listId,
                                 ),
                               );
                             },

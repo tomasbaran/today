@@ -17,14 +17,17 @@ void main() async {
   await Firebase.initializeApp();
 
   // DEV-MODE:
-  if (Auth().uid != null) {
-    // check whether the user is signed in
+  // check whether the user is signed in
+  if (Auth().uid == null) {
+    log(
+      time: DateTime.now(),
+      '${DateTime.now().minute}:${DateTime.now().second} NOT signed in',
+    );
+  } else {
     log(
       time: DateTime.now(),
       'signed in',
     );
-  } else {
-    log(time: DateTime.now(), '${DateTime.now().minute}:${DateTime.now().second} NOT signed in');
   }
   // FirebaseAuth.instance.signOut();
 
@@ -38,7 +41,7 @@ class TodayApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Today',
-      home: Auth().uid == null ? LoginScreen() : TasksScreen(date: DateTime.now()),
+      home: Auth().uid == null ? LoginScreen() : const TasksScreen(),
     );
   }
 }

@@ -9,34 +9,32 @@ class TasksScreenManager {
   final selectedList = ValueNotifier<MyList>(MyList());
   final selectedDate = ValueNotifier<DateTime>(DateTime.now());
 
-  changePage(double? oldPageIndex, int newPageIndex) {
-    print('$oldPageIndex -> $newPageIndex');
-    if (oldPageIndex != null) {
-      if (newPageIndex.toDouble() > oldPageIndex) {
-        showNextDay();
-      } else {
-        showPreviousDay();
-      }
+  changePage(double oldPageIndex, int newPageIndex) {
+    // print('$oldPageIndex -> $newPageIndex');
+    if (newPageIndex.toDouble() > oldPageIndex) {
+      showNextDay();
+    } else {
+      showPreviousDay();
     }
   }
 
   showAnyDay(DateTime newDate) {
     selectedDate.value = newDate;
-    getList(date: selectedDate.value);
+    getListBySelectedDate();
   }
 
   showNextDay() {
     selectedDate.value = selectedDate.value.add(Duration(days: 1));
-    getList(date: selectedDate.value);
+    getListBySelectedDate();
   }
 
   showPreviousDay() {
     selectedDate.value = selectedDate.value.subtract(Duration(days: 1));
-    getList(date: selectedDate.value);
+    getListBySelectedDate();
   }
 
-  addTask({DateTime? date}) {
-    TaskService().addTask(date: date);
+  addTaskToDateList() {
+    TaskService().addTaskToDateList(selectedDate.value);
   }
 
   reorderList(int oldIndex, int newIndex) {
@@ -50,20 +48,18 @@ class TasksScreenManager {
     TaskService().updateList(selectedList.value);
   }
 
-  getList({DateTime? date, String? listId}) {
-    TaskService().getList(date: date)?.onData((data) async {
-      // REFACTOR#5 separate function to get the title,id: either from dateList or list
+  getListBySelectedDate() {
+    DateTime date = selectedDate.value;
+    TaskService().getListByDate(date: date)?.onData((data) {
       MyList myList = MyList();
-      if (date != null) {
-        myList.title = date.toString();
-        myList.id = data.id;
-      }
+      myList.title = date.toString();
+      myList.id = data.id;
 
-      if (listId != null) {
-        myList.title = listId;
-      }
+      selectedList.value.title = date.toString();
 
       final Map<String, dynamic>? dbList = data.data();
+      log('newData!');
+      // TODO: follow up
       if (dbList == null) {
         // there are no tasks for that day assigned (yet)
         print('no tasks for that day');
@@ -72,7 +68,6 @@ class TasksScreenManager {
         dbTasks.asMap().forEach((key, value) {
           MyTask task = MyTask(
             key: key,
-            id: value['id'],
             title: value['title'],
           );
           myList.tasks.add(task);

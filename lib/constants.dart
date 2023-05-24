@@ -1,1 +1,1 @@
-const todayIndex = 100;
+const int todayIndex = 100;

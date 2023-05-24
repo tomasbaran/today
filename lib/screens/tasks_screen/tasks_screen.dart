@@ -6,13 +6,7 @@ import 'package:today/widgets/sliver_app_bar_widget.dart';
 import 'package:today/widgets/tasks_container.dart';
 
 class TasksScreen extends StatefulWidget {
-  final DateTime? date;
-  final String? listId;
-  const TasksScreen({
-    Key? key,
-    this.date,
-    this.listId,
-  }) : super(key: key);
+  const TasksScreen({Key? key}) : super(key: key);
 
   @override
   _TasksScreenState createState() => _TasksScreenState();
@@ -23,7 +17,7 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   void initState() {
     super.initState();
-    widgetManager.getList(date: widgetManager.selectedDate.value);
+    widgetManager.getListBySelectedDate();
   }
 
   ScrollController parentScrollController = ScrollController(initialScrollOffset: expandedAppBarHeight - kToolbarHeight);
@@ -31,7 +25,7 @@ class _TasksScreenState extends State<TasksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () => widgetManager.addTask(date: widgetManager.selectedDate.value),
+        onPressed: () => widgetManager.addTaskToDateList(),
         label: const Text('+ Add task'),
       ),
       body: NestedScrollView(

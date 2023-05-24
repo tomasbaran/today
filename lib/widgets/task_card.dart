@@ -4,13 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:today/models/my_task.dart';
 
 class TaskCard extends StatelessWidget {
-  final String? listTitle;
   final double elevation;
   final MyTask task;
   const TaskCard({
     required this.task,
     super.key,
-    this.listTitle,
     this.elevation = 0,
     // required this.position,
   });
@@ -52,9 +50,11 @@ class TaskCard extends StatelessWidget {
             padding: const EdgeInsets.all(12.0),
             child: Align(
               alignment: Alignment.bottomRight,
-              child: Text(
-                listTitle ?? '',
-              ),
+              // This is where the listTitle will go.
+              // E.g. #Family, #Health, #Project
+              // child: Text(
+              //   task.listTitle ?? '',
+              // ),
             ),
           ),
         ]),
