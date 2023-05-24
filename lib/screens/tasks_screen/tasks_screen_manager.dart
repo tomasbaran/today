@@ -21,23 +21,23 @@ class TasksScreenManager {
 
   showAnyDay(DateTime newDate) {
     selectedDate.value = newDate;
-    getListBySelectedDate();
+    getDateList();
   }
 
   showNextDay() {
     selectedDate.value = selectedDate.value.add(const Duration(days: 1));
-    getListBySelectedDate();
+    getDateList();
   }
 
   showPreviousDay() {
     selectedDate.value = selectedDate.value.subtract(const Duration(days: 1));
-    getListBySelectedDate();
+    getDateList();
   }
 
   addTaskToDateList() {
     String randomTitle = 'My Title ' + math.Random().nextInt(20).toString();
-    MyTask hardCodedTask = MyTask(title: randomTitle);
-    TaskService().addTaskToDateList(hardCodedTask, selectedDate.value);
+    MyTask newHardCodedTask = MyTask(title: randomTitle);
+    TaskService().addTaskToDateList(newHardCodedTask, selectedDate.value);
   }
 
   reorderList(int oldIndex, int newIndex) {
@@ -52,7 +52,7 @@ class TasksScreenManager {
     TaskService().updateDateList(selectedList.value);
   }
 
-  getListBySelectedDate() {
+  getDateList() {
     TaskService().getDateList(date: selectedDate.value)?.onData((data) {
       selectedList.value = TaskService().formatFirebaseSnapshotToMyList(
         firebaseSnapshot: data,
