@@ -1,9 +1,9 @@
 class MyTask {
   String title;
   bool completed;
-  int key;
+  int? key;
   MyTask({
-    required this.key,
+    this.key,
     required this.title,
     this.completed = false,
   });

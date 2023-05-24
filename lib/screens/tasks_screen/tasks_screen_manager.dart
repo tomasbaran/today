@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
 import 'package:today/models/my_task.dart';
@@ -34,7 +35,9 @@ class TasksScreenManager {
   }
 
   addTaskToDateList() {
-    TaskService().addTaskToDateList(selectedDate.value);
+    String randomTitle = 'My Title ' + math.Random().nextInt(20).toString();
+    MyTask hardCodedTask = MyTask(title: randomTitle);
+    TaskService().addTaskToDateList(hardCodedTask, selectedDate.value);
   }
 
   reorderList(int oldIndex, int newIndex) {
@@ -50,27 +53,10 @@ class TasksScreenManager {
 
   getListBySelectedDate() {
     TaskService().getDateList(date: selectedDate.value)?.onData((data) {
-      MyList myList = MyList();
-      myList.title = selectedDate.value.toString();
-      myList.id = data.id;
-
-      final Map<String, dynamic>? dbList = data.data();
-      log('newData!');
-      if (dbList == null) {
-        // there are no tasks for that day assigned (yet)
-        print('no tasks for that day');
-      } else {
-        List dbTasks = dbList['tasks'];
-        dbTasks.asMap().forEach((key, value) {
-          MyTask task = MyTask(
-            key: key,
-            title: value['title'],
-          );
-          myList.tasks.add(task);
-          print('loadedTask as Map: ${task}');
-        });
-      }
-      selectedList.value = myList;
+      selectedList.value = TaskService().formatFirebaseSnapshotToMyList(
+        firebaseSnapshot: data,
+        myListTitle: selectedDate.value.toString(),
+      );
     });
   }
 }
