@@ -41,13 +41,14 @@ class TasksScreenManager {
   }
 
   reorderList(int oldIndex, int newIndex) {
+    // print('0. before ordering List: ${selectedList.value}');
+
     if (newIndex < oldIndex) {
       newIndex = newIndex + 1;
     }
     final element = selectedList.value.tasks.removeAt(oldIndex);
     selectedList.value.tasks.insert(newIndex, element);
-    log('reordered List: ${selectedList.value}');
-
+    print('1. reordered List: ${selectedList.value}');
     TaskService().updateDateList(selectedList.value);
   }
 

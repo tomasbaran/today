@@ -40,8 +40,6 @@ class TaskService {
     if (_uid == null) {
       throw ('Error #6[updating task]: User not signed in.');
     } else {
-      log('updatedList: $updatedList');
-
       Map<Object, Object> formattedUpdatedList = formatMyListToFirebaseList(updatedList);
       final DocumentReference<Map<String, dynamic>> listDocRef = _db.collection("users").doc(_uid).collection('date_lists').doc(updatedList.id);
 
@@ -60,7 +58,6 @@ class TaskService {
 
       String listDateId = '${date.year}-${date.month}-${date.day}_$_uid';
       listDocRef = _db.collection("users").doc(_uid).collection('date_lists').doc(listDateId);
-      log('listDocRef: ${listDocRef.path}');
 
       Map formattedTask = formatMyTaskToFirebaseTask(myTask);
       log('adding new task: $formattedTask');
@@ -95,7 +92,7 @@ class TaskService {
     Map<Object, Object> firebaseList = {
       'tasks': firebaseTasks,
     };
-    log('formattedList: $firebaseList');
+    log('2. formattedList: $firebaseList');
 
     return firebaseList;
   }
@@ -112,7 +109,7 @@ class TaskService {
 
     if (firebaseList == null) {
       // there are no tasks for that day assigned (yet)
-      print('no tasks for that day');
+      print('no tasks for day: ${myList.title}');
       return myList;
     } else {
       List firebaseTasks = firebaseList['tasks'];
@@ -126,6 +123,7 @@ class TaskService {
           myList.tasks.add(myTask);
         },
       );
+      log('got list: $myList');
       return myList;
     }
   }

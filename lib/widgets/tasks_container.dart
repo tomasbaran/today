@@ -97,7 +97,6 @@ class TasksContainer extends StatelessWidget {
                 return ValueListenableBuilder<MyList>(
                     valueListenable: widgetManager.selectedList,
                     builder: (_, pageList, __) {
-                      log('!!!!!!!!!!!!!!!selectedList: ${widgetManager.selectedList.value}');
                       return ReorderableListView.builder(
                         padding: const EdgeInsets.fromLTRB(0, 52, 0, 40),
                         itemCount: pageList.tasks.length,

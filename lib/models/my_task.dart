@@ -10,6 +10,6 @@ class MyTask {
 
   @override
   String toString() {
-    return '[$key] $title: $completed';
+    return '\n[$key] $title: $completed';
   }
 }
