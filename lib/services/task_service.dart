@@ -123,6 +123,7 @@ class TaskService {
             title: value['title'],
             completed: value['completed'],
             startTime: value['start_time'] == null ? null : convertTimestampToDateTime(value['start_time']),
+            finishTime: value['finish_time'] == null ? null : convertTimestampToDateTime(value['finish_time']),
           );
           myList.tasks.add(myTask);
         },
