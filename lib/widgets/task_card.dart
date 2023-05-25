@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:today/models/my_task.dart';
+import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
+import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:intl/intl.dart';
 
@@ -22,9 +24,8 @@ class TaskCard extends StatelessWidget {
       child: Row(
         children: [
           TimeCard(
-            startTime: task.startTime,
-            finishTime: task.finishTime,
-            date: task.date,
+            taskStartTime: task.startTime,
+            taskFinishTime: task.finishTime,
           ),
           Expanded(
             child: Container(
@@ -76,25 +77,24 @@ class TaskCard extends StatelessWidget {
 }
 
 class TimeCard extends StatelessWidget {
-  final DateTime? startTime;
-  final DateTime? finishTime;
-  final DateTime? date;
+  final DateTime? taskStartTime;
+  final DateTime? taskFinishTime;
   const TimeCard({
     super.key,
-    this.date,
-    this.finishTime,
-    this.startTime,
+    this.taskFinishTime,
+    this.taskStartTime,
   });
 
   @override
   Widget build(BuildContext context) {
-    log('startTime: $startTime');
-    String startTimeString = startTime == null ? '' : '${startTime!.hour}:${startTime!.minute.toString().padLeft(2, '0')}';
-    String finishTimeString = finishTime == null ? '' : '${finishTime!.hour}:${finishTime!.minute.toString().padLeft(2, '0')}';
-    String dateString = date == null ? '' : '${date!.day} ${DateFormat('MMM').format(date!)}';
+    String startTimeString = taskStartTime == null ? '' : '${taskStartTime!.hour}:${taskStartTime!.minute.toString().padLeft(2, '0')}';
+    String finishTimeString = taskFinishTime == null ? '' : '${taskFinishTime!.hour}:${taskFinishTime!.minute.toString().padLeft(2, '0')}';
+    String dateString = taskStartTime == null ? '' : '${taskStartTime!.day} ${DateFormat('MMM').format(taskStartTime!)}';
+
+    final tasksScreenManager = getIt<TasksScreenManager>();
 
     return Visibility(
-      visible: startTime != null,
+      visible: taskStartTime != null,
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.horizontal(left: Radius.circular(cardRadius)),
@@ -108,7 +108,18 @@ class TimeCard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               Text(startTimeString, style: timeCardTextStyle),
-              Text(dateString, style: timeCardTextStyle.copyWith(fontWeight: FontWeight.w800)),
+              ValueListenableBuilder(
+                  valueListenable: tasksScreenManager.selectedDate,
+                  builder: (_, selectedDate, __) {
+                    bool taskDateEqualsSelectedListDate() => (taskStartTime?.day == selectedDate.day &&
+                        taskStartTime?.month == selectedDate.month &&
+                        taskStartTime?.year == selectedDate.year);
+
+                    return Text(
+                      taskDateEqualsSelectedListDate() ? '' : dateString,
+                      style: timeCardTextStyle.copyWith(fontWeight: FontWeight.w800),
+                    );
+                  }),
               Text(finishTimeString, style: timeCardTextStyle),
             ],
           ),
