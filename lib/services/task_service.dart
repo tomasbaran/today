@@ -75,6 +75,7 @@ class TaskService {
         'title': myTask.title,
         'completed': myTask.completed,
         'start_time': myTask.startTime == null ? null : convertDateTimeToTimestamp(myTask.startTime!),
+        'finish_time': myTask.startTime == null ? null : convertDateTimeToTimestamp(myTask.finishTime!),
       };
 
   Map<Object, Object> formatMyListToFirebaseList(MyList myList) {

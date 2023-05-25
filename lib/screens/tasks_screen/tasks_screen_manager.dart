@@ -36,10 +36,12 @@ class TasksScreenManager {
 
   addTaskToDateList() {
     String randomTitle = 'My Title ' + math.Random().nextInt(20).toString();
-    DateTime startTime = DateTime.now();
+    DateTime startTime = selectedDate.value;
+    DateTime finishTime = selectedDate.value.add(const Duration(hours: 1));
     MyTask newHardCodedTask = MyTask(
       title: randomTitle,
-      // startTime: startTime,
+      startTime: startTime,
+      finishTime: finishTime,
     );
     TaskService().addTaskToDateList(newHardCodedTask, selectedDate.value);
   }
