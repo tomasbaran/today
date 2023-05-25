@@ -3,12 +3,13 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:today/constants.dart';
 import 'package:today/models/my_list.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/task_card.dart';
+
+import '../globals/constants.dart';
 
 class TasksContainer extends StatelessWidget {
   final ScrollController parentController;
