@@ -74,6 +74,7 @@ class TaskService {
   Map<String, dynamic> formatMyTaskToFirebaseTask(MyTask myTask) => {
         'title': myTask.title,
         'completed': myTask.completed,
+        'start_time': myTask.startTime == null ? null : convertDateTimeToTimestamp(myTask.startTime!),
       };
 
   Map<Object, Object> formatMyListToFirebaseList(MyList myList) {
@@ -95,8 +96,8 @@ class TaskService {
     return firebaseList;
   }
 
-  DateTime? convertTimestampToDateTime(Timestamp? timestamp) =>
-      timestamp == null ? null : DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
+  DateTime convertTimestampToDateTime(Timestamp timestamp) => DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
+  Timestamp convertDateTimeToTimestamp(DateTime dateTime) => Timestamp.fromMillisecondsSinceEpoch(dateTime.millisecondsSinceEpoch);
 
   MyList formatFirebaseSnapshotToMyList({
     required DocumentSnapshot<Map<String, dynamic>> firebaseSnapshot,
@@ -120,7 +121,7 @@ class TaskService {
             key: key,
             title: value['title'],
             completed: value['completed'],
-            startTime: convertTimestampToDateTime(value['start_time']),
+            startTime: value['start_time'] == null ? null : convertTimestampToDateTime(value['start_time']),
           );
           myList.tasks.add(myTask);
         },
