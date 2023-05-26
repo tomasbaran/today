@@ -46,6 +46,11 @@ class TasksScreenManager {
     TaskService().addTaskToDateList(newHardCodedTask, selectedDate.value);
   }
 
+  toggleTaskCompleted(MyTask task) {
+    selectedList.value.tasks.firstWhere((element) => element.key == task.key).toggleCompleted();
+    TaskService().updateDateList(selectedList.value);
+  }
+
   reorderList(int oldIndex, int newIndex) {
     // print('0. before ordering List: ${selectedList.value}');
 

@@ -16,4 +16,8 @@ class MyTask {
   String toString() {
     return '\n[$key] $title: $completed; $startTime';
   }
+
+  toggleCompleted() {
+    completed = !completed;
+  }
 }

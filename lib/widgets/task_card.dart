@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:today/models/my_task.dart';
+import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
+import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/time_card.dart';
 
@@ -14,6 +16,7 @@ class TaskCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tasksScreenManager = getIt<TasksScreenManager>();
     return Card(
       elevation: elevation,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(cardRadius)),
@@ -49,7 +52,9 @@ class TaskCard extends StatelessWidget {
                   alignment: Alignment.topRight,
                   child: Checkbox(
                     value: task.completed,
-                    onChanged: null,
+                    onChanged: (newValue) {
+                      tasksScreenManager.toggleTaskCompleted(task);
+                    },
                   ),
                 ),
                 Padding(
