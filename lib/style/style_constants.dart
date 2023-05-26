@@ -11,5 +11,5 @@ const double cardRadius = 12;
 const TextStyle timeCardTextStyle = TextStyle(
   color: Colors.white,
   fontSize: 13,
-  fontWeight: FontWeight.w500,
+  fontWeight: FontWeight.w600,
 );

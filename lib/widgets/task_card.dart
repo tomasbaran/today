@@ -1,11 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:today/models/my_task.dart';
-import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
-import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
-import 'package:intl/intl.dart';
+import 'package:today/widgets/time_card.dart';
 
 class TaskCard extends StatelessWidget {
   final double elevation;
@@ -71,59 +67,6 @@ class TaskCard extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class TimeCard extends StatelessWidget {
-  final DateTime? taskStartTime;
-  final DateTime? taskFinishTime;
-  const TimeCard({
-    super.key,
-    this.taskFinishTime,
-    this.taskStartTime,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    String startTimeString = taskStartTime == null ? '' : '${taskStartTime!.hour}:${taskStartTime!.minute.toString().padLeft(2, '0')}';
-    String finishTimeString = taskFinishTime == null ? '' : '${taskFinishTime!.hour}:${taskFinishTime!.minute.toString().padLeft(2, '0')}';
-    String dateString = taskStartTime == null ? '' : '${taskStartTime!.day} ${DateFormat('MMM').format(taskStartTime!)}';
-
-    final tasksScreenManager = getIt<TasksScreenManager>();
-
-    return Visibility(
-      visible: taskStartTime != null,
-      child: Container(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.horizontal(left: Radius.circular(cardRadius)),
-          color: kDefaultHighlightColor,
-        ),
-        height: 68,
-        width: 68,
-        child: Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              Text(startTimeString, style: timeCardTextStyle),
-              ValueListenableBuilder(
-                  valueListenable: tasksScreenManager.selectedDate,
-                  builder: (_, selectedDate, __) {
-                    bool taskDateEqualsSelectedListDate() => (taskStartTime?.day == selectedDate.day &&
-                        taskStartTime?.month == selectedDate.month &&
-                        taskStartTime?.year == selectedDate.year);
-
-                    return Text(
-                      taskDateEqualsSelectedListDate() ? '' : dateString,
-                      style: timeCardTextStyle.copyWith(fontWeight: FontWeight.w800),
-                    );
-                  }),
-              Text(finishTimeString, style: timeCardTextStyle),
-            ],
-          ),
-        ),
       ),
     );
   }
