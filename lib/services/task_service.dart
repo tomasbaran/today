@@ -81,11 +81,8 @@ class TaskService {
   Map<Object, Object> formatMyListToFirebaseList(MyList myList) {
     List<Map> firebaseTasks = [];
 
-    for (var task in myList.tasks) {
-      Map firebaseTask = {
-        'title': task.title,
-        'completed': task.completed,
-      };
+    for (var myTask in myList.tasks) {
+      Map firebaseTask = formatMyTaskToFirebaseTask(myTask);
       firebaseTasks.add(firebaseTask);
     }
 
