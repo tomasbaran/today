@@ -4,8 +4,13 @@ const double expandedAppBarHeight = 360;
 const kBackgroundColor = Color.fromARGB(255, 228, 233, 238);
 const kDefaultHighlightColor = Colors.black;
 
-// taskCard
+// TaskCard
 const double cardRadius = 12;
+const double taskCardHeight = 76;
+
+// TasksContainer
+const double bottomCompletedPadding = 100;
+const double defaultFillInHeight = 60;
 
 // TimeCard
 const TextStyle timeCardTextStyle = TextStyle(

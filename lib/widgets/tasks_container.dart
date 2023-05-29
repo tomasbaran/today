@@ -98,45 +98,84 @@ class TasksContainer extends StatelessWidget {
                 return ValueListenableBuilder<MyList>(
                     valueListenable: widgetManager.selectedList,
                     builder: (_, pageList, __) {
+                      int tasksCount = pageList.tasks.length;
+                      int listWidgetsCount = tasksCount + 1; // +1 is the new last item: Column of FillInHeight + COMPLETED:
                       return ReorderableListView.builder(
-                        padding: const EdgeInsets.fromLTRB(0, 52, 0, 40),
-                        itemCount: pageList.tasks.length,
-                        itemBuilder: ((___, taskIndex) {
-                          // reversedIndex is to show the newest task on top of the list
-                          int reversedIndex = pageList.tasks.length - 1 - taskIndex;
-                          return TaskCard(
-                            key: Key(reversedIndex.toString()),
-                            task: pageList.tasks[reversedIndex],
-                          );
-                        }),
-                        // possible bugfix of scrollbug#2 by utilizing the below scrollController instead of using PageView's NotificationListener
-                        // scrollController: ,
-                        proxyDecorator: (_, taskIndex, animation) {
-                          // reversedIndex is to show the newest task on top of the list
-                          int reversedIndex = pageList.tasks.length - 1 - taskIndex;
-                          return AnimatedBuilder(
-                            animation: animation,
-                            builder: (_, __) {
-                              final double animValue = Curves.easeOut.transform(animation.value);
-                              final double elevation = lerpDouble(1, 6, animValue)!;
-                              final scale = lerpDouble(1, 1.02, animValue)!;
-                              return Transform.scale(
-                                scale: scale,
-                                child: TaskCard(
-                                  elevation: elevation,
-                                  task: pageList.tasks[reversedIndex],
+                          padding: const EdgeInsets.fromLTRB(0, 52, 0, 40),
+                          itemCount: listWidgetsCount, // +1 is the new last item: Column of FillInHeight + COMPLETED:
+                          itemBuilder: ((___, taskIndex) {
+                            // reversedIndex is to show the newest task on top of the list
+                            int reversedIndex = tasksCount - 1 - taskIndex;
+                            // Add FillInHeight + COMPLETED as the last item in the ListView
+                            if (taskIndex == tasksCount) {
+                              double fillInHeight = widgetManager.countFillInHeight(
+                                MediaQuery.of(context).size.height,
+                                MediaQuery.of(context).padding.bottom,
+                              );
+                              return GestureDetector(
+                                key: const Key('last'),
+                                onLongPress: () => {
+                                  // print('holdme')
+                                },
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    SizedBox(
+                                      height: fillInHeight < defaultFillInHeight ? defaultFillInHeight : fillInHeight,
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Text('COMPLETED: 0'),
+                                    ),
+                                  ],
                                 ),
                               );
-                            },
-                            // child: child,
-                          );
-                        },
-                        onReorder: (oldIndex, newIndex) {
-                          int reversedOldIndex = pageList.tasks.length - 1 - oldIndex;
-                          int reversedNewIndex = pageList.tasks.length - 1 - newIndex;
-                          widgetManager.reorderList(reversedOldIndex, reversedNewIndex);
-                        },
-                      );
+                            } else {
+                              return TaskCard(
+                                key: Key(reversedIndex.toString()),
+                                task: pageList.tasks[reversedIndex],
+                              );
+                            }
+                          }),
+                          // possible bugfix of scrollbug#2 by utilizing the below scrollController instead of using PageView's NotificationListener
+                          // scrollController: ,
+                          proxyDecorator: (_, taskIndex, animation) {
+                            print('taskIndex: $taskIndex; lastIndex: $tasksCount');
+                            // Don't animate lastIndex
+                            if (taskIndex == tasksCount) {
+                              // print('taskIndex: not animating the lastIndex');
+                              return const SizedBox();
+                            } else {
+                              // reversedIndex is to show the newest task on top of the list
+                              int reversedIndex = tasksCount - 1 - taskIndex;
+                              return AnimatedBuilder(
+                                animation: animation,
+                                builder: (_, __) {
+                                  final double animValue = Curves.easeOut.transform(animation.value);
+                                  final double elevation = lerpDouble(1, 6, animValue)!;
+                                  final scale = lerpDouble(1, 1.02, animValue)!;
+                                  return Transform.scale(
+                                    scale: scale,
+                                    child: TaskCard(
+                                      elevation: elevation,
+                                      task: pageList.tasks[reversedIndex],
+                                    ),
+                                  );
+                                },
+                                // child: child,
+                              );
+                            }
+                          },
+                          onReorder: (oldIndex, newIndex) {
+                            print('oldIndex: $oldIndex; lastIndex: $listWidgetsCount');
+                            // order any item except for the last one
+                            if (oldIndex != tasksCount) {
+                              int reversedOldIndex = tasksCount - 1 - oldIndex;
+                              // if you move a TaskCard to the last place put it as the penultimate (instead of the last one): since the last one (COMPLETED) is unmovable
+                              int reversedNewIndex = newIndex == listWidgetsCount ? tasksCount - newIndex : tasksCount - 1 - newIndex;
+                              widgetManager.reorderList(reversedOldIndex, reversedNewIndex);
+                            }
+                          });
                     });
               },
             ),
