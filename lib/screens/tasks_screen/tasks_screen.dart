@@ -27,7 +27,6 @@ class _TasksScreenState extends State<TasksScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
-        // onPressed: () => widgetManager.addTaskToDateList(),
         onPressed: () {
           showCupertinoModalBottomSheet(
             context: context,
