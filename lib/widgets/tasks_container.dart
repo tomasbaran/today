@@ -115,7 +115,7 @@ class TasksContainer extends StatelessWidget {
                             // Add CompletedTasksColumn as the last item in the ListView
                             if (taskIndex == tasksCount) {
                               return CompletedTasksColumn(
-                                key: UniqueKey(),
+                                key: const Key('last'),
                                 fillInHeight: fillInHeight,
                               );
                             } else {
