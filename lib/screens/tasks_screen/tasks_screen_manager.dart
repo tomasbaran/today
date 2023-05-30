@@ -52,7 +52,18 @@ class TasksScreenManager {
   }
 
   toggleTaskCompleted(MyTask task) {
-    selectedList.value.tasks.firstWhere((element) => element.key == task.key).toggleCompleted();
+    if (!task.completed) {
+      selectedList.value.tasks.remove(task);
+
+      task.toggleCompleted();
+      selectedList.value.completedTasks.add(task);
+    } else {
+      selectedList.value.completedTasks.remove(task);
+
+      task.toggleCompleted();
+      selectedList.value.tasks.add(task);
+    }
+
     TaskService().updateDateList(selectedList.value);
   }
 
@@ -70,7 +81,7 @@ class TasksScreenManager {
 
   getDateList() {
     TaskService().getDateList(date: selectedDate.value)?.onData((data) {
-      selectedList.value = TaskService().formatFirebaseSnapshotToMyList(
+      selectedList.value = TaskService().convertFirebaseSnapshotToMyList(
         firebaseSnapshot: data,
         myListTitle: selectedDate.value.toString(),
       );

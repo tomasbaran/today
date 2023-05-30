@@ -4,13 +4,15 @@ class MyList {
   String? title;
   String? id;
   List<MyTask> tasks;
+  List<MyTask> completedTasks;
   MyList({
     this.title,
     this.id,
-  }) : tasks = [];
+  })  : tasks = [],
+        completedTasks = [];
 
   @override
   String toString() {
-    return '$id.items: $tasks';
+    return '\ntasks: $tasks\ncompleted: $completedTasks';
   }
 }

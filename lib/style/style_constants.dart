@@ -9,7 +9,7 @@ const double cardRadius = 12;
 const double taskCardHeight = 76;
 
 // TasksContainer
-const double bottomCompletedPadding = 100;
+const double bottomCompletedPadding = 68;
 const double defaultFillInHeight = 60;
 
 // TimeCard

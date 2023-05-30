@@ -40,8 +40,8 @@ class TaskService {
     if (_uid == null) {
       throw ('Error #6[updating task]: User not signed in.');
     } else {
-      Map<Object, Object> formattedUpdatedList = formatMyListToFirebaseList(updatedList);
-      final listDocRef = _db.collection("users").doc(_uid).collection('date_lists').doc(updatedList.id);
+      Map<String, dynamic> formattedUpdatedList = formatMyListToFirebaseList(updatedList);
+      final listDocRef = _db.collection('users').doc(_uid).collection('date_lists').doc(updatedList.id);
 
       listDocRef.update(formattedUpdatedList).onError((error, stackTrace) {
         log('\x1B[31mError #6[updating task]: $error\x1B[0m');
@@ -78,16 +78,22 @@ class TaskService {
         'finish_time': myTask.startTime == null ? null : convertDateTimeToTimestamp(myTask.finishTime!),
       };
 
-  Map<Object, Object> formatMyListToFirebaseList(MyList myList) {
+  Map<String, dynamic> formatMyListToFirebaseList(MyList myList) {
     List<Map> firebaseTasks = [];
-
     for (var myTask in myList.tasks) {
       Map firebaseTask = formatMyTaskToFirebaseTask(myTask);
       firebaseTasks.add(firebaseTask);
     }
 
-    Map<Object, Object> firebaseList = {
+    List<Map> firebaseCompletedTasks = [];
+    for (var myTask in myList.completedTasks) {
+      Map firebaseTask = formatMyTaskToFirebaseTask(myTask);
+      firebaseCompletedTasks.add(firebaseTask);
+    }
+
+    Map<String, dynamic> firebaseList = {
       'tasks': firebaseTasks,
+      'completed_tasks': firebaseCompletedTasks,
     };
     log('2. formattedList: $firebaseList');
 
@@ -97,7 +103,27 @@ class TaskService {
   DateTime convertTimestampToDateTime(Timestamp timestamp) => DateTime.fromMillisecondsSinceEpoch(timestamp.millisecondsSinceEpoch);
   Timestamp convertDateTimeToTimestamp(DateTime dateTime) => Timestamp.fromMillisecondsSinceEpoch(dateTime.millisecondsSinceEpoch);
 
-  MyList formatFirebaseSnapshotToMyList({
+  List<MyTask> convertFirebaseTasksToMyListItems(List? firebaseTasks) {
+    List<MyTask> output = [];
+    if (firebaseTasks != null) {
+      firebaseTasks.asMap().forEach(
+        (key, value) {
+          MyTask myTask = MyTask(
+            key: key,
+            title: value['title'],
+            completed: value['completed'],
+            startTime: value['start_time'] == null ? null : convertTimestampToDateTime(value['start_time']),
+            finishTime: value['finish_time'] == null ? null : convertTimestampToDateTime(value['finish_time']),
+          );
+          output.add(myTask);
+        },
+      );
+    }
+
+    return output;
+  }
+
+  MyList convertFirebaseSnapshotToMyList({
     required DocumentSnapshot<Map<String, dynamic>> firebaseSnapshot,
     required String myListTitle,
   }) {
@@ -112,20 +138,8 @@ class TaskService {
       print('no tasks for day: ${myList.title}');
       return myList;
     } else {
-      List firebaseTasks = firebaseList['tasks'];
-      firebaseTasks.asMap().forEach(
-        (key, value) {
-          MyTask myTask = MyTask(
-            key: key,
-            title: value['title'],
-            completed: value['completed'],
-            startTime: value['start_time'] == null ? null : convertTimestampToDateTime(value['start_time']),
-            finishTime: value['finish_time'] == null ? null : convertTimestampToDateTime(value['finish_time']),
-          );
-          myList.tasks.add(myTask);
-        },
-      );
-      log('got list: $myList');
+      myList.tasks = convertFirebaseTasksToMyListItems(firebaseList['tasks']);
+      myList.completedTasks = convertFirebaseTasksToMyListItems(firebaseList['completed_tasks']);
       return myList;
     }
   }

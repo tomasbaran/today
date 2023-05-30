@@ -124,8 +124,8 @@ class TasksContainer extends StatelessWidget {
                                       height: fillInHeight < defaultFillInHeight ? defaultFillInHeight : fillInHeight,
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.only(left: 8.0),
-                                      child: Text('COMPLETED: 0'),
+                                      padding: const EdgeInsets.only(left: 8.0, bottom: 20),
+                                      child: Text('COMPLETED: ${pageList.completedTasks.length}'),
                                     ),
                                   ],
                                 ),
