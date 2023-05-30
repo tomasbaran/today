@@ -7,6 +7,7 @@ import 'package:today/models/my_list.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
+import 'package:today/widgets/completed_tasks_column.dart';
 import 'package:today/widgets/task_card.dart';
 
 import '../globals/constants.dart';
@@ -100,35 +101,22 @@ class TasksContainer extends StatelessWidget {
                     builder: (_, pageList, __) {
                       int tasksCount = pageList.tasks.length;
                       int listWidgetsCount = tasksCount + 1; // +1 is the new last item: Column of FillInHeight + COMPLETED:
+                      double fillInHeight = widgetManager.countFillInHeight(
+                        MediaQuery.of(context).size.height,
+                        MediaQuery.of(context).padding.bottom,
+                      );
+
                       return ReorderableListView.builder(
                           padding: const EdgeInsets.fromLTRB(0, 52, 0, 40),
                           itemCount: listWidgetsCount, // +1 is the new last item: Column of FillInHeight + COMPLETED:
                           itemBuilder: ((___, taskIndex) {
                             // reversedIndex is to show the newest task on top of the list
                             int reversedIndex = tasksCount - 1 - taskIndex;
-                            // Add FillInHeight + COMPLETED as the last item in the ListView
+                            // Add CompletedTasksColumn as the last item in the ListView
                             if (taskIndex == tasksCount) {
-                              double fillInHeight = widgetManager.countFillInHeight(
-                                MediaQuery.of(context).size.height,
-                                MediaQuery.of(context).padding.bottom,
-                              );
-                              return GestureDetector(
-                                key: const Key('last'),
-                                onLongPress: () => {
-                                  // print('holdme')
-                                },
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    SizedBox(
-                                      height: fillInHeight < defaultFillInHeight ? defaultFillInHeight : fillInHeight,
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.only(left: 8.0, bottom: 20),
-                                      child: Text('COMPLETED: ${pageList.completedTasks.length}'),
-                                    ),
-                                  ],
-                                ),
+                              return CompletedTasksColumn(
+                                key: UniqueKey(),
+                                fillInHeight: fillInHeight,
                               );
                             } else {
                               return TaskCard(
