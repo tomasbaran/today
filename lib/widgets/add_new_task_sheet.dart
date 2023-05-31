@@ -102,11 +102,11 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
                 child: TaskTimeTile(
                   title: 'Date',
                   icon: Icons.calendar_today_rounded,
-                  value: DateFormat.yMMMMd('en_US').format(widgetManager.selectedDate.value),
+                  value: DateFormat.yMMMMd('en_US').format(widgetManager.selectedDate),
                 ),
                 onTap: () => showDatePicker(
                   context: context,
-                  initialDate: widgetManager.selectedDate.value,
+                  initialDate: widgetManager.selectedDate,
                   firstDate: DateTime(2021),
                   lastDate: DateTime(2050),
                 ).then((newDate) {

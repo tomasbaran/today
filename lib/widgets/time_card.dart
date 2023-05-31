@@ -20,7 +20,7 @@ class TimeCard extends StatelessWidget {
     String startTimeString = taskStartTime == null ? '' : '${taskStartTime!.hour}:${taskStartTime!.minute.toString().padLeft(2, '0')}';
     String endTimeString = taskEndTime == null ? '' : '${taskEndTime!.hour}:${taskEndTime!.minute.toString().padLeft(2, '0')}';
     String dateString = taskStartTime == null ? '' : '${taskStartTime!.day} ${DateFormat('MMM').format(taskStartTime!)}';
-    final selectedDate = tasksScreenManager.selectedDate.value;
+    final selectedDate = tasksScreenManager.selectedDate;
     bool taskDateEqualsSelectedListDate() =>
         (taskStartTime?.day == selectedDate.day && taskStartTime?.month == selectedDate.month && taskStartTime?.year == selectedDate.year);
 

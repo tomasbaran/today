@@ -1,7 +1,3 @@
-import 'dart:developer';
-import 'dart:math' as math;
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:today/models/my_task.dart';
 import 'package:today/models/my_list.dart';
@@ -11,10 +7,12 @@ import 'package:today/style/style_constants.dart';
 
 class TasksScreenManager {
   final selectedList = ValueNotifier<MyList>(MyList());
-  final selectedDate = ValueNotifier<DateTime>(DateTime.now());
+  DateTime _selectedDate = DateTime.now();
+
+  DateTime get selectedDate => _selectedDate;
 
   updateSelectedDate(DateTime newDateTime) {
-    selectedDate.value = newDateTime;
+    _selectedDate = newDateTime;
   }
 
   countFillInHeight(double screenHeight, double safeAreaBottom) =>
@@ -30,17 +28,17 @@ class TasksScreenManager {
   }
 
   showAnyDay(DateTime newDate) {
-    selectedDate.value = newDate;
+    _selectedDate = newDate;
     getDateList();
   }
 
   showNextDay() {
-    selectedDate.value = selectedDate.value.add(const Duration(days: 1));
+    _selectedDate = _selectedDate.add(const Duration(days: 1));
     getDateList();
   }
 
   showPreviousDay() {
-    selectedDate.value = selectedDate.value.subtract(const Duration(days: 1));
+    _selectedDate = _selectedDate.subtract(const Duration(days: 1));
     getDateList();
   }
 
@@ -50,9 +48,9 @@ class TasksScreenManager {
     DateTime? endTime,
   }) {
     // use selectedDate's date and startTime's time
-    startTime = DateTimeService().mixDateAndTime(selectedDate.value, startTime);
+    startTime = DateTimeService().mixDateAndTime(_selectedDate, startTime);
     // use selectedDate's date and endTime's time
-    endTime = DateTimeService().mixDateAndTime(selectedDate.value, endTime);
+    endTime = DateTimeService().mixDateAndTime(_selectedDate, endTime);
     // Don't add an empty titled task
     if (title != null) {
       MyTask newTask = MyTask(
@@ -60,7 +58,7 @@ class TasksScreenManager {
         startTime: startTime,
         endTime: endTime,
       );
-      TaskService().addTaskToDateList(newTask, selectedDate.value);
+      TaskService().addTaskToDateList(newTask, _selectedDate);
     }
   }
 
@@ -93,10 +91,10 @@ class TasksScreenManager {
   }
 
   getDateList() {
-    TaskService().getDateList(date: selectedDate.value)?.onData((data) {
+    TaskService().getDateList(date: _selectedDate)?.onData((data) {
       selectedList.value = TaskService().convertFirebaseSnapshotToMyList(
         firebaseSnapshot: data,
-        myListTitle: DateTimeService().niceDateTimeString(selectedDate.value),
+        myListTitle: DateTimeService().niceDateTimeString(_selectedDate),
       );
     });
   }
