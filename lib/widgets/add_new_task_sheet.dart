@@ -8,7 +8,7 @@ import 'package:today/widgets/task_time_tile.dart';
 import 'package:today/services/date_time_service.dart';
 
 class AddNewTaskSheet extends StatefulWidget {
-  AddNewTaskSheet({super.key});
+  const AddNewTaskSheet({super.key});
 
   @override
   State<AddNewTaskSheet> createState() => _AddNewTaskSheetState();
@@ -29,30 +29,6 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
 
   @override
   Widget build(BuildContext context) {
-    // This function displays a CupertinoModalPopup with a reasonable fixed height
-    // which hosts CupertinoDatePicker.
-    void showCupertinoDialog(Widget child) {
-      showCupertinoModalPopup<void>(
-        context: context,
-        builder: (BuildContext context) => Container(
-          height: 216,
-          padding: const EdgeInsets.only(top: 6.0),
-          // The Bottom margin is provided to align the popup above the system
-          // navigation bar.
-          margin: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          // Provide a background color for the popup.
-          color: CupertinoColors.systemBackground.resolveFrom(context),
-          // Use a SafeArea widget to avoid system overlaps.
-          child: SafeArea(
-            top: false,
-            child: child,
-          ),
-        ),
-      );
-    }
-
     return Scaffold(
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
@@ -104,63 +80,47 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
             dividerMargin: cupertinoListTileLeadingSize,
             children: [
               GestureDetector(
-                onTap: () {
-                  showCupertinoDialog(
-                    CupertinoDatePicker(
-                        minuteInterval: 5,
-                        // .subtract(Duration(minutes: DateTime.now().minute % 5)) is bugfixing cases when DateTime.now() is not divisible by 5
-                        initialDateTime: DateTime.now().subtract(Duration(minutes: DateTime.now().minute % 5)),
-                        mode: CupertinoDatePickerMode.time,
-                        use24hFormat: true,
-                        onDateTimeChanged: (DateTime newStartTime) {
-                          setState(() => startTime = newStartTime);
-                        }),
-                  );
-                },
                 child: TaskTimeTile(
                   title: 'Starts',
                   icon: Icons.access_time,
                   value: startTime == null ? null : DateTimeService().formatTime(startTime!),
                 ),
+                onTap: () => DateTimeService().showCupertinoTimePicker(
+                  context: context,
+                  onDateTimeChanged: (DateTime newTime) {
+                    setState(() => startTime = newTime);
+                  },
+                ),
               ),
               GestureDetector(
-                onTap: () {
-                  showCupertinoDialog(
-                    CupertinoDatePicker(
-                        minuteInterval: 5,
-                        // .subtract(Duration(minutes: DateTime.now().minute % 5)) is bugfixing cases when DateTime.now() is not divisible by 5
-                        initialDateTime: DateTime.now().subtract(Duration(minutes: DateTime.now().minute % 5)),
-                        mode: CupertinoDatePickerMode.time,
-                        use24hFormat: true,
-                        onDateTimeChanged: (DateTime newEndTime) {
-                          setState(() => endTime = newEndTime);
-                        }),
-                  );
-                },
                 child: TaskTimeTile(
                   title: 'Ends',
                   icon: Icons.access_time_filled,
                   value: endTime == null ? null : DateTimeService().formatTime(endTime!),
                 ),
+                onTap: () => DateTimeService().showCupertinoTimePicker(
+                  context: context,
+                  onDateTimeChanged: (DateTime newTime) {
+                    setState(() => endTime = newTime);
+                  },
+                ),
               ),
               GestureDetector(
-                onTap: () {
-                  showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime(2021),
-                    lastDate: DateTime(2050),
-                  ).then((selectedDate) {
-                    if (selectedDate != null) {
-                      taskDateTime = selectedDate;
-                    }
-                  });
-                },
                 child: TaskTimeTile(
                   title: 'Date',
                   icon: Icons.calendar_today_rounded,
                   value: DateFormat.yMMMMd('en_US').format(taskDateTime ?? widgetManager.selectedDate.value),
                 ),
+                onTap: () => showDatePicker(
+                  context: context,
+                  initialDate: DateTime.now(),
+                  firstDate: DateTime(2021),
+                  lastDate: DateTime(2050),
+                ).then((selectedDate) {
+                  if (selectedDate != null) {
+                    taskDateTime = selectedDate;
+                  }
+                }),
               ),
             ],
           ),
