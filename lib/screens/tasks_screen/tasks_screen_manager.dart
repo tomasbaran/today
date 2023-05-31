@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:today/models/my_task.dart';
 import 'package:today/models/my_list.dart';
+import 'package:today/services/date_time_service.dart';
 import 'package:today/services/task_service.dart';
 import 'package:today/style/style_constants.dart';
 
@@ -48,6 +49,10 @@ class TasksScreenManager {
     DateTime? startTime,
     DateTime? endTime,
   }) {
+    // use selectedDate's date and startTime's time
+    startTime = DateTimeService().mixDateAndTime(selectedDate.value, startTime);
+    // use selectedDate's date and endTime's time
+    endTime = DateTimeService().mixDateAndTime(selectedDate.value, endTime);
     // Don't add an empty titled task
     if (title != null) {
       MyTask newTask = MyTask(

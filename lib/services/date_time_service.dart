@@ -4,6 +4,24 @@ class DateTimeService {
   String formatTime(DateTime dateTime) => '${dateTime.hour} : ${formatMinutes(dateTime)}';
   String formatMinutes(DateTime dateTime) => dateTime.minute.toString().padLeft(2, '0');
 
+  DateTime resetTimeToZero(DateTime dateTime) => dateTime.subtract(Duration(
+        hours: dateTime.hour,
+        minutes: dateTime.minute,
+        seconds: dateTime.second,
+        microseconds: dateTime.microsecond,
+        milliseconds: dateTime.millisecond,
+      ));
+
+  DateTime? mixDateAndTime(DateTime useDate, DateTime? useTime) {
+    // Reset hours,minutes,seconds to 00:00:00
+    DateTime resetTime = resetTimeToZero(useDate);
+    if (useTime == null) {
+      return null;
+    } else {
+      return resetTime.add(Duration(hours: useTime.hour, minutes: useTime.minute));
+    }
+  }
+
 // This function displays a CupertinoModalPopup with a reasonable fixed height
 // which hosts CupertinoDatePicker.
   void showCupertinoTimePicker({required BuildContext context, required Function(DateTime) onDateTimeChanged}) {
