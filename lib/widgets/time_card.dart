@@ -6,10 +6,10 @@ import 'package:intl/intl.dart';
 
 class TimeCard extends StatelessWidget {
   final DateTime? taskStartTime;
-  final DateTime? taskFinishTime;
+  final DateTime? taskEndTime;
   const TimeCard({
     super.key,
-    this.taskFinishTime,
+    this.taskEndTime,
     this.taskStartTime,
   });
 
@@ -18,7 +18,7 @@ class TimeCard extends StatelessWidget {
     final tasksScreenManager = getIt<TasksScreenManager>();
 
     String startTimeString = taskStartTime == null ? '' : '${taskStartTime!.hour}:${taskStartTime!.minute.toString().padLeft(2, '0')}';
-    String finishTimeString = taskFinishTime == null ? '' : '${taskFinishTime!.hour}:${taskFinishTime!.minute.toString().padLeft(2, '0')}';
+    String endTimeString = taskEndTime == null ? '' : '${taskEndTime!.hour}:${taskEndTime!.minute.toString().padLeft(2, '0')}';
     String dateString = taskStartTime == null ? '' : '${taskStartTime!.day} ${DateFormat('MMM').format(taskStartTime!)}';
     final selectedDate = tasksScreenManager.selectedDate.value;
     bool taskDateEqualsSelectedListDate() =>
@@ -36,14 +36,20 @@ class TimeCard extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(taskDateEqualsSelectedListDate() ? 6 : 2),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: taskEndTime == null ? MainAxisAlignment.center : MainAxisAlignment.spaceEvenly,
             children: [
               Text(startTimeString, style: timeCardTextStyle),
-              Text(
-                taskDateEqualsSelectedListDate() ? '' : dateString,
-                style: timeCardTextStyle,
+              Visibility(
+                visible: taskEndTime != null,
+                child: Text(
+                  taskDateEqualsSelectedListDate() ? '' : dateString,
+                  style: timeCardTextStyle,
+                ),
               ),
-              Text(finishTimeString, style: timeCardTextStyle),
+              Visibility(
+                visible: taskEndTime != null,
+                child: Text(endTimeString, style: timeCardTextStyle),
+              ),
             ],
           ),
         ),
