@@ -12,6 +12,10 @@ class TasksScreenManager {
   final selectedList = ValueNotifier<MyList>(MyList());
   final selectedDate = ValueNotifier<DateTime>(DateTime.now());
 
+  updateSelectedDate(DateTime newDateTime) {
+    selectedDate.value = newDateTime;
+  }
+
   countFillInHeight(double screenHeight, double safeAreaBottom) =>
       screenHeight - (selectedList.value.tasks.length * taskCardHeight) - kTextTabBarHeight - safeAreaBottom - bottomCompletedPadding;
 

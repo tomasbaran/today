@@ -18,14 +18,7 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
   final widgetManager = getIt<TasksScreenManager>();
   DateTime? startTime;
   DateTime? endTime;
-  DateTime? taskDateTime;
   String? taskTitle;
-
-  @override
-  void initState() {
-    taskDateTime = widgetManager.selectedDate.value;
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -109,16 +102,19 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
                 child: TaskTimeTile(
                   title: 'Date',
                   icon: Icons.calendar_today_rounded,
-                  value: DateFormat.yMMMMd('en_US').format(taskDateTime ?? widgetManager.selectedDate.value),
+                  value: DateFormat.yMMMMd('en_US').format(widgetManager.selectedDate.value),
                 ),
                 onTap: () => showDatePicker(
                   context: context,
-                  initialDate: DateTime.now(),
+                  initialDate: widgetManager.selectedDate.value,
                   firstDate: DateTime(2021),
                   lastDate: DateTime(2050),
-                ).then((selectedDate) {
-                  if (selectedDate != null) {
-                    taskDateTime = selectedDate;
+                ).then((newDate) {
+                  if (newDate != null) {
+                    setState(() {
+                      widgetManager.updateSelectedDate(newDate);
+                      widgetManager.getDateList();
+                    });
                   }
                 }),
               ),
