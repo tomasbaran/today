@@ -24,7 +24,7 @@ class TaskCard extends StatelessWidget {
         children: [
           TimeCard(
             taskStartTime: task.startTime,
-            taskFinishTime: task.finishTime,
+            taskEndTime: task.endTime,
           ),
           Expanded(
             child: Container(

@@ -1,12 +1,12 @@
 class MyTask {
   DateTime? startTime;
-  DateTime? finishTime;
+  DateTime? endTime;
   String title;
   bool completed;
   int? key;
   MyTask({
     this.startTime,
-    this.finishTime,
+    this.endTime,
     this.key,
     required this.title,
     this.completed = false,

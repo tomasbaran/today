@@ -75,7 +75,7 @@ class TaskService {
         'title': myTask.title,
         'completed': myTask.completed,
         'start_time': myTask.startTime == null ? null : convertDateTimeToTimestamp(myTask.startTime!),
-        'finish_time': myTask.startTime == null ? null : convertDateTimeToTimestamp(myTask.finishTime!),
+        'end_time': myTask.endTime == null ? null : convertDateTimeToTimestamp(myTask.endTime!),
       };
 
   Map<String, dynamic> formatMyListToFirebaseList(MyList myList) {
@@ -113,7 +113,7 @@ class TaskService {
             title: value['title'],
             completed: value['completed'],
             startTime: value['start_time'] == null ? null : convertTimestampToDateTime(value['start_time']),
-            finishTime: value['finish_time'] == null ? null : convertTimestampToDateTime(value['finish_time']),
+            endTime: value['end_time'] == null ? null : convertTimestampToDateTime(value['end_time']),
           );
           output.add(myTask);
         },
