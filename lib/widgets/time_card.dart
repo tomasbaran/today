@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
+import 'package:today/services/date_time_service.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:intl/intl.dart';
@@ -20,9 +21,6 @@ class TimeCard extends StatelessWidget {
     String startTimeString = taskStartTime == null ? '' : '${taskStartTime!.hour}:${taskStartTime!.minute.toString().padLeft(2, '0')}';
     String endTimeString = taskEndTime == null ? '' : '${taskEndTime!.hour}:${taskEndTime!.minute.toString().padLeft(2, '0')}';
     String dateString = taskStartTime == null ? '' : '${taskStartTime!.day} ${DateFormat('MMM').format(taskStartTime!)}';
-    final selectedDate = tasksScreenManager.selectedDate;
-    bool taskDateEqualsSelectedListDate() =>
-        (taskStartTime?.day == selectedDate.day && taskStartTime?.month == selectedDate.month && taskStartTime?.year == selectedDate.year);
 
     return Visibility(
       visible: taskStartTime != null,
@@ -34,7 +32,7 @@ class TimeCard extends StatelessWidget {
         height: 68,
         width: 64,
         child: Padding(
-          padding: EdgeInsets.all(taskDateEqualsSelectedListDate() ? 6 : 2),
+          padding: EdgeInsets.all(DateTimeService().isSpecialDay(tasksScreenManager.selectedDate, taskStartTime) == MyDate.isToday ? 6 : 2),
           child: Column(
             mainAxisAlignment: taskEndTime == null ? MainAxisAlignment.center : MainAxisAlignment.spaceEvenly,
             children: [
@@ -42,7 +40,7 @@ class TimeCard extends StatelessWidget {
               Visibility(
                 visible: taskEndTime != null,
                 child: Text(
-                  taskDateEqualsSelectedListDate() ? '' : dateString,
+                  DateTimeService().isSpecialDay(tasksScreenManager.selectedDate, taskStartTime) == MyDate.isToday ? '' : dateString,
                   style: timeCardTextStyle,
                 ),
               ),

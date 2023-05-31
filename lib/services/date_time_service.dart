@@ -12,24 +12,31 @@ class DateTimeService {
   String formatTime(DateTime dateTime) => '${dateTime.hour} : ${formatMinutes(dateTime)}';
   String formatMinutes(DateTime dateTime) => dateTime.minute.toString().padLeft(2, '0');
 
-  MyDate isSpecialDay(DateTime dateTime) {
-    DateTime now = DateTime.now();
+  MyDate? isSpecialDay(DateTime defaultDateTime, DateTime? checkingDateTime) {
     const Duration oneDay = Duration(hours: 24);
-    if (dateTime.day == now.day && dateTime.month == now.month && dateTime.year == now.year) {
-      return MyDate.isToday;
-    } else if (dateTime.day == now.add(oneDay).day && dateTime.month == now.add(oneDay).month && dateTime.year == now.add(oneDay).year) {
-      return MyDate.isTomorrow;
-    } else if (dateTime.day == now.subtract(oneDay).day &&
-        dateTime.month == now.subtract(oneDay).month &&
-        dateTime.year == now.subtract(oneDay).year) {
-      return MyDate.isYesterday;
+    if (checkingDateTime == null) {
+      return null;
     } else {
-      return MyDate.isAnotherDay;
+      if (checkingDateTime.day == defaultDateTime.day &&
+          checkingDateTime.month == defaultDateTime.month &&
+          checkingDateTime.year == defaultDateTime.year) {
+        return MyDate.isToday;
+      } else if (checkingDateTime.subtract(oneDay).day == defaultDateTime.day &&
+          checkingDateTime.subtract(oneDay).month == defaultDateTime.month &&
+          checkingDateTime.subtract(oneDay).year == defaultDateTime.year) {
+        return MyDate.isTomorrow;
+      } else if (checkingDateTime.add(oneDay).day == defaultDateTime.day &&
+          checkingDateTime.add(oneDay).month == defaultDateTime.month &&
+          checkingDateTime.add(oneDay).year == defaultDateTime.year) {
+        return MyDate.isYesterday;
+      } else {
+        return MyDate.isAnotherDay;
+      }
     }
   }
 
   String niceDateTimeString(DateTime dateTime) {
-    switch (isSpecialDay(dateTime)) {
+    switch (isSpecialDay(DateTime.now(), dateTime)) {
       case MyDate.isToday:
         return 'Today';
       case MyDate.isYesterday:
