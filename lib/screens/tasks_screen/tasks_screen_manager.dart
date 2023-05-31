@@ -96,7 +96,7 @@ class TasksScreenManager {
     TaskService().getDateList(date: selectedDate.value)?.onData((data) {
       selectedList.value = TaskService().convertFirebaseSnapshotToMyList(
         firebaseSnapshot: data,
-        myListTitle: selectedDate.value.toString(),
+        myListTitle: DateTimeService().niceDateTimeString(selectedDate.value),
       );
     });
   }
