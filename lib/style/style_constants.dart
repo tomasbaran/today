@@ -27,6 +27,12 @@ const TextStyle addNewTaskSheetTitleTextStyle = TextStyle(
   fontWeight: FontWeight.w600,
 );
 
+const TextStyle addNewTaskSheetTaskTitleTextStyle = TextStyle(
+  color: kDefaultHighlightColor,
+  fontSize: 18,
+  fontWeight: FontWeight.w400,
+);
+
 const TextStyle addNewTaskSheetButtonsTextStyle = TextStyle(
   fontSize: 16,
   fontWeight: FontWeight.w700,
@@ -36,3 +42,11 @@ const TextStyle addNewTaskSheetFieldTitleTextStyle = TextStyle(
   fontWeight: FontWeight.w500,
   fontSize: 15,
 );
+const TextStyle addNewTaskSheetFieldHintTitleTextStyle = TextStyle(
+  color: Colors.grey,
+  fontWeight: FontWeight.w500,
+  fontSize: 15,
+);
+
+const double cupertinoListTileLeadingToTitle = 28;
+const double cupertinoListTileLeadingSize = 76;
