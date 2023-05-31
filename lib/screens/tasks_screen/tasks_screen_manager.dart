@@ -39,15 +39,17 @@ class TasksScreenManager {
     getDateList();
   }
 
-  addTaskToDateList({required String? title}) {
-    DateTime startTime = selectedDate.value;
-    DateTime finishTime = selectedDate.value.add(const Duration(hours: 1));
+  addTaskToDateList({
+    required String? title,
+    DateTime? startTime,
+    DateTime? endTime,
+  }) {
     // Don't add an empty titled task
     if (title != null) {
       MyTask newTask = MyTask(
         title: title,
         startTime: startTime,
-        finishTime: finishTime,
+        endTime: endTime,
       );
       TaskService().addTaskToDateList(newTask, selectedDate.value);
     }

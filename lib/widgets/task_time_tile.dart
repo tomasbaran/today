@@ -11,7 +11,7 @@ class TaskTimeTile extends StatelessWidget {
   });
   final String title;
   final IconData icon;
-  final String value;
+  final String? value;
 
   @override
   Widget build(BuildContext context) {
@@ -34,8 +34,8 @@ class TaskTimeTile extends StatelessWidget {
         ),
       ),
       title: Text(
-        value,
-        style: addNewTaskSheetFieldHintTitleTextStyle.copyWith(color: title == 'Date' ? Colors.black : null),
+        value ?? 'not assigned',
+        style: addNewTaskSheetFieldHintTitleTextStyle.copyWith(color: value != null ? Colors.black : null),
       ),
     );
   }

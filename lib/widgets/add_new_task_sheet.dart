@@ -5,14 +5,54 @@ import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/task_time_tile.dart';
+import 'package:today/services/date_time_service.dart';
 
-class AddNewTaskSheet extends StatelessWidget {
+class AddNewTaskSheet extends StatefulWidget {
   AddNewTaskSheet({super.key});
+
+  @override
+  State<AddNewTaskSheet> createState() => _AddNewTaskSheetState();
+}
+
+class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
   final widgetManager = getIt<TasksScreenManager>();
+  DateTime? startTime;
+  DateTime? endTime;
+  DateTime? taskDateTime;
+  String? taskTitle;
+
+  @override
+  void initState() {
+    taskDateTime = widgetManager.selectedDate.value;
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    String? taskTitle;
+    // This function displays a CupertinoModalPopup with a reasonable fixed height
+    // which hosts CupertinoDatePicker.
+    void showCupertinoDialog(Widget child) {
+      showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) => Container(
+          height: 216,
+          padding: const EdgeInsets.only(top: 6.0),
+          // The Bottom margin is provided to align the popup above the system
+          // navigation bar.
+          margin: EdgeInsets.only(
+            bottom: MediaQuery.of(context).viewInsets.bottom,
+          ),
+          // Provide a background color for the popup.
+          color: CupertinoColors.systemBackground.resolveFrom(context),
+          // Use a SafeArea widget to avoid system overlaps.
+          child: SafeArea(
+            top: false,
+            child: child,
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       backgroundColor: kBackgroundColor,
       appBar: AppBar(
@@ -34,7 +74,11 @@ class AddNewTaskSheet extends StatelessWidget {
               style: addNewTaskSheetButtonsTextStyle,
             ),
             onPressed: () {
-              widgetManager.addTaskToDateList(title: taskTitle);
+              widgetManager.addTaskToDateList(
+                title: taskTitle,
+                startTime: startTime,
+                endTime: endTime,
+              );
               Navigator.pop(context);
             },
           ),
@@ -60,22 +104,63 @@ class AddNewTaskSheet extends StatelessWidget {
             dividerMargin: cupertinoListTileLeadingSize,
             children: [
               GestureDetector(
-                onTap: () {},
-                child: const TaskTimeTile(
+                onTap: () {
+                  showCupertinoDialog(
+                    CupertinoDatePicker(
+                        minuteInterval: 5,
+                        // .subtract(Duration(minutes: DateTime.now().minute % 5)) is bugfixing cases when DateTime.now() is not divisible by 5
+                        initialDateTime: DateTime.now().subtract(Duration(minutes: DateTime.now().minute % 5)),
+                        mode: CupertinoDatePickerMode.time,
+                        use24hFormat: true,
+                        onDateTimeChanged: (DateTime newStartTime) {
+                          setState(() => startTime = newStartTime);
+                        }),
+                  );
+                },
+                child: TaskTimeTile(
                   title: 'Starts',
                   icon: Icons.access_time,
-                  value: 'not assigned',
+                  value: startTime == null ? null : DateTimeService().formatTime(startTime!),
                 ),
               ),
-              const TaskTimeTile(
-                title: 'Ends',
-                icon: Icons.access_time_filled,
-                value: 'not assigned',
+              GestureDetector(
+                onTap: () {
+                  showCupertinoDialog(
+                    CupertinoDatePicker(
+                        minuteInterval: 5,
+                        // .subtract(Duration(minutes: DateTime.now().minute % 5)) is bugfixing cases when DateTime.now() is not divisible by 5
+                        initialDateTime: DateTime.now().subtract(Duration(minutes: DateTime.now().minute % 5)),
+                        mode: CupertinoDatePickerMode.time,
+                        use24hFormat: true,
+                        onDateTimeChanged: (DateTime newEndTime) {
+                          setState(() => endTime = newEndTime);
+                        }),
+                  );
+                },
+                child: TaskTimeTile(
+                  title: 'Ends',
+                  icon: Icons.access_time_filled,
+                  value: endTime == null ? null : DateTimeService().formatTime(endTime!),
+                ),
               ),
-              TaskTimeTile(
-                title: 'Date',
-                icon: Icons.calendar_today_rounded,
-                value: DateFormat.yMMMMd('en_US').format(widgetManager.selectedDate.value),
+              GestureDetector(
+                onTap: () {
+                  showDatePicker(
+                    context: context,
+                    initialDate: DateTime.now(),
+                    firstDate: DateTime(2021),
+                    lastDate: DateTime(2050),
+                  ).then((selectedDate) {
+                    if (selectedDate != null) {
+                      taskDateTime = selectedDate;
+                    }
+                  });
+                },
+                child: TaskTimeTile(
+                  title: 'Date',
+                  icon: Icons.calendar_today_rounded,
+                  value: DateFormat.yMMMMd('en_US').format(taskDateTime ?? widgetManager.selectedDate.value),
+                ),
               ),
             ],
           ),
