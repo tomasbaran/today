@@ -71,7 +71,6 @@ class TasksContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     ScrollDirection? scrollDirection;
     return Scaffold(
-      backgroundColor: kBackgroundColor,
       body: Padding(
         padding: const EdgeInsets.only(top: kToolbarHeight + 3),
         child: NotificationListener<UserScrollNotification>(

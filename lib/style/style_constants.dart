@@ -1,5 +1,12 @@
 import 'package:flutter/material.dart';
 
+// FAB
+const TextStyle fabTextStyle = TextStyle(
+  color: Colors.white,
+  fontWeight: FontWeight.w500,
+  fontSize: 15,
+);
+
 // const kBackgroundColor = Color.fromARGB(255, 228, 233, 238);
 const kBackgroundColor = Color(0xFFF2F2F7);
 const kDefaultHighlightColor = Colors.black;

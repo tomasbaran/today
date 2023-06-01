@@ -35,7 +35,7 @@ class _TasksScreenState extends State<TasksScreen> {
             ),
           );
         },
-        label: const Text('+ Add task'),
+        label: const Text('+ Add task', style: fabTextStyle),
       ),
       body: NestedScrollView(
         controller: parentScrollController,
@@ -44,7 +44,6 @@ class _TasksScreenState extends State<TasksScreen> {
             SliverOverlapAbsorber(
               handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
               sliver: const SliverAppBar(
-                backgroundColor: kBackgroundColor,
                 pinned: true,
                 expandedHeight: expandedAppBarHeight,
                 flexibleSpace: SliverAppBarWidget(),

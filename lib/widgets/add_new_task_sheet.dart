@@ -23,9 +23,7 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        backgroundColor: kBackgroundColor,
         shadowColor: Colors.transparent,
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
