@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
@@ -13,16 +14,22 @@ class CollapsedAppBar extends StatelessWidget {
       backgroundColor: kBackgroundColor,
       shadowColor: Colors.transparent,
       centerTitle: true,
-      title: Column(
-        children: [
-          ValueListenableBuilder(
-            valueListenable: tasksScreenManager.selectedList,
-            builder: ((_, selectedList, __) => Text(
+      title: ValueListenableBuilder(
+        valueListenable: tasksScreenManager.selectedList,
+        builder: ((_, selectedList, __) => Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Text(
                   selectedList.title ?? '...',
-                  style: const TextStyle(color: Colors.black),
-                )),
-          ),
-        ],
+                  style: collapsedAppBarTitleTextStyle,
+                ),
+                Text(
+                  selectedList.date == null ? '?' : DateFormat.MMMMd('en_US').format(selectedList.date!),
+                  style: collapsedAppBarSubtitleTextStyle,
+                ),
+                const SizedBox(height: 16),
+              ],
+            )),
       ),
       // actions: <Widget>[
       //   IconButton(

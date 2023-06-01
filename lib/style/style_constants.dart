@@ -1,9 +1,23 @@
 import 'package:flutter/material.dart';
 
-const double expandedAppBarHeight = 360;
 // const kBackgroundColor = Color.fromARGB(255, 228, 233, 238);
 const kBackgroundColor = Color(0xFFF2F2F7);
 const kDefaultHighlightColor = Colors.black;
+
+// ExpandedAppBar
+const double expandedAppBarHeight = 360;
+// CollapsedAppBar
+const TextStyle collapsedAppBarTitleTextStyle = TextStyle(
+  color: Colors.black,
+  fontSize: 24,
+  fontWeight: FontWeight.w700,
+);
+
+const TextStyle collapsedAppBarSubtitleTextStyle = TextStyle(
+  color: Colors.blueGrey,
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+);
 
 // TaskCard
 const double cardRadius = 12;

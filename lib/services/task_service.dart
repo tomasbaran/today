@@ -126,9 +126,11 @@ class TaskService {
   MyList convertFirebaseSnapshotToMyList({
     required DocumentSnapshot<Map<String, dynamic>> firebaseSnapshot,
     required String myListTitle,
+    DateTime? listDate,
   }) {
     MyList myList = MyList();
     myList.title = myListTitle;
+    myList.date = listDate;
     myList.id = firebaseSnapshot.id;
 
     final Map<String, dynamic>? firebaseList = firebaseSnapshot.data();

@@ -1,6 +1,7 @@
 import 'package:today/models/my_task.dart';
 
 class MyList {
+  DateTime? date;
   String? title;
   String? id;
   List<MyTask> tasks;
