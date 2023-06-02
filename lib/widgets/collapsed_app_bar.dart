@@ -26,7 +26,6 @@ class CollapsedAppBar extends StatelessWidget {
                   selectedList.date == null ? '?' : DateFormat.MMMMd('en_US').format(selectedList.date!),
                   style: collapsedAppBarSubtitleTextStyle,
                 ),
-                const SizedBox(height: 16),
               ],
             )),
       ),

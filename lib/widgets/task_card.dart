@@ -39,9 +39,7 @@ class TaskCard extends StatelessWidget {
                       task.title,
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w400,
+                      style: taskCardTitleTextStyle.copyWith(
                         color: task.completed ? Colors.black54 : null,
                         decoration: task.completed ? TextDecoration.lineThrough : null,
                       ),
