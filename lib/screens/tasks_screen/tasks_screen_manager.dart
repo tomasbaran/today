@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:today/models/my_task.dart';
 import 'package:today/models/my_list.dart';
@@ -13,6 +15,7 @@ class TasksScreenManager {
 
   updateSelectedDate(DateTime newDateTime) {
     _selectedDate = newDateTime;
+    getDateList();
   }
 
   countFillInHeight(double screenHeight, double safeAreaBottom) =>

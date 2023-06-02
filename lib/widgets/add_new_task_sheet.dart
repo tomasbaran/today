@@ -111,7 +111,6 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
                   if (newDate != null) {
                     setState(() {
                       widgetManager.updateSelectedDate(newDate);
-                      widgetManager.getDateList();
                     });
                   }
                 }),
