@@ -1,14 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
+import 'package:today/globals/constants.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/add_new_task_sheet.dart';
 
 class BottomToolbar extends StatelessWidget {
+  final PageController pageController;
   BottomToolbar({
     super.key,
+    required this.pageController,
   });
 
   final widgetManager = getIt<TasksScreenManager>();
@@ -31,7 +34,7 @@ class BottomToolbar extends StatelessWidget {
               children: [
                 GestureDetector(
                   onTap: () {
-                    widgetManager.updateSelectedDate(DateTime.now());
+                    pageController.animateToPage(todayIndex, duration: Duration(milliseconds: 300), curve: Curves.easeIn);
                   },
                   child: Icon(
                     CupertinoIcons.today_fill,

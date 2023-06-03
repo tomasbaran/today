@@ -174,7 +174,9 @@ class TasksContainer extends StatelessWidget {
               ),
             ),
           ),
-          BottomToolbar(),
+          BottomToolbar(
+            pageController: pageController,
+          ),
         ],
       ),
     );
