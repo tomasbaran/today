@@ -9,9 +9,11 @@ import 'package:today/widgets/add_new_task_sheet.dart';
 
 class BottomToolbar extends StatelessWidget {
   final PageController pageController;
+  final ScrollController calendarScrollController;
   BottomToolbar({
     super.key,
     required this.pageController,
+    required this.calendarScrollController,
   });
 
   final widgetManager = getIt<TasksScreenManager>();
@@ -82,11 +84,21 @@ class BottomToolbar extends StatelessWidget {
                 //     color: kThemeColor7,
                 //   ),
                 // ),
-                Icon(
-                  CupertinoIcons.calendar,
-                  // CupertinoIcons.profile_circled,
-                  color: kThemeColor7,
-                  size: 30,
+                GestureDetector(
+                  onTap: () => calendarScrollController.animateTo(
+                    // if the calendar is hidden (calendarScrollController.position.maxScrollExtent) -> reveal it (0); if not, hide it (calendarScrollController.position.maxScrollExtent)
+                    calendarScrollController.offset == calendarScrollController.position.maxScrollExtent
+                        ? 0
+                        : calendarScrollController.position.maxScrollExtent,
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeIn,
+                  ),
+                  child: Icon(
+                    CupertinoIcons.calendar,
+                    // CupertinoIcons.profile_circled,
+                    color: kThemeColor7,
+                    size: 30,
+                  ),
                 ),
               ],
             ),

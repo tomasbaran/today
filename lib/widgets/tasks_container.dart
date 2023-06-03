@@ -176,6 +176,7 @@ class TasksContainer extends StatelessWidget {
           ),
           BottomToolbar(
             pageController: pageController,
+            calendarScrollController: parentController,
           ),
         ],
       ),
