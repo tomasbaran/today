@@ -26,17 +26,6 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          showCupertinoModalBottomSheet(
-            context: context,
-            builder: (context) => Scaffold(
-              body: AddNewTaskSheet(),
-            ),
-          );
-        },
-        label: const Text('+ Add task', style: fabTextStyle),
-      ),
       body: NestedScrollView(
         controller: parentScrollController,
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {

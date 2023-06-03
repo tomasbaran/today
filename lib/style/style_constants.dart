@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 
-// FAB
-const TextStyle fabTextStyle = TextStyle(
-  color: Colors.white,
+// ActionBar
+const TextStyle actionBarLinkTextStyle = TextStyle(
   fontWeight: FontWeight.w500,
-  fontSize: 15,
+  fontSize: 16,
 );
 
 // const kBackgroundColor = Color.fromARGB(255, 228, 233, 238);
-const kBackgroundColor = Color(0xFFF2F2F7);
-const kDefaultHighlightColor = Colors.black;
+// const kThemeColor = Color(0xFFF2F6FA);
+const kBackgroundColor = Color(0xFFF3F3F3); // blueGrey
+const kThemeColor2 = Color(0xFFE4E9F0); // grey
+const kThemeColor3 = Color(0xFFB9C3CF); // blueGrey
+const kThemeColor4 = Color(0xFF95A2B1); // blueGrey
+Color kThemeColor6 = Colors.blueGrey.shade400; // blueGrey
+const kThemeColor7 = Colors.blueGrey; // blueGrey
+// dark ones
+const kThemeColor10 = Color(0xFF232B34); // blueGrey
+const kThemeColor11 = Color(0xFF152335); // blueGrey
+const kThemeColor12 = Color(0xFF041427); // blueGrey
+const kHighlightColor = Colors.black;
 
 // ExpandedAppBar
 const double expandedAppBarHeight = 360;
@@ -21,7 +30,7 @@ const TextStyle collapsedAppBarTitleTextStyle = TextStyle(
 );
 
 const TextStyle collapsedAppBarSubtitleTextStyle = TextStyle(
-  color: Colors.blueGrey,
+  color: kThemeColor7,
   fontSize: 16,
   fontWeight: FontWeight.w500,
 );
@@ -30,8 +39,13 @@ const TextStyle collapsedAppBarSubtitleTextStyle = TextStyle(
 const double cardRadius = 12;
 const double taskCardHeight = 76;
 
+const TextStyle taskCardTitleTextStyle = TextStyle(
+  fontSize: 16,
+  fontWeight: FontWeight.w500,
+);
+
 // TasksContainer
-const double bottomCompletedPadding = 68;
+const double bottomCompletedPadding = 146;
 const double defaultFillInHeight = 60;
 
 // TimeCard
@@ -43,23 +57,25 @@ const TextStyle timeCardTextStyle = TextStyle(
 
 // AddNewTaskSheet
 const TextStyle addNewTaskSheetTitleTextStyle = TextStyle(
-  color: kDefaultHighlightColor,
-  fontSize: 16,
-  fontWeight: FontWeight.w600,
+  color: kHighlightColor,
+  fontSize: 15,
+  fontWeight: FontWeight.w500,
 );
 
 const TextStyle addNewTaskSheetTaskTitleTextStyle = TextStyle(
-  color: kDefaultHighlightColor,
-  fontSize: 18,
+  color: kHighlightColor,
+  fontSize: 22,
   fontWeight: FontWeight.w400,
 );
 
 const TextStyle addNewTaskSheetButtonsTextStyle = TextStyle(
+  color: kHighlightColor,
   fontSize: 16,
   fontWeight: FontWeight.w700,
 );
 
 const TextStyle addNewTaskSheetFieldTitleTextStyle = TextStyle(
+  color: kThemeColor10,
   fontWeight: FontWeight.w500,
   fontSize: 15,
 );

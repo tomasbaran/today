@@ -8,6 +8,7 @@ environment:
 
 dependencies:
   cloud_firestore: ^4.5.0
+  cupertino_icons: ^1.0.5
   extended_nested_scroll_view: ^6.0.0
   extension_google_sign_in_as_googleapis_auth: ^2.0.9
   firebase_auth: ^4.4.0

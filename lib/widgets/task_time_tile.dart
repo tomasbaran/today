@@ -22,7 +22,10 @@ class TaskTimeTile extends StatelessWidget {
         alignment: Alignment.centerLeft,
         child: Row(
           children: [
-            Icon(icon),
+            Icon(
+              icon,
+              color: kThemeColor10,
+            ),
             const SizedBox(
               width: 8,
             ),

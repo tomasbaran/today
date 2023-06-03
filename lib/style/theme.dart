@@ -8,7 +8,7 @@ class AppTheme {
     scaffoldBackgroundColor: kBackgroundColor,
     colorScheme: const ColorScheme.light(
       primary: kBackgroundColor,
-      secondary: kDefaultHighlightColor,
+      secondary: kHighlightColor,
     ),
     textTheme: const TextTheme(
       labelLarge: TextStyle(color: Colors.white),

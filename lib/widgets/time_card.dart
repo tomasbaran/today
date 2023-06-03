@@ -27,7 +27,7 @@ class TimeCard extends StatelessWidget {
       child: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.horizontal(left: Radius.circular(cardRadius)),
-          color: kDefaultHighlightColor,
+          color: kHighlightColor,
         ),
         height: 68,
         width: 64,

@@ -56,6 +56,7 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
           CupertinoListSection.insetGrouped(
             children: [
               CupertinoListTile.notched(
+                backgroundColor: kBackgroundColor,
                 title: TextField(
                   style: addNewTaskSheetTaskTitleTextStyle,
                   maxLines: 2,
@@ -99,7 +100,7 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
               GestureDetector(
                 child: TaskTimeTile(
                   title: 'Date',
-                  icon: Icons.calendar_today_rounded,
+                  icon: CupertinoIcons.calendar,
                   value: DateFormat.yMMMMd('en_US').format(widgetManager.selectedDate),
                 ),
                 onTap: () => showDatePicker(
