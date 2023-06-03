@@ -49,6 +49,7 @@ class TaskCard extends StatelessWidget {
                 Align(
                   alignment: Alignment.topRight,
                   child: Checkbox(
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
                     value: task.completed,
                     onChanged: (newValue) {
                       tasksScreenManager.toggleTaskCompleted(task);
