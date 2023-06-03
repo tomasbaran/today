@@ -24,7 +24,7 @@ class BottomToolbar extends StatelessWidget {
           Container(
             height: 50,
             decoration: const BoxDecoration(color: Colors.white, border: Border(top: BorderSide(color: kThemeColor2, width: 1))),
-            padding: const EdgeInsets.only(top: 4),
+            padding: const EdgeInsets.only(top: 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -33,17 +33,41 @@ class BottomToolbar extends StatelessWidget {
                   onTap: () {
                     widgetManager.updateSelectedDate(DateTime.now());
                   },
-                  child: const Icon(
+                  child: Icon(
                     CupertinoIcons.today_fill,
                     size: 30,
                     color: kThemeColor7,
                   ),
                 ),
-                const Icon(
-                  CupertinoIcons.calendar,
-                  color: kThemeColor7,
-                  size: 30,
+                // Icon(
+                //   CupertinoIcons.calendar,
+                //   color: kThemeColor7,
+                //   size: 30,
+                // ),
+                GestureDetector(
+                  onTap: () => showCupertinoModalBottomSheet(
+                    context: context,
+                    builder: (context) => const Scaffold(
+                      body: AddNewTaskSheet(),
+                    ),
+                  ),
+                  child: Container(
+                    height: 40,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      color: kThemeColor12,
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
+                    child: const Center(
+                      child: Icon(
+                        Icons.add_rounded,
+                        size: 28,
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
                 ),
+
                 // Hamburger icon
                 // GestureDetector(
                 //   onTap: () {
@@ -54,33 +78,12 @@ class BottomToolbar extends StatelessWidget {
                 //     size: 30,
                 //     color: kThemeColor7,
                 //   ),
-                //   // child: Text(
-                //   //   'Today',
-                //   //   style: actionBarLinkTextStyle,
-                //   // ),
                 // ),
-                GestureDetector(
-                  onTap: () => showCupertinoModalBottomSheet(
-                    context: context,
-                    builder: (context) => const Scaffold(
-                      body: AddNewTaskSheet(),
-                    ),
-                  ),
-                  child: Container(
-                    height: 24,
-                    width: 24,
-                    decoration: const BoxDecoration(
-                      color: kThemeColor7,
-                      borderRadius: BorderRadius.all(Radius.circular(4)),
-                    ),
-                    child: const Center(
-                      child: Icon(
-                        Icons.add_rounded,
-                        size: 24,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
+                Icon(
+                  CupertinoIcons.calendar,
+                  // CupertinoIcons.profile_circled,
+                  color: kThemeColor7,
+                  size: 30,
                 ),
               ],
             ),

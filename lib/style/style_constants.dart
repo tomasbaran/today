@@ -14,6 +14,10 @@ const kThemeColor3 = Color(0xFFB9C3CF); // blueGrey
 const kThemeColor4 = Color(0xFF95A2B1); // blueGrey
 Color kThemeColor6 = Colors.blueGrey.shade400; // blueGrey
 const kThemeColor7 = Colors.blueGrey; // blueGrey
+Color kThemeColor8 = Colors.blueGrey.shade600; // blueGrey
+const kThemeColor9 = Color(0xFF496370); // blueGrey
+
+// 496370
 // dark ones
 const kThemeColor10 = Color(0xFF232B34); // blueGrey
 const kThemeColor11 = Color(0xFF152335); // blueGrey
