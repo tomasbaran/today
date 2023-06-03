@@ -24,7 +24,7 @@ class TaskTimeTile extends StatelessWidget {
           children: [
             Icon(
               icon,
-              color: kThemeColor10,
+              color: kThemeColor9,
             ),
             const SizedBox(
               width: 8,
@@ -38,7 +38,7 @@ class TaskTimeTile extends StatelessWidget {
       ),
       title: Text(
         value ?? 'not assigned',
-        style: addNewTaskSheetFieldHintTitleTextStyle.copyWith(color: value != null ? Colors.black : null),
+        style: addNewTaskSheetFieldHintTitleTextStyle.copyWith(color: value != null ? kThemeColor10 : null),
       ),
     );
   }

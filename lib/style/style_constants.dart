@@ -79,12 +79,12 @@ const TextStyle addNewTaskSheetButtonsTextStyle = TextStyle(
 );
 
 const TextStyle addNewTaskSheetFieldTitleTextStyle = TextStyle(
-  color: kThemeColor10,
+  color: kThemeColor9,
   fontWeight: FontWeight.w500,
   fontSize: 15,
 );
-const TextStyle addNewTaskSheetFieldHintTitleTextStyle = TextStyle(
-  color: Colors.grey,
+TextStyle addNewTaskSheetFieldHintTitleTextStyle = TextStyle(
+  color: kThemeColor3,
   fontWeight: FontWeight.w500,
   fontSize: 15,
 );

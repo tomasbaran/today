@@ -28,7 +28,7 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
         leading: IconButton(
           onPressed: () => Navigator.pop(context),
           icon: const Icon(Icons.cancel),
-          color: Colors.grey,
+          color: kThemeColor4,
         ),
         title: const Text(
           'Add New Task',
