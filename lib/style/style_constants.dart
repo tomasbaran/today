@@ -91,3 +91,10 @@ TextStyle addNewTaskSheetFieldHintTitleTextStyle = TextStyle(
 
 const double cupertinoListTileLeadingToTitle = 28;
 const double cupertinoListTileLeadingSize = 76;
+
+// BottomToolbar
+TextStyle bottomToolbarIconTextStyle = TextStyle(
+  color: kThemeColor7,
+  fontSize: 26,
+  fontWeight: FontWeight.w500,
+);

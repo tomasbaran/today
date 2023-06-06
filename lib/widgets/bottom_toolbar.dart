@@ -40,8 +40,25 @@ class BottomToolbar extends StatelessWidget {
                   },
                   child: Icon(
                     CupertinoIcons.today_fill,
-                    size: 30,
+                    // Icons.today,
+                    size: 26,
                     color: kThemeColor7,
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () => calendarScrollController.animateTo(
+                    // if the calendar is hidden (calendarScrollController.position.maxScrollExtent) -> reveal it (0); if not, hide it (calendarScrollController.position.maxScrollExtent)
+                    calendarScrollController.offset == calendarScrollController.position.maxScrollExtent
+                        ? 0
+                        : calendarScrollController.position.maxScrollExtent,
+                    duration: const Duration(milliseconds: 200),
+                    curve: Curves.easeIn,
+                  ),
+                  child: Icon(
+                    CupertinoIcons.calendar,
+                    // Icons.calendar_month_rounded,
+                    color: kThemeColor7,
+                    size: 26,
                   ),
                 ),
                 // Icon(
@@ -74,30 +91,33 @@ class BottomToolbar extends StatelessWidget {
                 ),
 
                 // Hamburger icon
-                // GestureDetector(
-                //   onTap: () {
-                //     widgetManager.updateSelectedDate(DateTime.now());
-                //   },
-                //   child: Icon(
-                //     CupertinoIcons.line_horizontal_3_decrease,
-                //     size: 30,
-                //     color: kThemeColor7,
-                //   ),
-                // ),
                 GestureDetector(
-                  onTap: () => calendarScrollController.animateTo(
-                    // if the calendar is hidden (calendarScrollController.position.maxScrollExtent) -> reveal it (0); if not, hide it (calendarScrollController.position.maxScrollExtent)
-                    calendarScrollController.offset == calendarScrollController.position.maxScrollExtent
-                        ? 0
-                        : calendarScrollController.position.maxScrollExtent,
-                    duration: const Duration(milliseconds: 200),
-                    curve: Curves.easeIn,
+                  onTap: () {
+                    widgetManager.updateSelectedDate(DateTime.now());
+                  },
+                  // child: Icon(
+                  //   CupertinoIcons.line_horizontal_3_decrease,
+                  //   size: 26,
+                  //   color: kThemeColor7,
+                  // ),
+
+                  child: Text(
+                    '@',
+                    style: bottomToolbarIconTextStyle,
                   ),
-                  child: Icon(
-                    CupertinoIcons.calendar,
-                    // CupertinoIcons.profile_circled,
-                    color: kThemeColor7,
-                    size: 30,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    widgetManager.updateSelectedDate(DateTime.now());
+                  },
+                  // child: Icon(
+                  //   CupertinoIcons.line_horizontal_3_decrease,
+                  //   size: 26,
+                  //   color: kThemeColor7,
+                  // ),
+                  child: Text(
+                    '#',
+                    style: bottomToolbarIconTextStyle,
                   ),
                 ),
               ],
