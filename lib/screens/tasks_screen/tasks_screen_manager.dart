@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:today/globals/constants.dart';
 import 'package:today/models/my_task.dart';
 import 'package:today/models/my_list.dart';
 import 'package:today/services/date_time_service.dart';
@@ -12,6 +13,8 @@ class TasksScreenManager {
   DateTime _selectedDate = DateTime.now();
 
   DateTime get selectedDate => _selectedDate;
+
+  final pageController = PageController(initialPage: todayIndex, viewportFraction: 0.95);
 
   updateSelectedDate(DateTime newDateTime) {
     _selectedDate = newDateTime;

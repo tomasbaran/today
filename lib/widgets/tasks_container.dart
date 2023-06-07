@@ -5,7 +5,7 @@ import 'package:today/models/my_list.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
-import 'package:today/widgets/floating_bar.dart';
+import 'package:today/widgets/floating_container.dart';
 import 'package:today/widgets/completed_tasks_column.dart';
 import 'package:today/widgets/task_card.dart';
 
@@ -19,8 +19,6 @@ class TasksContainer extends StatelessWidget {
   }) : super(key: key);
 
   final widgetManager = getIt<TasksScreenManager>();
-
-  final pageController = PageController(initialPage: todayIndex, viewportFraction: 0.95);
 
   hideCalendar() {
     double defaultParentHiddenPosition = parentController.position.maxScrollExtent;
@@ -69,6 +67,7 @@ class TasksContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScrollDirection? scrollDirection;
+    final pageController = widgetManager.pageController;
     return Scaffold(
       body: Stack(
         children: [
@@ -174,10 +173,7 @@ class TasksContainer extends StatelessWidget {
               ),
             ),
           ),
-          FloatingBar(
-            pageController: pageController,
-            calendarScrollController: parentController,
-          ),
+          FloatingContainer(),
         ],
       ),
     );
