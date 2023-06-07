@@ -24,19 +24,33 @@ class NavBar extends StatelessWidget {
         GestureDetector(
           onTap: () => pageController.animateToPage(todayIndex, duration: Duration(milliseconds: 300), curve: Curves.easeIn),
           child: Icon(
-            CupertinoIcons.today_fill,
-            // Icons.today,
-            size: 26,
+            // Icons.blur_circular,
+            // Icons.radio_button_on_rounded,
+            // Icons.view_timeline_outlined,
+            // Icons.format_list_bulleted,
+            // CupertinoIcons.line_horizontal_3_decrease,
+            // Icons.center_focus_strong_outlined,
+            // Icons.picture_in_picture,
+            Icons.public_sharp,
+            // Icons.spa_outlined,
+            // Icons.push_pin_outlined,
+            // Icons.notes_rounded,
+            // CupertinoIcons.doc_plaintext,
+            // Icons.note_outlined,
+            // Icons.fullscreen_rounded,
+            // Icons.wb_sunny_outlined,
+            // CupertinoIcons.house,
+            size: 28,
             color: kIconColor,
           ),
         ),
         GestureDetector(
           onTap: () => null,
           child: Icon(
-            CupertinoIcons.calendar,
-            // Icons.calendar_month_rounded,
+            // CupertinoIcons.calendar,
+            Icons.calendar_month_outlined,
             color: kIconColor,
-            size: 26,
+            size: 28,
           ),
         ),
         // Icon(
@@ -70,15 +84,17 @@ class NavBar extends StatelessWidget {
 
         // Hamburger icon
         GestureDetector(
-          onTap: () => null,
-          // child: Icon(
-          //   CupertinoIcons.line_horizontal_3_decrease,
-          //   size: 26,
-          //   color: kThemeColor7,
+          onTap: () => widgetManager.updateNavBarSelection(NavBarSelection.list),
+          // child: Text(
+          //   '&',
+          //   style: bottomToolbarIconTextStyle,
           // ),
-          child: Text(
-            '&',
-            style: bottomToolbarIconTextStyle,
+          child: Icon(
+            // Icons.flash_auto,
+            CupertinoIcons.line_horizontal_3_decrease,
+            // Icons.notes_rounded,
+            color: kIconColor,
+            size: 28,
           ),
         ),
         GestureDetector(
