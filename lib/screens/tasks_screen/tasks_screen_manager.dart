@@ -8,9 +8,19 @@ import 'package:today/services/date_time_service.dart';
 import 'package:today/services/task_service.dart';
 import 'package:today/style/style_constants.dart';
 
+enum NavBarSelection {
+  unselected,
+  calendar,
+  list,
+}
+
 class TasksScreenManager {
   final selectedList = ValueNotifier<MyList>(MyList());
   DateTime _selectedDate = DateTime.now();
+
+  final navBar = ValueNotifier<NavBarSelection>(NavBarSelection.unselected);
+
+  updateNavBarSelection(NavBarSelection newNavBarSelection) => navBar.value = newNavBarSelection;
 
   DateTime get selectedDate => _selectedDate;
 

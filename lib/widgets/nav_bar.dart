@@ -82,12 +82,7 @@ class NavBar extends StatelessWidget {
           ),
         ),
         GestureDetector(
-          onTap: () => null,
-          // child: Icon(
-          //   CupertinoIcons.line_horizontal_3_decrease,
-          //   size: 26,
-          //   color: kThemeColor7,
-          // ),
+          onTap: () => widgetManager.updateNavBarSelection(NavBarSelection.list),
           child: Text(
             '#',
             style: bottomToolbarIconTextStyle,

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
 import 'package:today/style/style_constants.dart';
 
-class RevealedFloatingContainer extends StatelessWidget {
-  const RevealedFloatingContainer({super.key});
+class FloatingListContainer extends StatelessWidget {
+  const FloatingListContainer({super.key});
 
   @override
   Widget build(BuildContext context) {
