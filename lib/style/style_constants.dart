@@ -93,9 +93,19 @@ TextStyle addNewTaskSheetFieldHintTitleTextStyle = TextStyle(
 const double cupertinoListTileLeadingToTitle = 28;
 const double cupertinoListTileLeadingSize = 76;
 
-// BottomToolbar
+// FloatingContainor
+double floatingContainerWidth = 340;
+
+// NavBar
 TextStyle bottomToolbarIconTextStyle = TextStyle(
   color: kIconColor,
+  fontSize: 26,
+  fontWeight: FontWeight.w400,
+);
+
+// # navBarList
+TextStyle navBarListTextStyle = TextStyle(
+  color: Colors.amber,
   fontSize: 26,
   fontWeight: FontWeight.w400,
 );
