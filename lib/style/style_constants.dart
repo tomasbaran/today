@@ -15,7 +15,8 @@ const kThemeColor4 = Color(0xFF95A2B1); // blueGrey
 Color kThemeColor6 = Colors.blueGrey.shade400; // blueGrey
 const kThemeColor7 = Colors.blueGrey; // blueGrey
 Color kThemeColor8 = Colors.blueGrey.shade600; // blueGrey
-const kThemeColor9 = Color(0xFF496370); // blueGrey
+const kThemeColor9 = Color(0xFF496370);
+const kIconColor = Color(0xFF5E6678);
 
 // 496370
 // dark ones
@@ -94,7 +95,7 @@ const double cupertinoListTileLeadingSize = 76;
 
 // BottomToolbar
 TextStyle bottomToolbarIconTextStyle = TextStyle(
-  color: kThemeColor7,
+  color: kIconColor,
   fontSize: 26,
-  fontWeight: FontWeight.w500,
+  fontWeight: FontWeight.w400,
 );

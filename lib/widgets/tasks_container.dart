@@ -5,7 +5,7 @@ import 'package:today/models/my_list.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
-import 'package:today/widgets/bottom_toolbar.dart';
+import 'package:today/widgets/floating_bar.dart';
 import 'package:today/widgets/completed_tasks_column.dart';
 import 'package:today/widgets/task_card.dart';
 
@@ -73,7 +73,7 @@ class TasksContainer extends StatelessWidget {
       body: Stack(
         children: [
           SafeArea(
-            minimum: const EdgeInsets.only(bottom: 88),
+            minimum: const EdgeInsets.only(bottom: 68 + 28 + 4),
             child: Padding(
               padding: const EdgeInsets.only(top: kToolbarHeight + 3),
               child: NotificationListener<UserScrollNotification>(
@@ -174,7 +174,7 @@ class TasksContainer extends StatelessWidget {
               ),
             ),
           ),
-          BottomToolbar(
+          FloatingBar(
             pageController: pageController,
             calendarScrollController: parentController,
           ),
