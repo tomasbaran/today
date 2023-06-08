@@ -28,27 +28,16 @@ class TasksScreenManager {
   final pageController = PageController(initialPage: todayIndex, viewportFraction: 0.95);
 
   updateSelectedDate(DateTime newDateTime) {
-    // update isSelectedDateToday
-    DateTimeService().isSpecialDay(DateTime.now(), newDateTime) == MyDate.isToday
-        ? isSelectedDateToday.value = true
-        : isSelectedDateToday.value = false;
-
-    // DateTime selectedDate = DateTimeService().resetTimeToZero(_selectedDate);
-    // log('selectedDate: ${selectedDate}');
-    // DateTime resettedToday = DateTimeService().resetTimeToZero(DateTime.now());
-    // int differenceInDays = newDateTime.difference(resettedToday).inDays;
-    // log('differenceInDays: $differenceInDays');
-    // int newPageIndex = differenceInDays + todayIndex;
-    // log('newPageIndex: $newPageIndex');
-    // pageController.jumpToPage(newPageIndex);
-
     _selectedDate = newDateTime;
 
-    DateTimeService().isSpecialDay(DateTime.now(), newDateTime) == MyDate.isToday
+    checkIfSelectedDateIsToday();
+    getDateList();
+  }
+
+  checkIfSelectedDateIsToday() {
+    DateTimeService().isSpecialDay(DateTime.now(), _selectedDate) == MyDate.isToday
         ? isSelectedDateToday.value = true
         : isSelectedDateToday.value = false;
-
-    getDateList();
   }
 
   countFillInHeight(double screenHeight, double safeAreaBottom) =>
@@ -57,24 +46,10 @@ class TasksScreenManager {
   changePage(double oldPageIndex, int newPageIndex) {
     // print('$oldPageIndex -> $newPageIndex');
     if (newPageIndex.toDouble() > oldPageIndex) {
-      showNextDay();
+      updateSelectedDate(_selectedDate.add(const Duration(days: 1)));
     } else {
-      showPreviousDay();
+      updateSelectedDate(_selectedDate.subtract(const Duration(days: 1)));
     }
-  }
-
-  showNewDate(DateTime newDate) {
-    updateSelectedDate(newDate);
-  }
-
-  showNextDay() {
-    // _selectedDate = _selectedDate.add(const Duration(days: 1));
-    // getDateList();
-    updateSelectedDate(_selectedDate.add(const Duration(days: 1)));
-  }
-
-  showPreviousDay() {
-    updateSelectedDate(_selectedDate.subtract(const Duration(days: 1)));
   }
 
   addTaskToDateList({

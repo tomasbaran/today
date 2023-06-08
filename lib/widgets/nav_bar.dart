@@ -25,7 +25,7 @@ class NavBar extends StatelessWidget {
           onTap: () => widgetManager.updateSelectedDate(DateTime.now()),
           behavior: HitTestBehavior.translucent,
           child: Padding(
-            padding: const EdgeInsets.only(left: 32, top: 16, bottom: 16, right: 16),
+            padding: const EdgeInsets.only(left: 28, top: 16, bottom: 16, right: 16),
             child: Transform.rotate(
               angle: 0.18 * 3.1415926535897932, // Rotate 45 degrees (0.25 * 2 * pi)
               child: ValueListenableBuilder(
@@ -147,7 +147,7 @@ class NavBar extends StatelessWidget {
               FontAwesomeIcons.paperPlane,
               // FontAwesomeIcons.commentDots,
               color: kIconColor,
-              size: 23,
+              size: 22,
             ),
           ),
         ),
