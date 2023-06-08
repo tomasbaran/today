@@ -66,11 +66,14 @@ class NavBar extends StatelessWidget {
           behavior: HitTestBehavior.translucent,
           child: Padding(
             padding: const EdgeInsets.all(16),
-            child: Icon(
-              // CupertinoIcons.calendar,
-              Icons.calendar_today_outlined,
-              color: kIconColor,
-              size: 28,
+            child: Padding(
+              padding: const EdgeInsets.only(bottom: 2),
+              child: Icon(
+                // CupertinoIcons.calendar,
+                Icons.calendar_today_outlined,
+                color: kIconColor,
+                size: 28,
+              ),
             ),
           ),
         ),
@@ -95,7 +98,7 @@ class NavBar extends StatelessWidget {
               decoration: BoxDecoration(
                 // color: kIconColor,
                 border: Border.all(
-                  width: 2,
+                  width: 2.3,
                   color: kIconColor,
                 ),
                 borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -103,7 +106,8 @@ class NavBar extends StatelessWidget {
               child: const Center(
                 child: Icon(
                   Icons.add_rounded,
-                  size: 24,
+                  weight: 10,
+                  size: 23,
                   color: kIconColor,
                   // color: kThemeColor12,
                 ),
@@ -127,7 +131,7 @@ class NavBar extends StatelessWidget {
               CupertinoIcons.line_horizontal_3_decrease,
               // Icons.notes_rounded,
               color: kIconColor,
-              size: 32,
+              size: 30,
             ),
           ),
         ),
