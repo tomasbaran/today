@@ -28,11 +28,15 @@ class NavBar extends StatelessWidget {
           onTap: () => widgetManager.updateSelectedDate(DateTime.now()),
           child: Transform.rotate(
             angle: 0.18 * 3.1415926535897932, // Rotate 45 degrees (0.25 * 2 * pi)
-            child: Icon(
-              Icons.push_pin_outlined,
-              size: 28,
-              color: kIconColor,
-            ),
+            child: ValueListenableBuilder(
+                valueListenable: widgetManager.isSelectedDateToday,
+                builder: (_, isSelectedToday, __) {
+                  return Icon(
+                    isSelectedToday ? Icons.push_pin : Icons.push_pin_outlined,
+                    size: 28,
+                    color: kIconColor,
+                  );
+                }),
           ),
           // child: Icon(
           // Icons.blur_circular,

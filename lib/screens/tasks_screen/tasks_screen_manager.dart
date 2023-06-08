@@ -17,6 +17,7 @@ enum NavBarSelection {
 class TasksScreenManager {
   final selectedList = ValueNotifier<MyList>(MyList());
   DateTime _selectedDate = DateTime.now();
+  final isSelectedDateToday = ValueNotifier<bool>(true);
 
   final navBar = ValueNotifier<NavBarSelection>(NavBarSelection.unselected);
 
@@ -27,7 +28,26 @@ class TasksScreenManager {
   final pageController = PageController(initialPage: todayIndex, viewportFraction: 0.95);
 
   updateSelectedDate(DateTime newDateTime) {
+    // update isSelectedDateToday
+    DateTimeService().isSpecialDay(DateTime.now(), newDateTime) == MyDate.isToday
+        ? isSelectedDateToday.value = true
+        : isSelectedDateToday.value = false;
+
+    // DateTime selectedDate = DateTimeService().resetTimeToZero(_selectedDate);
+    // log('selectedDate: ${selectedDate}');
+    // DateTime resettedToday = DateTimeService().resetTimeToZero(DateTime.now());
+    // int differenceInDays = newDateTime.difference(resettedToday).inDays;
+    // log('differenceInDays: $differenceInDays');
+    // int newPageIndex = differenceInDays + todayIndex;
+    // log('newPageIndex: $newPageIndex');
+    // pageController.jumpToPage(newPageIndex);
+
     _selectedDate = newDateTime;
+
+    DateTimeService().isSpecialDay(DateTime.now(), newDateTime) == MyDate.isToday
+        ? isSelectedDateToday.value = true
+        : isSelectedDateToday.value = false;
+
     getDateList();
   }
 
@@ -43,19 +63,18 @@ class TasksScreenManager {
     }
   }
 
-  showAnyDay(DateTime newDate) {
-    _selectedDate = newDate;
-    getDateList();
+  showNewDate(DateTime newDate) {
+    updateSelectedDate(newDate);
   }
 
   showNextDay() {
-    _selectedDate = _selectedDate.add(const Duration(days: 1));
-    getDateList();
+    // _selectedDate = _selectedDate.add(const Duration(days: 1));
+    // getDateList();
+    updateSelectedDate(_selectedDate.add(const Duration(days: 1)));
   }
 
   showPreviousDay() {
-    _selectedDate = _selectedDate.subtract(const Duration(days: 1));
-    getDateList();
+    updateSelectedDate(_selectedDate.subtract(const Duration(days: 1)));
   }
 
   addTaskToDateList({
