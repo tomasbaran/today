@@ -49,9 +49,11 @@ const TextStyle taskCardTitleTextStyle = TextStyle(
   fontWeight: FontWeight.w500,
 );
 
-// TasksContainer
-const double bottomCompletedPadding = 146;
-const double defaultFillInHeight = 60;
+// CompletedContainer
+const double completedTitleHeight = 16;
+const double completedTitleBottomPadding = 16;
+const double minEmptySpaceHeight = 60;
+double floatingNavBarContainerHeight = 62;
 
 // TimeCard
 const TextStyle timeCardTextStyle = TextStyle(

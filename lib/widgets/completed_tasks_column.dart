@@ -6,20 +6,23 @@ import 'package:today/widgets/task_card.dart';
 
 class CompletedTasksColumn extends StatelessWidget {
   final widgetManager = getIt<TasksScreenManager>();
-  final double fillInHeight;
   CompletedTasksColumn({
     super.key,
-    required this.fillInHeight,
   });
 
   List<Widget> children() {
+    double emptySpaceHeight = widgetManager.calcEmptySpaceHeight();
+
     List<Widget> output = [];
     output.add(
       Padding(
-        padding: EdgeInsets.only(top: fillInHeight < defaultFillInHeight ? defaultFillInHeight : fillInHeight, left: 12, bottom: 20),
+        padding: EdgeInsets.only(top: emptySpaceHeight < minEmptySpaceHeight ? minEmptySpaceHeight : emptySpaceHeight, left: 12),
         child: Text('COMPLETED: ${widgetManager.selectedList.value.completedTasks.length}'),
       ),
     );
+    if (widgetManager.selectedList.value.completedTasks.isNotEmpty) {
+      output.add(const SizedBox(height: completedTitleBottomPadding));
+    }
     for (var completedTask in widgetManager.selectedList.value.completedTasks) {
       output.add(TaskCard(
         task: completedTask,

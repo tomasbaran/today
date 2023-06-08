@@ -26,6 +26,7 @@ class _TasksScreenState extends State<TasksScreen> {
   ScrollController parentScrollController = ScrollController(initialScrollOffset: expandedAppBarHeight - kToolbarHeight);
   @override
   Widget build(BuildContext context) {
+    widgetManager.getScreenMeasurments(context);
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.purple,
