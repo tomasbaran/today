@@ -18,6 +18,10 @@ class ExpandedAppBar extends StatelessWidget {
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
               focusedDay: DateTime.now(),
+              daysOfWeekStyle: DaysOfWeekStyle(
+                weekdayStyle: TextStyle(color: const Color(0xFF4F4F4F), fontWeight: FontWeight.w700),
+                weekendStyle: TextStyle(color: const Color(0xFF6A6A6A), fontWeight: FontWeight.w700),
+              ),
             ),
           ],
         ),

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
+import 'package:today/widgets/calendar_view.dart';
 import 'package:today/widgets/nav_bar.dart';
-import 'package:today/widgets/floating_list_container.dart';
+import 'package:today/widgets/floating_list_view.dart';
 
 class FloatingContainer extends StatelessWidget {
   FloatingContainer({
@@ -24,7 +25,7 @@ class FloatingContainer extends StatelessWidget {
           child: Container(
             width: floatingContainerWidth,
             decoration: BoxDecoration(
-              color: kThemeColor12,
+              color: kThemeColor11,
               borderRadius: BorderRadius.all(Radius.circular(31)),
             ),
             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -33,7 +34,9 @@ class FloatingContainer extends StatelessWidget {
               builder: (context, navBarSelection, child) {
                 switch (navBarSelection) {
                   case NavBarSelection.list:
-                    return FloatingListContainer();
+                    return FloatingListView();
+                  case NavBarSelection.calendar:
+                    return CalendarView();
                   default:
                     return NavBar();
                 }

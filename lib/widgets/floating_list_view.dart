@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:today/style/style_constants.dart';
 
-class FloatingListContainer extends StatelessWidget {
-  const FloatingListContainer({super.key});
+class FloatingListView extends StatelessWidget {
+  const FloatingListView({super.key});
 
   @override
   Widget build(BuildContext context) {
