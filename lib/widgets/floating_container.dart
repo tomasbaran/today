@@ -28,7 +28,6 @@ class FloatingContainer extends StatelessWidget {
               color: kThemeColor11,
               borderRadius: BorderRadius.all(Radius.circular(31)),
             ),
-            padding: const EdgeInsets.symmetric(vertical: 16),
             child: ValueListenableBuilder(
               valueListenable: widgetManager.navBar,
               builder: (context, navBarSelection, child) {

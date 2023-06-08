@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:googleapis/firestore/v1.dart';
 import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
-import 'package:today/globals/constants.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
-import 'package:today/services/date_time_service.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/add_new_task_sheet.dart';
@@ -26,17 +23,21 @@ class NavBar extends StatelessWidget {
         GestureDetector(
           // onTap: () => widgetManager.pageController.animateToPage(todayIndex, duration: Duration(milliseconds: 300), curve: Curves.easeIn),
           onTap: () => widgetManager.updateSelectedDate(DateTime.now()),
-          child: Transform.rotate(
-            angle: 0.18 * 3.1415926535897932, // Rotate 45 degrees (0.25 * 2 * pi)
-            child: ValueListenableBuilder(
-                valueListenable: widgetManager.isSelectedDateToday,
-                builder: (_, isSelectedToday, __) {
-                  return Icon(
-                    isSelectedToday ? Icons.push_pin : Icons.push_pin_outlined,
-                    size: 28,
-                    color: kIconColor,
-                  );
-                }),
+          behavior: HitTestBehavior.translucent,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 32, top: 16, bottom: 16, right: 16),
+            child: Transform.rotate(
+              angle: 0.18 * 3.1415926535897932, // Rotate 45 degrees (0.25 * 2 * pi)
+              child: ValueListenableBuilder(
+                  valueListenable: widgetManager.isSelectedDateToday,
+                  builder: (_, isSelectedToday, __) {
+                    return Icon(
+                      isSelectedToday ? Icons.push_pin : Icons.push_pin_outlined,
+                      size: 28,
+                      color: kIconColor,
+                    );
+                  }),
+            ),
           ),
           // child: Icon(
           // Icons.blur_circular,
@@ -62,11 +63,15 @@ class NavBar extends StatelessWidget {
         ),
         GestureDetector(
           onTap: () => widgetManager.updateNavBarSelection(NavBarSelection.calendar),
-          child: Icon(
-            // CupertinoIcons.calendar,
-            Icons.calendar_today_outlined,
-            color: kIconColor,
-            size: 28,
+          behavior: HitTestBehavior.translucent,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Icon(
+              // CupertinoIcons.calendar,
+              Icons.calendar_today_outlined,
+              color: kIconColor,
+              size: 28,
+            ),
           ),
         ),
         // Icon(
@@ -75,29 +80,33 @@ class NavBar extends StatelessWidget {
         //   size: 30,
         // ),
         GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () => showCupertinoModalBottomSheet(
             context: context,
             builder: (context) => const Scaffold(
               body: AddNewTaskSheet(),
             ),
           ),
-          child: Container(
-            height: 30,
-            width: 30,
-            decoration: BoxDecoration(
-              // color: kIconColor,
-              border: Border.all(
-                width: 2,
-                color: kIconColor,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Container(
+              height: 30,
+              width: 30,
+              decoration: BoxDecoration(
+                // color: kIconColor,
+                border: Border.all(
+                  width: 2,
+                  color: kIconColor,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(8)),
               ),
-              borderRadius: BorderRadius.all(Radius.circular(8)),
-            ),
-            child: const Center(
-              child: Icon(
-                Icons.add_rounded,
-                size: 24,
-                color: kIconColor,
-                // color: kThemeColor12,
+              child: const Center(
+                child: Icon(
+                  Icons.add_rounded,
+                  size: 24,
+                  color: kIconColor,
+                  // color: kThemeColor12,
+                ),
               ),
             ),
           ),
@@ -105,29 +114,37 @@ class NavBar extends StatelessWidget {
 
         // Hamburger icon
         GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () => widgetManager.updateNavBarSelection(NavBarSelection.list),
           // child: Text(
           //   '&',
           //   style: bottomToolbarIconTextStyle,
           // ),
-          child: Icon(
-            // Icons.flash_auto,
-            CupertinoIcons.line_horizontal_3_decrease,
-            // Icons.notes_rounded,
-            color: kIconColor,
-            size: 32,
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Icon(
+              // Icons.flash_auto,
+              CupertinoIcons.line_horizontal_3_decrease,
+              // Icons.notes_rounded,
+              color: kIconColor,
+              size: 32,
+            ),
           ),
         ),
         GestureDetector(
+          behavior: HitTestBehavior.translucent,
           onTap: () => widgetManager.updateNavBarSelection(NavBarSelection.list),
           child:
               // Icons.messenger_outline_sharp,
               // CupertinoIcons.bubble_left,
-              FaIcon(
-            FontAwesomeIcons.paperPlane,
-            // FontAwesomeIcons.commentDots,
-            color: kIconColor,
-            size: 23,
+              Padding(
+            padding: const EdgeInsets.only(right: 32, top: 16, bottom: 16, left: 16),
+            child: FaIcon(
+              FontAwesomeIcons.paperPlane,
+              // FontAwesomeIcons.commentDots,
+              color: kIconColor,
+              size: 23,
+            ),
           ),
         ),
       ],
