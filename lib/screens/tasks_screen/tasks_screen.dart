@@ -43,7 +43,7 @@ class _TasksScreenState extends State<TasksScreen> {
             ),
           ];
         },
-        body: TasksContainer(parentController: parentScrollController),
+        body: TasksContainer(),
       ),
     );
   }
