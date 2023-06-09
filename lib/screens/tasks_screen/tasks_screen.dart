@@ -23,7 +23,6 @@ class _TasksScreenState extends State<TasksScreen> {
     widgetManager.getDateList();
   }
 
-  ScrollController parentScrollController = ScrollController(initialScrollOffset: expandedAppBarHeight - kToolbarHeight);
   @override
   Widget build(BuildContext context) {
     widgetManager.getScreenMeasurments(context);
