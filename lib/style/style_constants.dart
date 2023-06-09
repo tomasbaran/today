@@ -29,14 +29,14 @@ const kHighlightColor = Colors.black;
 const double expandedAppBarHeight = 360;
 // CollapsedAppBar
 const TextStyle collapsedAppBarTitleTextStyle = TextStyle(
-  color: Colors.black,
+  color: kThemeColor11,
   fontSize: 24,
   fontWeight: FontWeight.w700,
 );
 
 const TextStyle collapsedAppBarSubtitleTextStyle = TextStyle(
-  color: kThemeColor7,
-  fontSize: 16,
+  color: kThemeColor11,
+  fontSize: 24,
   fontWeight: FontWeight.w500,
 );
 

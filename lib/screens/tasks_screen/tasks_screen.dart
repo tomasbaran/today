@@ -29,8 +29,7 @@ class _TasksScreenState extends State<TasksScreen> {
     widgetManager.getScreenMeasurments(context);
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.purple,
-        // shadowColor: Colors.transparent,
+        shadowColor: Colors.transparent,
         title: ValueListenableBuilder(
           valueListenable: widgetManager.selectedList,
           builder: ((_, selectedList, __) => Row(
@@ -40,6 +39,7 @@ class _TasksScreenState extends State<TasksScreen> {
                     selectedList.title ?? '...',
                     style: collapsedAppBarTitleTextStyle,
                   ),
+                  const SizedBox(width: 8),
                   Text(
                     selectedList.date == null ? '?' : DateFormat.MMMMd('en_US').format(selectedList.date!),
                     style: collapsedAppBarSubtitleTextStyle,
