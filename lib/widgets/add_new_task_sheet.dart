@@ -95,6 +95,7 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
                   onDateTimeChanged: (DateTime newTime) {
                     setState(() => endTime = newTime);
                   },
+                  defaultTime: startTime,
                 ),
               ),
               GestureDetector(

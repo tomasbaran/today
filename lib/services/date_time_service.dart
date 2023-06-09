@@ -68,7 +68,11 @@ class DateTimeService {
 
 // This function displays a CupertinoModalPopup with a reasonable fixed height
 // which hosts CupertinoDatePicker.
-  void showCupertinoTimePicker({required BuildContext context, required Function(DateTime) onDateTimeChanged}) {
+  void showCupertinoTimePicker({
+    required BuildContext context,
+    required Function(DateTime) onDateTimeChanged,
+    DateTime? defaultTime,
+  }) {
     showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) => Container(
@@ -87,7 +91,7 @@ class DateTimeService {
           child: CupertinoDatePicker(
             minuteInterval: 5,
             // .subtract(Duration(minutes: DateTime.now().minute % 5)) is bugfixing cases when DateTime.now() is not divisible by 5
-            initialDateTime: DateTime.now().subtract(Duration(minutes: DateTime.now().minute % 5)),
+            initialDateTime: defaultTime ?? DateTime.now().subtract(Duration(minutes: DateTime.now().minute % 5)),
             mode: CupertinoDatePickerMode.time,
             use24hFormat: true,
             onDateTimeChanged: (DateTime newTime) => onDateTimeChanged(newTime),
