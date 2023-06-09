@@ -38,12 +38,12 @@ class _TasksScreenState extends State<TasksScreen> {
                   children: [
                     Text(
                       selectedList.title ?? '...',
-                      style: collapsedAppBarTitleTextStyle,
+                      style: appBarTitleTextStyle,
                     ),
                     const SizedBox(width: 8),
                     Text(
                       selectedList.date == null ? '?' : DateFormat.MMMMd('en_US').format(selectedList.date!),
-                      style: collapsedAppBarSubtitleTextStyle,
+                      style: appBarSubtitleTextStyle,
                     ),
                   ],
                 )),

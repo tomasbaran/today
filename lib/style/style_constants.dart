@@ -10,7 +10,7 @@ const TextStyle actionBarLinkTextStyle = TextStyle(
 // const kThemeColor = Color(0xFFF2F6FA);
 const kBackgroundColor = Color(0xFFF3F3F3); // blueGrey
 const kThemeColor2 = Color(0xFFE4E9F0); // grey
-const kThemeColor3 = Color(0xFFB9C3CF); // blueGrey
+const kThemeColor3 = Color.fromARGB(255, 202, 208, 215); // blueGrey
 const kThemeColor4 = Color(0xFF95A2B1); // blueGrey
 Color kThemeColor6 = Colors.blueGrey.shade400; // blueGrey
 const kThemeColor7 = Colors.blueGrey; // blueGrey
@@ -37,14 +37,13 @@ TextStyle loginScreenSubtitle = TextStyle(
   fontSize: 24,
 );
 
-// ExpandedAppBar
-const TextStyle collapsedAppBarTitleTextStyle = TextStyle(
+// TaskScreenAppBar
+const TextStyle appBarTitleTextStyle = TextStyle(
   color: kThemeColor11,
   fontSize: 24,
   fontWeight: FontWeight.w700,
 );
-
-const TextStyle collapsedAppBarSubtitleTextStyle = TextStyle(
+const TextStyle appBarSubtitleTextStyle = TextStyle(
   color: kThemeColor11,
   fontSize: 24,
   fontWeight: FontWeight.w500,

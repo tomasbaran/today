@@ -19,6 +19,7 @@ class TaskCard extends StatelessWidget {
     final tasksScreenManager = getIt<TasksScreenManager>();
     return Card(
       elevation: elevation,
+      color: task.completed ? kThemeColor3 : null,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(cardRadius)),
       child: Row(
         children: [
@@ -28,7 +29,6 @@ class TaskCard extends StatelessWidget {
           ),
           Expanded(
             child: Container(
-              color: task.completed ? Colors.black12 : null,
               height: 68,
               child: Stack(children: [
                 Padding(
