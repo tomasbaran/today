@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -8,7 +10,8 @@ import 'package:today/widgets/task_time_tile.dart';
 import 'package:today/services/date_time_service.dart';
 
 class AddNewTaskSheet extends StatefulWidget {
-  const AddNewTaskSheet({super.key});
+  final String title;
+  const AddNewTaskSheet({super.key, required this.title});
 
   @override
   State<AddNewTaskSheet> createState() => _AddNewTaskSheetState();
@@ -16,9 +19,23 @@ class AddNewTaskSheet extends StatefulWidget {
 
 class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
   final widgetManager = getIt<TasksScreenManager>();
+  String? taskTitle;
   DateTime? startTime;
   DateTime? endTime;
-  String? taskTitle;
+
+  @override
+  void initState() {
+    taskTitle = widgetManager.selectedTask?.title;
+    startTime = widgetManager.selectedTask?.startTime;
+    endTime = widgetManager.selectedTask?.endTime;
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    widgetManager.unselectTask();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,8 +47,8 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
           icon: const Icon(Icons.cancel),
           color: kThemeColor4,
         ),
-        title: const Text(
-          'Add New Task',
+        title: Text(
+          widget.title,
           style: addNewTaskSheetTitleTextStyle,
         ),
         actions: [
@@ -58,6 +75,7 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
               CupertinoListTile.notched(
                 backgroundColor: kBackgroundColor,
                 title: TextField(
+                  controller: TextEditingController.fromValue(TextEditingValue(text: taskTitle ?? '')),
                   style: addNewTaskSheetTaskTitleTextStyle,
                   maxLines: 2,
                   onChanged: (text) => taskTitle = text,
@@ -79,6 +97,7 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
                 ),
                 onTap: () => DateTimeService().showCupertinoTimePicker(
                   context: context,
+                  defaultTime: startTime,
                   onDateTimeChanged: (DateTime newTime) {
                     setState(() => startTime = newTime);
                   },
@@ -95,7 +114,7 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
                   onDateTimeChanged: (DateTime newTime) {
                     setState(() => endTime = newTime);
                   },
-                  defaultTime: startTime,
+                  defaultTime: endTime ?? startTime,
                 ),
               ),
               GestureDetector(

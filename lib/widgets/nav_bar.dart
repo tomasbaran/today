@@ -87,7 +87,7 @@ class NavBar extends StatelessWidget {
           onTap: () => showCupertinoModalBottomSheet(
             context: context,
             builder: (context) => const Scaffold(
-              body: AddNewTaskSheet(),
+              body: AddNewTaskSheet(title: 'Add New Task'),
             ),
           ),
           child: Padding(

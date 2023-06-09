@@ -16,6 +16,13 @@ enum NavBarSelection {
 
 class TasksScreenManager {
   final selectedList = ValueNotifier<MyList>(MyList());
+  MyTask? _selectedTask;
+  get selectedTask => _selectedTask;
+  set selectTask(MyTask task) => _selectedTask = task;
+  unselectTask() {
+    _selectedTask = null;
+  }
+
   DateTime _selectedDate = DateTime.now();
   final isSelectedDateToday = ValueNotifier<bool>(true);
 
