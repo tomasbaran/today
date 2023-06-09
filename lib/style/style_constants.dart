@@ -108,6 +108,6 @@ TextStyle bottomToolbarIconTextStyle = TextStyle(
 // # navBarList
 TextStyle navBarListTextStyle = TextStyle(
   color: Colors.amber,
-  fontSize: 26,
-  fontWeight: FontWeight.w400,
+  fontSize: 18,
+  fontWeight: FontWeight.w500,
 );
