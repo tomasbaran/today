@@ -27,30 +27,33 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   Widget build(BuildContext context) {
     widgetManager.getScreenMeasurments(context);
-    return Scaffold(
-      appBar: AppBar(
-        shadowColor: Colors.transparent,
-        title: ValueListenableBuilder(
-          valueListenable: widgetManager.selectedList,
-          builder: ((_, selectedList, __) => Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Text(
-                    selectedList.title ?? '...',
-                    style: collapsedAppBarTitleTextStyle,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    selectedList.date == null ? '?' : DateFormat.MMMMd('en_US').format(selectedList.date!),
-                    style: collapsedAppBarSubtitleTextStyle,
-                  ),
-                ],
-              )),
+    return GestureDetector(
+      onTap: () => widgetManager.updateNavBarSelection(NavBarSelection.unselected),
+      child: Scaffold(
+        appBar: AppBar(
+          shadowColor: Colors.transparent,
+          title: ValueListenableBuilder(
+            valueListenable: widgetManager.selectedList,
+            builder: ((_, selectedList, __) => Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Text(
+                      selectedList.title ?? '...',
+                      style: collapsedAppBarTitleTextStyle,
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      selectedList.date == null ? '?' : DateFormat.MMMMd('en_US').format(selectedList.date!),
+                      style: collapsedAppBarSubtitleTextStyle,
+                    ),
+                  ],
+                )),
+          ),
         ),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        floatingActionButton: FloatingContainer(),
+        body: TasksContainer(),
       ),
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-      floatingActionButton: FloatingContainer(),
-      body: TasksContainer(),
     );
   }
 }

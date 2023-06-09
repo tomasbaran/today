@@ -17,30 +17,27 @@ class FloatingContainer extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => widgetManager.updateNavBarSelection(NavBarSelection.unselected),
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: Material(
-          borderRadius: BorderRadius.all(Radius.circular(60)),
-          elevation: 10,
-          child: Container(
-            width: floatingContainerWidth,
-            decoration: BoxDecoration(
-              color: kThemeColor11,
-              borderRadius: BorderRadius.all(Radius.circular(31)),
-            ),
-            child: ValueListenableBuilder(
-              valueListenable: widgetManager.navBar,
-              builder: (context, navBarSelection, child) {
-                switch (navBarSelection) {
-                  case NavBarSelection.list:
-                    return FloatingListView();
-                  case NavBarSelection.calendar:
-                    return CalendarView();
-                  default:
-                    return NavBar();
-                }
-              },
-            ),
+      child: Material(
+        borderRadius: BorderRadius.all(Radius.circular(60)),
+        elevation: 10,
+        child: Container(
+          width: floatingContainerWidth,
+          decoration: BoxDecoration(
+            color: kThemeColor11,
+            borderRadius: BorderRadius.all(Radius.circular(31)),
+          ),
+          child: ValueListenableBuilder(
+            valueListenable: widgetManager.navBar,
+            builder: (context, navBarSelection, child) {
+              switch (navBarSelection) {
+                case NavBarSelection.list:
+                  return FloatingListView();
+                case NavBarSelection.calendar:
+                  return CalendarView();
+                default:
+                  return NavBar();
+              }
+            },
           ),
         ),
       ),
