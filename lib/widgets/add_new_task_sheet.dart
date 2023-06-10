@@ -11,7 +11,8 @@ import 'package:today/services/date_time_service.dart';
 
 class AddNewTaskSheet extends StatefulWidget {
   final String title;
-  const AddNewTaskSheet({super.key, required this.title});
+  final String catButtonTitle;
+  const AddNewTaskSheet({super.key, required this.title, required this.catButtonTitle});
 
   @override
   State<AddNewTaskSheet> createState() => _AddNewTaskSheetState();
@@ -53,8 +54,8 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
         ),
         actions: [
           TextButton(
-            child: const Text(
-              'Add',
+            child: Text(
+              widget.catButtonTitle,
               style: addNewTaskSheetButtonsTextStyle,
             ),
             onPressed: () {
