@@ -74,6 +74,18 @@ class TasksScreenManager {
     }
   }
 
+  updateTask({
+    required DateTime originalDate,
+    String? newTitle,
+    DateTime? newStartTime,
+    DateTime? newEndTime,
+  }) {
+    DateTime newDate = _selectedDate;
+    MyTask? originalTask = _selectedTask;
+    log('\x1B[31moriginal[$originalDate]selectedTask[${originalTask!.key}]: ${originalTask.title}');
+    log('\x1B[32m[$newDate]widgetManager.updateTask: $newTitle, $newStartTime, $newEndTime  \x1B[0m');
+  }
+
   addTaskToDateList({
     required String? title,
     DateTime? startTime,

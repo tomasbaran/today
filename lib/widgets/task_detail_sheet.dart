@@ -9,23 +9,29 @@ import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/task_time_tile.dart';
 import 'package:today/services/date_time_service.dart';
 
-class AddNewTaskSheet extends StatefulWidget {
-  final String title;
-  final String catButtonTitle;
-  const AddNewTaskSheet({super.key, required this.title, required this.catButtonTitle});
-
-  @override
-  State<AddNewTaskSheet> createState() => _AddNewTaskSheetState();
+enum SheetType {
+  newTask,
+  updateTask,
 }
 
-class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
+class TaskDetailSheet extends StatefulWidget {
+  final SheetType sheetType;
+  const TaskDetailSheet({super.key, required this.sheetType});
+
+  @override
+  State<TaskDetailSheet> createState() => _TaskDetailSheetState();
+}
+
+class _TaskDetailSheetState extends State<TaskDetailSheet> {
   final widgetManager = getIt<TasksScreenManager>();
   String? taskTitle;
   DateTime? startTime;
   DateTime? endTime;
+  late DateTime originalDate;
 
   @override
   void initState() {
+    originalDate = widgetManager.selectedDate;
     taskTitle = widgetManager.selectedTask?.title;
     startTime = widgetManager.selectedTask?.startTime;
     endTime = widgetManager.selectedTask?.endTime;
@@ -49,21 +55,28 @@ class _AddNewTaskSheetState extends State<AddNewTaskSheet> {
           color: kThemeColor4,
         ),
         title: Text(
-          widget.title,
+          widget.sheetType == SheetType.newTask ? 'Add New Task' : 'Edit Task',
           style: addNewTaskSheetTitleTextStyle,
         ),
         actions: [
           TextButton(
             child: Text(
-              widget.catButtonTitle,
+              widget.sheetType == SheetType.newTask ? 'Add' : 'Update',
               style: addNewTaskSheetButtonsTextStyle,
             ),
             onPressed: () {
-              widgetManager.addTaskToDateList(
-                title: taskTitle,
-                startTime: startTime,
-                endTime: endTime,
-              );
+              widget.sheetType == SheetType.newTask
+                  ? widgetManager.addTaskToDateList(
+                      title: taskTitle,
+                      startTime: startTime,
+                      endTime: endTime,
+                    )
+                  : widgetManager.updateTask(
+                      originalDate: originalDate,
+                      newTitle: taskTitle,
+                      newStartTime: startTime,
+                      newEndTime: endTime,
+                    );
               Navigator.pop(context);
             },
           ),

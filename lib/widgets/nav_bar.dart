@@ -4,7 +4,7 @@ import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
-import 'package:today/widgets/add_new_task_sheet.dart';
+import 'package:today/widgets/task_detail_sheet.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class NavBar extends StatelessWidget {
@@ -87,10 +87,7 @@ class NavBar extends StatelessWidget {
           onTap: () => showCupertinoModalBottomSheet(
             context: context,
             builder: (context) => const Scaffold(
-              body: AddNewTaskSheet(
-                title: 'Add New Task',
-                catButtonTitle: 'Add',
-              ),
+              body: TaskDetailSheet(sheetType: SheetType.newTask),
             ),
           ),
           child: Padding(

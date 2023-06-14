@@ -6,7 +6,7 @@ import 'package:today/models/my_task.dart';
 import 'package:today/screens/tasks_screen/tasks_screen_manager.dart';
 import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
-import 'package:today/widgets/add_new_task_sheet.dart';
+import 'package:today/widgets/task_detail_sheet.dart';
 import 'package:today/widgets/time_card.dart';
 
 class TaskCard extends StatelessWidget {
@@ -25,14 +25,11 @@ class TaskCard extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         widgetManager.selectTask = task;
-        log('edit task: ${task.title}');
+        log('open edit sheet [${task.title}]');
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => const Scaffold(
-            body: AddNewTaskSheet(
-              title: 'Edit Task',
-              catButtonTitle: 'Update',
-            ),
+            body: TaskDetailSheet(sheetType: SheetType.updateTask),
           ),
         );
       },

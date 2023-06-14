@@ -6,7 +6,7 @@ import 'package:today/services/service_locator.dart';
 import 'package:today/style/style_constants.dart';
 import 'package:today/widgets/floating_container.dart';
 import 'package:today/widgets/tasks_container.dart';
-import 'package:today/widgets/add_new_task_sheet.dart';
+import 'package:today/widgets/task_detail_sheet.dart';
 
 class TasksScreen extends StatefulWidget {
   const TasksScreen({Key? key}) : super(key: key);
