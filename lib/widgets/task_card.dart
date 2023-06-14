@@ -29,7 +29,7 @@ class TaskCard extends StatelessWidget {
         showCupertinoModalBottomSheet(
           context: context,
           builder: (context) => const Scaffold(
-            body: TaskDetailSheet(sheetType: SheetType.updateTask),
+            body: TaskDetailSheet.updateTask(),
           ),
         );
       },

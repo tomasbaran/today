@@ -16,7 +16,9 @@ enum SheetType {
 
 class TaskDetailSheet extends StatefulWidget {
   final SheetType sheetType;
-  const TaskDetailSheet({super.key, required this.sheetType});
+  // Named constructor
+  const TaskDetailSheet.newTask({super.key}) : sheetType = SheetType.newTask;
+  const TaskDetailSheet.updateTask({super.key}) : sheetType = SheetType.updateTask;
 
   @override
   State<TaskDetailSheet> createState() => _TaskDetailSheetState();
