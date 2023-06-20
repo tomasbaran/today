@@ -42,7 +42,7 @@ class TaskService {
     }
   }
 
-  updateDateList(MyList updatedList) {
+  updateDateListInDatabase(MyList updatedList) {
     if (_uid == null) {
       throw ('Error #6[updating task]: User not signed in.');
     } else {

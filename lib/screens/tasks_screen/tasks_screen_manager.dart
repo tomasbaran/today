@@ -74,6 +74,27 @@ class TasksScreenManager {
     }
   }
 
+  removeTaskFromList({
+    required DateTime date,
+    required MyTask task,
+  }) async {
+    final dateListSnapshot = await TaskService().getDateListSnapshot(date);
+
+    MyList dateList = TaskService().convertFirebaseSnapshotToMyList(
+      firebaseSnapshot: dateListSnapshot,
+      myListTitle: DateTimeService().niceDateTimeString(date),
+      listDate: date,
+    );
+    log('old dateList: ${dateList.tasks}');
+
+    // delete task locally
+    dateList.tasks.removeAt(task.key!);
+    log('new dateList: ${dateList.tasks}');
+
+    // delete task in the db
+    await TaskService().updateDateListInDatabase(dateList);
+  }
+
   updateTask({
     required DateTime originalDate,
     String? newTitle,
@@ -96,9 +117,9 @@ class TasksScreenManager {
     if (newEndTime != null) {
       newTask.endTime = newEndTime;
     }
-
     log('\x1B[32m[$newDate]widgetManager.updateTask: ${newTask.title}, ${newTask.startTime}, ${newTask.endTime}  \x1B[0m');
 
+    // check whether the date was changed
     if (DateTimeService().isSpecialDay(originalDate, newDate) == MyDate.isToday) {
       // SAME DAY
       log('original: SAME DAY[${newTask.key}]: ${selectedList.value.tasks[newTask.key!]}');
@@ -108,27 +129,15 @@ class TasksScreenManager {
     } else {
       // DIFF DAY
       log('DIFF DAY');
-      final previouslySelectedListSnapshot = await TaskService().getDateListSnapshot(originalDate);
-
-      MyList previouslySelectedList = TaskService().convertFirebaseSnapshotToMyList(
-        firebaseSnapshot: previouslySelectedListSnapshot,
-        myListTitle: DateTimeService().niceDateTimeString(originalDate),
-        listDate: originalDate,
-      );
-      log('origo previouslySelectedList: ${previouslySelectedList.tasks}');
-      // delete the original task from the original date
-      previouslySelectedList.tasks.removeAt(originalTask.key!);
-      log('new previouslySelectedList: ${previouslySelectedList.tasks}');
-      // delete the original task from the db
-      await TaskService().updateDateList(previouslySelectedList);
-
+      // delete the original task from the original date in the db
+      removeTaskFromList(date: originalDate, task: originalTask);
       // add new task the selectedList locally
       selectedList.value.tasks.add(newTask);
     }
+
     // update the list with the updated task in db
     log('final updateDateList: ${selectedList.value}');
-
-    TaskService().updateDateList(selectedList.value);
+    TaskService().updateDateListInDatabase(selectedList.value);
   }
 
   addTaskToDateList({
@@ -164,7 +173,7 @@ class TasksScreenManager {
       selectedList.value.tasks.add(task);
     }
 
-    TaskService().updateDateList(selectedList.value);
+    TaskService().updateDateListInDatabase(selectedList.value);
   }
 
   reorderList(int oldIndex, int newIndex) {
@@ -176,7 +185,7 @@ class TasksScreenManager {
     final element = selectedList.value.tasks.removeAt(oldIndex);
     selectedList.value.tasks.insert(newIndex, element);
     print('1. reordered List: ${selectedList.value}');
-    TaskService().updateDateList(selectedList.value);
+    TaskService().updateDateListInDatabase(selectedList.value);
   }
 
   listenToDateList() {
