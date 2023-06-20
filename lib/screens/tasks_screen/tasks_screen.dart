@@ -20,7 +20,7 @@ class _TasksScreenState extends State<TasksScreen> {
   @override
   void initState() {
     super.initState();
-    widgetManager.getDateList();
+    widgetManager.listenToDateList();
   }
 
   @override

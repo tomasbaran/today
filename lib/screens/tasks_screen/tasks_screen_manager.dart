@@ -38,7 +38,7 @@ class TasksScreenManager {
     _selectedDate = newDateTime;
 
     checkIfSelectedDateIsToday();
-    getDateList();
+    listenToDateList();
   }
 
   checkIfSelectedDateIsToday() {
@@ -79,11 +79,56 @@ class TasksScreenManager {
     String? newTitle,
     DateTime? newStartTime,
     DateTime? newEndTime,
-  }) {
-    DateTime newDate = _selectedDate;
+  }) async {
     MyTask? originalTask = _selectedTask;
+
     log('\x1B[31moriginal[$originalDate]selectedTask[${originalTask!.key}]: ${originalTask.title}');
-    log('\x1B[32m[$newDate]widgetManager.updateTask: $newTitle, $newStartTime, $newEndTime  \x1B[0m');
+
+    DateTime newDate = _selectedDate;
+
+    MyTask newTask = originalTask;
+    if (newTitle != null) {
+      newTask.title = newTitle;
+    }
+    if (newStartTime != null) {
+      newTask.startTime = newStartTime;
+    }
+    if (newEndTime != null) {
+      newTask.endTime = newEndTime;
+    }
+
+    log('\x1B[32m[$newDate]widgetManager.updateTask: ${newTask.title}, ${newTask.startTime}, ${newTask.endTime}  \x1B[0m');
+
+    if (DateTimeService().isSpecialDay(originalDate, newDate) == MyDate.isToday) {
+      // SAME DAY
+      log('original: SAME DAY[${newTask.key}]: ${selectedList.value.tasks[newTask.key!]}');
+      // update the new task to the selectedList locally
+      selectedList.value.tasks[newTask.key!] = newTask;
+      log('new: SAME DAY[${newTask.key}]: ${selectedList.value.tasks[newTask.key!]}');
+    } else {
+      // DIFF DAY
+      log('DIFF DAY');
+      final previouslySelectedListSnapshot = await TaskService().getDateListSnapshot(originalDate);
+
+      MyList previouslySelectedList = TaskService().convertFirebaseSnapshotToMyList(
+        firebaseSnapshot: previouslySelectedListSnapshot,
+        myListTitle: DateTimeService().niceDateTimeString(originalDate),
+        listDate: originalDate,
+      );
+      log('origo previouslySelectedList: ${previouslySelectedList.tasks}');
+      // delete the original task from the original date
+      previouslySelectedList.tasks.removeAt(originalTask.key!);
+      log('new previouslySelectedList: ${previouslySelectedList.tasks}');
+      // delete the original task from the db
+      await TaskService().updateDateList(previouslySelectedList);
+
+      // add new task the selectedList locally
+      selectedList.value.tasks.add(newTask);
+    }
+    // update the list with the updated task in db
+    log('final updateDateList: ${selectedList.value}');
+
+    TaskService().updateDateList(selectedList.value);
   }
 
   addTaskToDateList({
@@ -134,8 +179,8 @@ class TasksScreenManager {
     TaskService().updateDateList(selectedList.value);
   }
 
-  getDateList() {
-    TaskService().getDateList(date: _selectedDate)?.onData((data) {
+  listenToDateList() {
+    TaskService().listenToDateListSnapshot(date: _selectedDate)?.onData((data) {
       selectedList.value = TaskService().convertFirebaseSnapshotToMyList(
         firebaseSnapshot: data,
         myListTitle: DateTimeService().niceDateTimeString(_selectedDate),

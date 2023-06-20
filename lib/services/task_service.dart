@@ -10,8 +10,14 @@ class TaskService {
   final _db = FirebaseFirestore.instance;
   final String? _uid = Auth().uid;
 
+  Future<DocumentSnapshot<Map<String, dynamic>>> getDateListSnapshot(DateTime date) {
+    String listDateId = '${date.year}-${date.month}-${date.day}_$_uid';
+    final DocumentReference<Map<String, dynamic>> listDocRef = _db.collection("users").doc(_uid).collection('date_lists').doc(listDateId);
+    return listDocRef.get();
+  }
+
   // REFACTOR #100: ? maybe better have two seperate functions: getListByDate, getListById
-  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? getDateList({DateTime? date, String? listId}) {
+  StreamSubscription<DocumentSnapshot<Map<String, dynamic>>>? listenToDateListSnapshot({DateTime? date, String? listId}) {
     if (_uid == null) {
       throw ('Error #2[getting list]: User not signed in.');
     } else {
@@ -43,7 +49,7 @@ class TaskService {
       Map<String, dynamic> formattedUpdatedList = formatMyListToFirebaseList(updatedList);
       final listDocRef = _db.collection('users').doc(_uid).collection('date_lists').doc(updatedList.id);
 
-      listDocRef.update(formattedUpdatedList).onError((error, stackTrace) {
+      listDocRef.set(formattedUpdatedList).onError((error, stackTrace) {
         log('\x1B[31mError #6[updating task]: $error\x1B[0m');
         Logger(printer: PrettyPrinter(colors: false)).e('Error #6[updating task]: $error');
       });
