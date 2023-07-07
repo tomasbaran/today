@@ -18,13 +18,14 @@ class FloatingContainer extends StatelessWidget {
     return GestureDetector(
       onTap: () => widgetManager.updateNavBarSelection(NavBarSelection.unselected),
       child: Material(
-        borderRadius: BorderRadius.all(Radius.circular(60)),
+        borderRadius: BorderRadius.all(Radius.circular(floatingBarRadius)),
         elevation: 10,
         child: Container(
+          // height: 400,
           width: floatingContainerWidth,
           decoration: BoxDecoration(
             color: kThemeColor11,
-            borderRadius: BorderRadius.all(Radius.circular(31)),
+            borderRadius: BorderRadius.all(Radius.circular(floatingBarRadius)),
           ),
           child: ValueListenableBuilder(
             valueListenable: widgetManager.navBar,

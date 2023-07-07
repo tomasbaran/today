@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -32,6 +33,7 @@ class TasksContainer extends StatelessWidget {
               builder: (_, pageList, __) {
                 int tasksCount = pageList.tasks.length;
                 int listWidgetsCount = tasksCount + 1; // +1 is the new last item: Column of FillInHeight + COMPLETED:
+                log('update List!!: ${pageList.title}; ${widgetManager.selectedList.value.tasks} ');
                 return ReorderableListView.builder(
                     itemCount: listWidgetsCount, // +1 is the new last item: Column of FillInHeight + COMPLETED:
                     itemBuilder: ((___, taskIndex) {

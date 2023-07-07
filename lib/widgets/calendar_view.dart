@@ -17,9 +17,7 @@ class CalendarView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CalendarDatePicker2(
-        config: CalendarDatePicker2WithActionButtonsConfig(
-          cancelButtonTextStyle: TextStyle(color: kThemeColor2, fontSize: 20),
-          okButtonTextStyle: TextStyle(color: Colors.red, fontSize: 20, backgroundColor: kThemeColor2),
+        config: CalendarDatePicker2Config(
           // cancelButton: ,
           firstDayOfWeek: 1,
           dayTextStyle: TextStyle(color: kThemeColor2),

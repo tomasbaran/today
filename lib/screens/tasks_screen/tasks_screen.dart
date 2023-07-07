@@ -24,6 +24,12 @@ class _TasksScreenState extends State<TasksScreen> {
   }
 
   @override
+  void dispose() {
+    widgetManager.disposeSubscription();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     widgetManager.getScreenMeasurments(context);
     return GestureDetector(

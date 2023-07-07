@@ -4,7 +4,7 @@ import 'package:today/style/style_constants.dart';
 class AppTheme {
   static ThemeData light = ThemeData(
     primaryColor: Colors.red,
-    highlightColor: Colors.yellow,
+    highlightColor: kThemeColor9,
     scaffoldBackgroundColor: kBackgroundColor,
     colorScheme: const ColorScheme.light(
       primary: kBackgroundColor,

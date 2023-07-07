@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:calendar_date_picker2/calendar_date_picker2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -139,18 +140,39 @@ class _TaskDetailSheetState extends State<TaskDetailSheet> {
                   icon: CupertinoIcons.calendar,
                   value: DateFormat.yMMMMd('en_US').format(widgetManager.selectedDate),
                 ),
-                onTap: () => showDatePicker(
-                  context: context,
-                  initialDate: widgetManager.selectedDate,
-                  firstDate: DateTime(2021),
-                  lastDate: DateTime(2050),
-                ).then((newDate) {
-                  if (newDate != null) {
-                    setState(() {
-                      widgetManager.updateSelectedDate(newDate);
-                    });
+                onTap: () async {
+                  final calendarValues = await showCalendarDatePicker2Dialog(
+                    borderRadius: BorderRadius.all(Radius.circular(floatingBarRadius)),
+                    dialogBackgroundColor: kThemeColor11,
+                    dialogSize: const Size(340, 340),
+                    context: context,
+                    config: CalendarDatePicker2WithActionButtonsConfig(
+                      okButton: Padding(
+                        padding: const EdgeInsets.only(right: 8),
+                        child: Text('OK',
+                            style: TextStyle(
+                              color: kBackgroundColor,
+                              fontWeight: FontWeight.w700,
+                              fontSize: 14,
+                            )),
+                      ),
+                      buttonPadding: EdgeInsets.all(16),
+                      cancelButtonTextStyle: TextStyle(fontWeight: FontWeight.w500, color: kThemeColor9),
+                      firstDayOfWeek: 1,
+                      dayTextStyle: TextStyle(color: kThemeColor2),
+                      disableModePicker: true,
+                      controlsTextStyle: TextStyle(color: kThemeColor9, fontWeight: FontWeight.w800),
+                      weekdayLabelTextStyle: TextStyle(color: kThemeColor9, fontWeight: FontWeight.w800),
+                      selectedDayTextStyle: TextStyle(color: kThemeColor11, fontWeight: FontWeight.w700),
+                      nextMonthIcon: Icon(Icons.arrow_forward_ios_rounded, size: 20, color: kThemeColor9),
+                      lastMonthIcon: Icon(Icons.arrow_back_ios_rounded, size: 20, color: kThemeColor9),
+                    ),
+                    value: [widgetManager.selectedDate],
+                  );
+                  if (calendarValues != null) {
+                    widgetManager.updateSelectedDate(calendarValues.first!);
                   }
-                }),
+                },
               ),
             ],
           ),

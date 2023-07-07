@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -188,13 +189,27 @@ class TasksScreenManager {
     TaskService().updateDateListInDatabase(selectedList.value);
   }
 
+  StreamSubscription? _subscription;
+
   listenToDateList() {
-    TaskService().listenToDateListSnapshot(date: _selectedDate)?.onData((data) {
-      selectedList.value = TaskService().convertFirebaseSnapshotToMyList(
-        firebaseSnapshot: data,
-        myListTitle: DateTimeService().niceDateTimeString(_selectedDate),
-        listDate: _selectedDate,
-      );
+    _subscription?.cancel();
+
+    _subscription = TaskService().listenToDateListSnapshot(date: _selectedDate);
+    _subscription?.onData((data) {
+      try {
+        log('selected DAY [$_selectedDate]: ${selectedList.value.tasks}');
+        selectedList.value = TaskService().convertFirebaseSnapshotToMyList(
+          firebaseSnapshot: data,
+          myListTitle: DateTimeService().niceDateTimeString(_selectedDate),
+          listDate: _selectedDate,
+        );
+      } catch (e) {
+        throw 'Error #12: $e';
+      }
     });
+  }
+
+  disposeSubscription() {
+    _subscription?.cancel();
   }
 }

@@ -114,6 +114,8 @@ TextStyle bottomToolbarIconTextStyle = TextStyle(
   fontWeight: FontWeight.w400,
 );
 
+double floatingBarRadius = 32;
+
 // # navBarList
 TextStyle navBarListTextStyle = TextStyle(
   color: Colors.amber,
