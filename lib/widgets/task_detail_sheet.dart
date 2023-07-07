@@ -135,11 +135,15 @@ class _TaskDetailSheetState extends State<TaskDetailSheet> {
                 ),
               ),
               GestureDetector(
-                child: TaskTimeTile(
-                  title: 'Date',
-                  icon: CupertinoIcons.calendar,
-                  value: DateFormat.yMMMMd('en_US').format(widgetManager.selectedDate),
-                ),
+                child: ValueListenableBuilder(
+                    valueListenable: widgetManager.selectedList,
+                    builder: (context, selectedList, child) {
+                      return TaskTimeTile(
+                        title: 'Date',
+                        icon: CupertinoIcons.calendar,
+                        value: DateFormat.yMMMMd('en_US').format(selectedList.date ?? widgetManager.selectedDate),
+                      );
+                    }),
                 onTap: () async {
                   final calendarValues = await showCalendarDatePicker2Dialog(
                     borderRadius: BorderRadius.all(Radius.circular(floatingBarRadius)),
